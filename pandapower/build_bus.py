@@ -332,6 +332,14 @@ def _fill_auxiliary_buses(net, ppc, bus_lookup, element, bus_column, aux):
     if net._options["mode"] == "opf":
         ppc["bus"][aux_idx, VMIN] = ppc["bus"][element_bus_idx, VMIN]
         ppc["bus"][aux_idx, VMAX] = ppc["bus"][element_bus_idx, VMAX]
+    if element == "xward":
+        # net.res_xward.vm_internal_pu after power flow is equal to net.xward.vm_pu. The net.res_xward.vm_internal_pu
+        # value is changed by the opf. It needs to be constrained:
+        delta = net._options["delta"] if hasattr(net, "_options") else 1e-6
+        delta = 1e-1
+        ppc["bus"][aux_idx, VMIN] = net.xward.vm_pu - delta
+        ppc["bus"][aux_idx, VMAX] = net.xward.vm_pu + delta
+
     if net._options["init_vm_pu"] == "results":
         ppc["bus"][aux_idx, VM] = net["res_%s"%element]["vm_internal_pu"].values
     else:

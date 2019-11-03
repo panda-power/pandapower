@@ -909,5 +909,27 @@ def test_gen_violated_p_vm_limits(four_bus_net):
     assert min_vm_pu < net.res_bus.at[bus, "vm_pu"] < max_vm_pu
 
 
+def test_xward_p_mw_fixed():
+    assert True
+
+
+def test_xward_vm_pu_fixed():
+    net = simple_four_bus_system()
+    net.sgen.drop(index=1, inplace=True)
+    net.load.drop(index=1, inplace=True)
+    # net.sgen.drop(index=1, inplace=True)
+    # net.load.drop(index=1, inplace=True)
+    pp.create_xward(net, bus=3, pz_mw=.01, qz_mvar=.01, ps_mw=-.01, qs_mvar=.01,
+                    vm_pu=0.979, x_ohm=.01, r_ohm=.01)
+    pp.runpp(net)
+    print(net.xward)
+    print(net.res_xward)
+    pp.diagnostic(net, report_style="none")
+    #pp.runopp(net)
+    print(net.xward)
+    print(net.res_xward)
+    #pp.runopp(net)
+    assert True
+
 if __name__ == "__main__":
     pytest.main([__file__, "-xs"])

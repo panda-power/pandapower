@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-# Copyright (c) 2016-2019 by University of Kassel and Fraunhofer Institute for Energy Economics
+# Copyright (c) 2016-2020 by University of Kassel and Fraunhofer Institute for Energy Economics
 # and Energy System Technology (IEE), Kassel. All rights reserved.
 
 import pandas as pd
@@ -32,6 +32,7 @@ def convert_format(net):
         reset_results(net)
     if isinstance(net.version, float) and net.version < 1.6:
         set_data_type_of_columns_to_default(net)
+    _convert_objects(net)
     net.version = __version__
     return net
 
@@ -146,12 +147,22 @@ def _rename_columns(net):
                 net.measurement.loc[~bus_measurements, "bus"].values
             net.measurement.rename(columns={'type': 'measurement_type'}, inplace=True)
             net.measurement.drop(["bus"], axis=1, inplace=True)
+    if "controller" in net:
+        net["controller"].rename(columns={"controller": "object"}, inplace=True)
     if "options" in net:
         if "recycle" in net["options"]:
-            if "_is_elements" not in net["options"]["recycle"]:
-                net["options"]["recycle"]["_is_elements"] = copy.deepcopy(
-                    net["options"]["recycle"]["is_elems"])
-                net["options"]["recycle"].pop("is_elems", None)
+            if "Ybus" in net["options"]["recycle"]:
+                if net["options"]["recycle"]["Ybus"]:
+                    net["options"]["recycle"]["trafo"] = False
+                del net["options"]["recycle"]["Ybus"]
+            else:
+                net["options"]["recycle"]["trafo"] = True
+            if "ppc" in net["options"]["recycle"]:
+                if net["options"]["recycle"]["ppc"]:
+                    net["options"]["recycle"]["bus_pq"] = False
+                del net["options"]["recycle"]["ppc"]
+            else:
+                net["options"]["recycle"]["bus_pq"] = True
 
 
 def _add_missing_columns(net):
@@ -248,6 +259,7 @@ def _set_data_type_of_columns(net):
                         net[key][col] = net[key][col].astype(new_net[key][col].dtype,
                                                              errors="ignore")
 
+
 def _convert_to_mw(net):
     replace = [("kw", "mw"), ("kvar", "mvar"), ("kva", "mva")]
     for element, tab in net.items():
@@ -268,3 +280,28 @@ def _convert_to_mw(net):
                     if old in parameter and parameter != "pfe_kw":
                         parameters[parameter.replace(old, new)] = value * 1e-3
                         del parameters[parameter]
+
+
+def _update_object_attributes(obj):
+    """
+    Rename attributes of a given object. A new attribute is added and the old one is removed.
+    """
+    to_rename = {"u_set": "vm_set_pu",
+                 "u_lower": "vm_lower_pu",
+                 "u_upper": "vm_upper_pu"}
+
+    for key, val in to_rename.items():
+        if key in obj.__dict__:
+            obj.__dict__[val] = obj.__dict__.pop(key)
+
+
+def _convert_objects(net):
+    """
+    The function updates attribute names in pandapower objects. For now, it affects TrafoController.
+    Should be expanded for other objects if necessary.
+    """
+    if "controller" in net.keys():
+        for obj in net["controller"].object.values:
+            _update_object_attributes(obj)
+            if not hasattr(obj, 'net'):
+                obj.__init__(net, overwrite=True, **obj.__dict__)

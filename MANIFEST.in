@@ -3,3 +3,4 @@ global-include *.p
 global-include *.mat
 global-include *.json
 global-include *.jl
+global-include *.csv

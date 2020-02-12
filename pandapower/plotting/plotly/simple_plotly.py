@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-# Copyright (c) 2016-2019 by University of Kassel and Fraunhofer Institute for Energy Economics
+# Copyright (c) 2016-2020 by University of Kassel and Fraunhofer Institute for Energy Economics
 # and Energy System Technology (IEE), Kassel. All rights reserved.
 
 
@@ -72,19 +72,19 @@ def simple_plotly(net, respect_switches=True, use_line_geodata=None, on_map=Fals
 
     INPUT:
         **net** - The pandapower format network. If none is provided, mv_oberrhein() will be
-        plotted as an example
+            plotted as an example
 
     OPTIONAL:
         **respect_switches** (bool, True) - Respect switches when artificial geodata is created
 
         *use_line_geodata** (bool, True) - defines if lines patches are based on net.line_geodata of the lines (True)
-        or on net.bus_geodata of the connected buses (False)
+            or on net.bus_geodata of the connected buses (False)
 
         **on_map** (bool, False) - enables using mapbox plot in plotly.
-        If provided geodata are not real geo-coordinates in lon/lat form, on_map will be set to False.
+            If provided geodata are not real geo-coordinates in lon/lat form, on_map will be set to False.
 
         **projection** (String, None) - defines a projection from which network geo-data will be transformed to
-        lat-long. For each projection a string can be found at http://spatialreference.org/ref/epsg/
+            lat-long. For each projection a string can be found at http://spatialreference.org/ref/epsg/
 
 
         **map_style** (str, 'basic') - enables using mapbox plot in plotly
@@ -97,8 +97,8 @@ def simple_plotly(net, respect_switches=True, use_line_geodata=None, on_map=Fals
 
         **figsize** (float, 1) - aspectratio is multiplied by it in order to get final image size
 
-        **aspectratio** (tuple, 'auto') - when 'auto' it preserves original aspect ratio of the network geodata
-        any custom aspectration can be given as a tuple, e.g. (1.2, 1)
+        **aspectratio** (tuple, 'auto') - when 'auto' it preserves original aspect ratio of the network geodata;
+            any custom aspectration can be given as a tuple, e.g. (1.2, 1)
 
         **line_width** (float, 1.0) - width of lines
 
@@ -115,6 +115,9 @@ def simple_plotly(net, respect_switches=True, use_line_geodata=None, on_map=Fals
         **trafo_color** (String, 'green') - Trafo Color. Init is green
 
         **ext_grid_color** (String, 'yellow') - External Grid Color. Init is yellow
+
+    OUTPUT:
+        **figure** (graph_objs._figure.Figure) figure object
     """
     version_check()
     # create geocoord if none are available
@@ -165,5 +168,5 @@ def simple_plotly(net, respect_switches=True, use_line_geodata=None, on_map=Fals
                                       color=ext_grid_color, size=ext_grid_size,
                                       patch_type=marker_type, trace_name='external_grid', infofunc=hoverinfo)
 
-    draw_traces(line_traces + trafo_trace + ext_grid_trace + bus_trace,
-                aspectratio=aspectratio, figsize=figsize, on_map=on_map, map_style=map_style)
+    return draw_traces(line_traces + trafo_trace + ext_grid_trace + bus_trace,
+                       aspectratio=aspectratio, figsize=figsize, on_map=on_map, map_style=map_style)

@@ -27,13 +27,15 @@ class TrafoController(Controller):
        **in_service** (bool) - Indicates if the element is currently active
 
        **trafotype** (string) - Type of the controlled trafo ("2W" or "3W")
+
+    OPTIONAL:
+        **recycle** (bool, True) - Re-use of internal-data in a time series loop.
     """
 
-    def __init__(self, net, tid, side, tol, in_service, trafotype, level=0, order=0, recycle=False,
+    def __init__(self, net, tid, side, tol, in_service, trafotype, level=0, order=0, recycle=True,
                  **kwargs):
         super().__init__(net, in_service=in_service, level=level, order=order, recycle=recycle,
                          **kwargs)
-        self.update_initialized(locals())
         self.tid = tid
         self.trafotype = trafotype
 
@@ -105,6 +107,18 @@ class TrafoController(Controller):
                                                                    self.tid))
         if self.net[self.trafotable].at[self.tid, "tap_step_percent"] < 0:
             self.tap_side_coeff *= -1
+        self.set_recycle()
+
+    def set_recycle(self):
+        allowed_elements = ["2W", "3W"]
+        if self.recycle is False or self.trafotype not in allowed_elements:
+            # if recycle is set to False by the user when creating the controller it is deactivated or when
+            # const control controls an element which is not able to be recycled
+            self.recycle = False
+            return
+        # these variables determine what is re-calculated during a time series run
+        recycle = dict(trafo=True, gen=False, bus_pq=False)
+        self.recycle = recycle
             
     def timestep(self):
         self.tap_pos = self.net[self.trafotable].at[self.tid, "tap_pos"]

@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-# Copyright (c) 2016-2019 by University of Kassel and Fraunhofer Institute for Energy Economics
+# Copyright (c) 2016-2020 by University of Kassel and Fraunhofer Institute for Energy Economics
 # and Energy System Technology (IEE), Kassel. All rights reserved.
 # Use of this source code is governed by a BSD-style license that can be found in the LICENSE file.
 
@@ -669,23 +669,6 @@ def _branches_with_oos_buses(net, ppc):
 
             ppc["bus"] = np.vstack(future_buses)
 
-
-def _update_trafo_trafo3w_ppc(net, ppc):
-    """
-    Updates the trafo and trafo3w values when reusing the ppc between two powerflows
-
-    :param net: pandapower net
-    :param ppc: pypower format
-    :return: ppc with updates values
-    """
-    line_end = len(net["line"])
-    trafo_end = line_end + len(net["trafo"])
-    trafo3w_end = trafo_end + len(net["trafo3w"]) * 3
-
-    if trafo_end > line_end:
-        _calc_trafo_parameter(net, ppc)
-    if trafo3w_end > trafo_end:
-        _calc_trafo3w_parameter(net, ppc)
 
 
 def _calc_switch_parameter(net, ppc):

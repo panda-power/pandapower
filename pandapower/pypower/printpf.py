@@ -186,7 +186,7 @@ def printpf(baseMVA, bus=None, gen=None, branch=None, f=None, success=None,
 
     if OUT_SYS_SUM:
         fd.write('\n================================================================================')
-        fd.write('\n|     System Summary                                                           |')
+        fd.write('\n| PyPower (ppci) System Summary - these are not valid for pandapower DataFrames|')
         fd.write('\n================================================================================')
         fd.write('\n\nHow many?                How much?              P (MW)            Q (MVAr)')
         fd.write('\n---------------------    -------------------  -------------  -----------------')

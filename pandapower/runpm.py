@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-# Copyright (c) 2016-2019 by University of Kassel and Fraunhofer Institute for Energy Economics
+# Copyright (c) 2016-2020 by University of Kassel and Fraunhofer Institute for Energy Economics
 # and Energy System Technology (IEE), Kassel. All rights reserved.
 # Use of this source code is governed by a BSD-style license that can be found in the LICENSE file.
 
@@ -13,7 +13,7 @@ from pandapower.converter.powermodels.from_pm import read_ots_results, read_tnep
 from pandapower.opf.pm_storage import add_storage_opf_settings, read_pm_storage_results
 
 
-def runpm(net, julia_file, pp_to_pm_callback=None, calculate_voltage_angles=True,
+def runpm(net, julia_file=None, pp_to_pm_callback=None, calculate_voltage_angles=True,
           trafo_model="t", delta=1e-8, trafo3w_losses="hv", check_connectivity=True,
           correct_pm_network_data=True, pm_model="ACPPowerModel", pm_solver="ipopt",
           pm_mip_solver="cbc", pm_nl_solver="ipopt", pm_time_limits=None, pm_log_level=0):  # pragma: no cover
@@ -74,6 +74,7 @@ def runpm(net, julia_file, pp_to_pm_callback=None, calculate_voltage_angles=True
      """
     net._options = {}
     ac = True if "DC" not in pm_model else False
+    julia_file = os.path.join(pp_dir, "opf", 'run_powermodels.jl') if julia_file is None else julia_file
     _add_ppc_options(net, calculate_voltage_angles=calculate_voltage_angles,
                      trafo_model=trafo_model, check_connectivity=check_connectivity,
                      mode="opf", switch_rx_ratio=2, init_vm_pu="flat", init_va_degree="flat",

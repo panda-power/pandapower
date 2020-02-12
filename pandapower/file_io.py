@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-# Copyright (c) 2016-2019 by University of Kassel and Fraunhofer Institute for Energy Economics
+# Copyright (c) 2016-2020 by University of Kassel and Fraunhofer Institute for Energy Economics
 # and Energy System Technology (IEE), Kassel. All rights reserved.
 
 
@@ -29,7 +29,7 @@ from pandapower.auxiliary import pandapowerNet
 from pandapower.create import create_empty_network
 from pandapower.convert_format import convert_format
 from pandapower.io_utils import to_dict_of_dfs, from_dict_of_dfs, PPJSONEncoder, PPJSONDecoder, \
-                                restore_jsoned_objects
+    to_dict_with_coord_transform, get_raw_data_from_pickle, transform_net_with_df_and_geo
 
 
 def to_pickle(net, filename):
@@ -52,20 +52,7 @@ def to_pickle(net, filename):
         return
     if not filename.endswith(".p"):
         raise Exception("Please use .p to save pandapower networks!")
-    save_net = dict()
-    for key, item in net.items():
-        if hasattr(item, "columns") and "geometry" in item.columns:
-            # we convert shapely-objects to primitive data-types on a deepcopy
-            item = copy.deepcopy(item)
-            if key == "bus_geodata" and not isinstance(item.geometry.values[0], tuple):
-                item["geometry"] = item.geometry.apply(lambda x: (x.x, x.y))
-            elif key == "line_geodata" and not isinstance(item.geometry.values[0], list):
-                item["geometry"] = item.geometry.apply(lambda x: list(x.coords))
-
-        save_net[key] = {"DF": item.to_dict("split"), "dtypes": {col: dt
-                                                                 for col, dt in
-                                                                 zip(item.columns, item.dtypes)}} \
-            if isinstance(item, pd.DataFrame) else item
+    save_net = to_dict_with_coord_transform(net, ["bus_geodata"], ["line_geodata"])
 
     with open(filename, "wb") as f:
         pickle.dump(save_net, f, protocol=2)  # use protocol 2 for py2 / py3 compatibility
@@ -157,70 +144,9 @@ def from_pickle(filename, convert=True):
 
     """
 
-    def read(f):
-        if sys.version_info >= (3, 0):
-            return pickle.load(f, encoding='latin1')
-        else:
-            return pickle.load(f)
+    net = pandapowerNet(get_raw_data_from_pickle(filename))
+    transform_net_with_df_and_geo(net, ["bus_geodata"], ["line_geodata"])
 
-    if hasattr(filename, 'read'):
-        net = read(filename)
-    elif not os.path.isfile(filename):
-        raise UserWarning("File %s does not exist!!" % filename)
-    else:
-        with open(filename, "rb") as f:
-            net = read(f)
-    net = pandapowerNet(net)
-
-    try:
-        epsg = net.gis_epsg_code
-    except AttributeError:
-        epsg = None
-
-    for key, item in net.items():
-        if isinstance(item, dict) and "DF" in item:
-            df_dict = item["DF"]
-            if "columns" in df_dict:
-                # make sure the index is Int64Index
-                try:
-                    df_index = pd.Int64Index(df_dict['index'])
-                except TypeError:
-                    df_index = df_dict['index']
-                if GEOPANDAS_INSTALLED and "geometry" in df_dict["columns"] \
-                        and epsg is not None:
-                    # convert primitive data-types to shapely-objects
-                    if key == "bus_geodata":
-                        data = {"x": [row[0] for row in df_dict["data"]],
-                                "y": [row[1] for row in df_dict["data"]]}
-                        geo = [Point(row[2][0], row[2][1]) for row in df_dict["data"]]
-                    elif key == "line_geodata":
-                        data = {"coords": [row[0] for row in df_dict["data"]]}
-                        geo = [LineString(row[1]) for row in df_dict["data"]]
-
-                    net[key] = GeoDataFrame(data, crs=from_epsg(epsg), geometry=geo,
-                                            index=df_index)
-                else:
-                    net[key] = pd.DataFrame(columns=df_dict["columns"], index=df_index,
-                                            data=df_dict["data"])
-            else:
-                net[key] = pd.DataFrame.from_dict(df_dict)
-                if "columns" in item:
-                    if version.parse(pd.__version__) < version.parse("0.21"):
-                        net[key] = net[key].reindex_axis(item["columns"], axis=1)
-                    else:
-                        net[key] = net[key].reindex(item["columns"], axis=1)
-
-            if "dtypes" in item:
-                if "columns" in df_dict and "geometry" in df_dict["columns"]:
-                    pass
-                else:
-                    try:
-                        # only works with pandas 0.19 or newer
-                        net[key] = net[key].astype(item["dtypes"])
-                    except:
-                        # works with pandas <0.19
-                        for column in net[key].columns:
-                            net[key][column] = net[key][column].astype(item["dtypes"][column])
     if convert:
         convert_format(net)
     return net
@@ -233,8 +159,8 @@ def from_excel(filename, convert=True):
     INPUT:
         **filename** (string) - The absolute or relative path to the input file.
 
-        **convert** (bool, True) - If True, converts the format of the net loaded from excel from 
-            the older version of pandapower to the newer version format 
+        **convert** (bool, True) - If True, converts the format of the net loaded from excel from
+            the older version of pandapower to the newer version format
 
     OUTPUT:
         **net** (dict) - The pandapower format network
@@ -297,7 +223,7 @@ def from_json(filename, convert=True):
     INPUT:
         **filename** (string or file) - The absolute or relative path to the input file or file-like object
 
-        **convert** (bool, True) - If True, converts the format of the net loaded from json from the older 
+        **convert** (bool, True) - If True, converts the format of the net loaded from json from the older
             version of pandapower to the newer version format
 
     OUTPUT:
@@ -310,13 +236,11 @@ def from_json(filename, convert=True):
     """
     if hasattr(filename, 'read'):
         net = json.load(filename, cls=PPJSONDecoder)
-        restore_jsoned_objects(net)
     elif not os.path.isfile(filename):
         raise UserWarning("File {} does not exist!!".format(filename))
     else:
         with open(filename) as fp:
             net = json.load(fp, cls=PPJSONDecoder)
-            restore_jsoned_objects(net)
             # this can be removed in the future
             # now net is saved with "_module", "_class", "_object"..., so json.load already returns
             # pandapowerNet. Older files don't have it yet, and are loaded as dict.
@@ -352,9 +276,6 @@ def from_json_string(json_string, convert=False):
 
     """
     net = json.loads(json_string, cls=PPJSONDecoder)
-    if isinstance(net, dict):
-        net = pandapowerNet(net)
-    restore_jsoned_objects(net)
     # this can be removed in the future
     # now net is saved with "_module", "_class", "_object"..., so json.load already returns
     # pandapowerNet. Older files don't have it yet, and are loaded as dict.

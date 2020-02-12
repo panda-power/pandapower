@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-# Copyright (c) 2016-2019 by University of Kassel and Fraunhofer Institute for Energy Economics
+# Copyright (c) 2016-2020 by University of Kassel and Fraunhofer Institute for Energy Economics
 # and Energy System Technology (IEE), Kassel. All rights reserved.
 
 
@@ -72,6 +72,9 @@ def pf_res_plotly(net, cmap="Jet", use_line_geodata=None, on_map=False, projecti
         **cpos_load** (float, 1.1) - position of the loading percent colorbar
 
         **filename** (str, "temp-plot.html") - filename / path to plot to. Should end on *.html
+
+    OUTPUT:
+        **figure** (graph_objs._figure.Figure) figure object
 
     """
     version_check()
@@ -154,6 +157,6 @@ def pf_res_plotly(net, cmap="Jet", use_line_geodata=None, on_map=False, projecti
                                       color='grey', size=bus_size * 2, trace_name='external_grid',
                                       patch_type=marker_type)
 
-    draw_traces(line_traces + trafo_traces + ext_grid_trace + bus_trace,
-                showlegend=False, aspectratio=aspectratio, on_map=on_map, map_style=map_style, figsize=figsize,
-                filename=filename)
+    return draw_traces(line_traces + trafo_traces + ext_grid_trace + bus_trace,
+                       showlegend=False, aspectratio=aspectratio, on_map=on_map,
+                       map_style=map_style, figsize=figsize, filename=filename)

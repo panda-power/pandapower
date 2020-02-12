@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-# Copyright (c) 2016-2019 by University of Kassel and Fraunhofer Institute for Energy Economics
+# Copyright (c) 2016-2020 by University of Kassel and Fraunhofer Institute for Energy Economics
 # and Energy System Technology (IEE), Kassel. All rights reserved.
 
 
@@ -320,10 +320,10 @@ def test_gen(result_test_network, v_tol=1e-6, i_tol=1e-6, s_tol=5e-3, l_tol=1e-3
     # powerfactory results
     q = 0.260660
     u2 = 1.00584636
-    u_set = 1.0
+    vm_set_pu = 1.0
 
     assert abs(net.res_bus.vm_pu.at[b2] - u2) < v_tol
-    assert abs(net.res_bus.vm_pu.at[b3] - u_set) < v_tol
+    assert abs(net.res_bus.vm_pu.at[b3] - vm_set_pu) < v_tol
     assert abs(net.res_gen.q_mvar.at[g1] - (-q)) < s_tol
 
 
@@ -497,9 +497,9 @@ def test_enforce_q_lims(v_tol=1e-6, i_tol=1e-6, s_tol=5e-3, l_tol=1e-3):
     g1 = gens[0]
     q = -0.260660
     u2 = 1.00584636
-    u_set = 1.0
+    vm_set_pu = 1.0
     assert abs(net.res_bus.vm_pu.at[b2] - u2) < v_tol
-    assert abs(net.res_bus.vm_pu.at[b3] - u_set) < v_tol
+    assert abs(net.res_bus.vm_pu.at[b3] - vm_set_pu) < v_tol
     assert abs(net.res_gen.q_mvar.at[g1] - q) < s_tol
 
     # test_enforce_qlims

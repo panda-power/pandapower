@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-# Copyright (c) 2016-2019 by University of Kassel and Fraunhofer Institute for Energy Economics
+# Copyright (c) 2016-2020 by University of Kassel and Fraunhofer Institute for Energy Economics
 # and Energy System Technology (IEE), Kassel. All rights reserved.
 
 
@@ -23,5 +23,12 @@ Q_FROM_IDX = 14
 IM_TO_IDX = 15
 P_TO_IDX = 16
 Q_TO_IDX = 17
+IA_FROM = 18
+IA_FROM_STD = 19
+IA_TO = 20
+IA_TO_STD = 21
+IA_FROM_IDX = 22
+IA_TO_IDX = 23
 
-branch_cols_se = 18
+
+branch_cols_se = 24

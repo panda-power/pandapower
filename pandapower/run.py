@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-# Copyright (c) 2016-2019 by University of Kassel and Fraunhofer Institute for Energy Economics
+# Copyright (c) 2016-2020 by University of Kassel and Fraunhofer Institute for Energy Economics
 # and Energy System Technology (IEE), Kassel. All rights reserved.
 
 
@@ -8,10 +8,10 @@ import inspect
 
 from pandapower.auxiliary import _check_bus_index_and_print_warning_if_high, \
     _check_gen_index_and_print_warning_if_high, _init_runpp_options, _init_rundcopp_options, \
-    _init_rundcpp_options, _init_runopp_options
+    _init_rundcpp_options, _init_runopp_options, _internal_stored
 from pandapower.opf.validate_opf_input import _check_necessary_opf_parameters
 from pandapower.optimal_powerflow import _optimal_powerflow
-from pandapower.powerflow import _powerflow
+from pandapower.powerflow import _powerflow, _recycled_powerflow
 
 try:
     import pplog as logging
@@ -37,9 +37,9 @@ def set_user_pf_options(net, overwrite=False, **kwargs):
     standard_parameters = ['calculate_voltage_angles', 'trafo_model', 'check_connectivity', 'mode',
                            'copy_constraints_to_ppc', 'switch_rx_ratio', 'enforce_q_lims',
                            'recycle', 'voltage_depend_loads', 'consider_line_temperature', 'delta',
-                           'trafo3w_losses', 'init_vm_pu', 'init_va_degree',  'init_results',
+                           'trafo3w_losses', 'init_vm_pu', 'init_va_degree', 'init_results',
                            'tolerance_mva', 'trafo_loading', 'numba', 'ac', 'algorithm',
-                           'max_iteration', 'v_debug']
+                           'max_iteration', 'v_debug', 'run_control']
 
     if overwrite or 'user_pf_options' not in net.keys():
         net['user_pf_options'] = dict()
@@ -200,10 +200,15 @@ def runpp(net, algorithm='nr', calculate_voltage_angles="auto", init="auto",
 
     # if dict 'user_pf_options' is present in net, these options overrule the net.__internal_options
     # except for parameters that are passed by user
+    recycle = kwargs.get("recycle", None)
+    if (recycle is not None and recycle is not False) and _internal_stored(net):
+        _recycled_powerflow(net, **kwargs)
+        return
+
     if run_control and net.controller.in_service.any():
         from pandapower.control import run_control
         parameters = {**locals(), **kwargs}
-        #disable run control for inner loop to avoid infinite loop
+        # disable run control for inner loop to avoid infinite loop
         parameters["run_control"] = False
         run_control(**parameters)
     else:
@@ -262,7 +267,7 @@ def rundcpp(net, trafo_model="t", trafo_loading="current", recycle=None, check_c
     """
     _init_rundcpp_options(net, trafo_model=trafo_model, trafo_loading=trafo_loading,
                           recycle=recycle, check_connectivity=check_connectivity,
-                          switch_rx_ratio=switch_rx_ratio, trafo3w_losses=trafo3w_losses)
+                          switch_rx_ratio=switch_rx_ratio, trafo3w_losses=trafo3w_losses, **kwargs)
 
     _check_bus_index_and_print_warning_if_high(net)
     _check_gen_index_and_print_warning_if_high(net)

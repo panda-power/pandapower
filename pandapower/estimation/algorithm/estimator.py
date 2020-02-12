@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-# Copyright (c) 2016-2019 by University of Kassel and Fraunhofer Institute for Energy Economics
+# Copyright (c) 2016-2020 by University of Kassel and Fraunhofer Institute for Energy Economics
 # and Energy System Technology (IEE), Kassel. All rights reserved.
 
 import numpy as np
@@ -105,7 +105,7 @@ class SHGMEstimatorIRWLS(BaseEstimatorIRWLS):
         sm = np.zeros(omega.shape[0])
         ps = np.zeros(omega.shape[0])
 
-        @jit(nopython=True)
+        @jit
         def calc_sm(omega, x, y, sm):  # pragma: no cover
             m = omega.shape[0]
             x_shape = x.shape[0]

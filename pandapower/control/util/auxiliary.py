@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-# Copyright (c) 2016-2019 by University of Kassel and Fraunhofer Institute for Energy Economics
+# Copyright (c) 2016-2020 by University of Kassel and Fraunhofer Institute for Energy Economics
 # and Energy System Technology (IEE), Kassel. All rights reserved.
 import csv
 import random
@@ -38,12 +38,13 @@ def asarray(val, dtype=np.float64):
 
     return np_val
 
+
 def get_controller_index_by_type(net, ctrl_type, idx=[]):
     """
     Returns controller indices of a given type as list.
     """
     idx = idx if len(idx) else net.controller.index
-    return [i for i in idx if isinstance(net.controller.controller.at[i], ctrl_type)]
+    return [i for i in idx if isinstance(net.controller.object.at[i], ctrl_type)]
 
 
 def get_controller_index_by_typename(net, typename, idx=[], case_sensitive=False):
@@ -52,9 +53,9 @@ def get_controller_index_by_typename(net, typename, idx=[], case_sensitive=False
     """
     idx = idx if len(idx) else net.controller.index
     if case_sensitive:
-        return [i for i in idx if str(net.controller.controller.at[i]).split(" ")[0] == typename]
+        return [i for i in idx if str(net.controller.object.at[i]).split(" ")[0] == typename]
     else:
-        return [i for i in idx if str(net.controller.controller.at[i]).split(" ")[0].lower() ==
+        return [i for i in idx if str(net.controller.object.at[i]).split(" ")[0].lower() ==
                 typename.lower()]
 
 
@@ -113,7 +114,7 @@ def get_controller_index(net, ctrl_type=None, parameters=None, idx=[]):
             idx &= net.controller.index[net.controller[df_key] == parameters[df_key]]
         # query of parameters in controller object attributes
         idx = [i for i in idx if _controller_attributes_query(
-            net.controller.controller.loc[i], attributes_dict)]
+            net.controller.object.loc[i], attributes_dict)]
     return idx
 
 

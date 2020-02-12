@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-# Copyright (c) 2016-2019 by University of Kassel and Fraunhofer Institute for Energy Economics
+# Copyright (c) 2016-2020 by University of Kassel and Fraunhofer Institute for Energy Economics
 # and Energy System Technology (IEE), Kassel. All rights reserved.
 
 
@@ -21,17 +21,17 @@ from pandapower.estimation.algorithm.estimator import SHGMEstimatorIRWLS
 
 def test_irwls_comp_wls():
     # it should be the same since wls will not update weight matrix
-    for net in [nw.case14(), nw.case57(), nw.case118()]:
-        pp.runpp(net)
-        add_virtual_meas_from_loadflow(net)
+    net = nw.case14()
+    pp.runpp(net)
+    add_virtual_meas_from_loadflow(net)
 
-        success = estimate(net, init='flat', algorithm="irwls", estimator='wls')
-        assert success
+    success = estimate(net, init='flat', algorithm="irwls", estimator='wls')
+    assert success
 
-        net_wls = deepcopy(net)
-        estimate(net_wls)
-        assert np.allclose(net_wls.res_bus_est.vm_pu, net.res_bus_est.vm_pu, 1e-6)
-        assert np.allclose(net_wls.res_bus_est.va_degree, net.res_bus_est.va_degree, 1e-6)
+    net_wls = deepcopy(net)
+    estimate(net_wls)
+    assert np.allclose(net_wls.res_bus_est.vm_pu, net.res_bus_est.vm_pu, 1e-6)
+    assert np.allclose(net_wls.res_bus_est.va_degree, net.res_bus_est.va_degree, 1e-6)
 
 
 def test_shgm_ps():
@@ -57,14 +57,12 @@ def test_shgm_ps():
 
 
 def test_irwls_shgm():
-    net = nw.case30()
+    net = nw.case14()
     pp.runpp(net)
-    add_virtual_meas_from_loadflow(net)
+    add_virtual_meas_from_loadflow(net, p_std_dev=0.01, q_std_dev=0.01)
     success = estimate(net, algorithm="irwls", estimator="shgm", 
                        a=3, maximum_iterations=50)
     assert success
-
-    # SHGM Estimator should deliver better results as wls estimator
     assert np.allclose(net.res_bus.vm_pu, net.res_bus_est.vm_pu, 1e-2)
     assert np.allclose(net.res_bus.va_degree, net.res_bus_est.va_degree, 1e-2)
 

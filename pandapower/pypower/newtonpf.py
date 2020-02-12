@@ -4,7 +4,7 @@
 # Use of this source code is governed by a BSD-style
 # license that can be found in the LICENSE file.
 
-# Copyright (c) 2016-2019 by University of Kassel and Fraunhofer Institute for Energy Economics
+# Copyright (c) 2016-2020 by University of Kassel and Fraunhofer Institute for Energy Economics
 # and Energy System Technology (IEE), Kassel. All rights reserved.
 
 
@@ -39,7 +39,7 @@ def newtonpf(Ybus, Sbus, V0, pv, pq, ppci, options):
     Modified by University of Kassel (Florian Schaefer) to use numba
     """
 
-    ## options
+    # options
     tol = options['tolerance_mva']
     max_it = options["max_iteration"]
     numba = options["numba"]
@@ -51,7 +51,7 @@ def newtonpf(Ybus, Sbus, V0, pv, pq, ppci, options):
     bus = ppci['bus']
     gen = ppci['gen']
 
-    ## initialize
+    # initialize
     i = 0
     V = V0
     Va = angle(V)
@@ -61,13 +61,13 @@ def newtonpf(Ybus, Sbus, V0, pv, pq, ppci, options):
         dVm, dVa = zeros_like(Vm), zeros_like(Va)
 
     if v_debug:
-        Vm_it=Vm.copy()
-        Va_it=Va.copy()
+        Vm_it = Vm.copy()
+        Va_it = Va.copy()
     else:
-        Vm_it=None
-        Va_it=None
+        Vm_it = None
+        Va_it = None
 
-    ## set up indexing for updating V
+    # set up indexing for updating V
     pvpq = r_[pv, pq]
     # generate lookup pvpq -> index pvpq (used in createJ)
     pvpq_lookup = zeros(max(Ybus.indices) + 1, dtype=int)
@@ -79,28 +79,28 @@ def newtonpf(Ybus, Sbus, V0, pv, pq, ppci, options):
     npv = len(pv)
     npq = len(pq)
     j1 = 0
-    j2 = npv  ## j1:j2 - V angle of pv buses
+    j2 = npv  # j1:j2 - V angle of pv buses
     j3 = j2
-    j4 = j2 + npq  ## j3:j4 - V angle of pq buses
+    j4 = j2 + npq  # j3:j4 - V angle of pq buses
     j5 = j4
-    j6 = j4 + npq  ## j5:j6 - V mag of pq buses
+    j6 = j4 + npq  # j5:j6 - V mag of pq buses
 
-    ## evaluate F(x0)
+    # evaluate F(x0)
     F = _evaluate_Fx(Ybus, V, Sbus, pv, pq)
     converged = _check_for_convergence(F, tol)
 
     Ybus = Ybus.tocsr()
     J = None
 
-    ## do Newton iterations
+    # do Newton iterations
     while (not converged and i < max_it):
-        ## update iteration counter
+        # update iteration counter
         i = i + 1
 
         J = create_jacobian_matrix(Ybus, V, pvpq, pq, createJ, pvpq_lookup, npv, npq, numba)
 
         dx = -1 * spsolve(J, F)
-        ## update voltage
+        # update voltage
         if npv and not iwamoto:
             Va[pv] = Va[pv] + dx[j1:j2]
         if npq and not iwamoto:
@@ -112,12 +112,12 @@ def newtonpf(Ybus, Sbus, V0, pv, pq, ppci, options):
             Vm, Va = _iwamoto_step(Ybus, J, F, dx, pq, npv, npq, dVa, dVm, Vm, Va, pv, j1, j2, j3, j4, j5, j6)
 
         V = Vm * exp(1j * Va)
-        Vm = abs(V)  ## update Vm and Va again in case
-        Va = angle(V)  ## we wrapped around with a negative Vm
+        Vm = abs(V)  # update Vm and Va again in case
+        Va = angle(V)  # we wrapped around with a negative Vm
 
         if v_debug:
-            Vm_it=column_stack((Vm_it,Vm))
-            Va_it=column_stack((Va_it,Va))
+            Vm_it = column_stack((Vm_it, Vm))
+            Va_it = column_stack((Va_it, Va))
 
         if voltage_depend_loads:
             Sbus = makeSbus(baseMVA, bus, gen, vm=Vm)
@@ -130,7 +130,7 @@ def newtonpf(Ybus, Sbus, V0, pv, pq, ppci, options):
 
 
 def _evaluate_Fx(Ybus, V, Sbus, pv, pq):
-    ## evalute F(x)
+    # evalute F(x)
     mis = V * conj(Ybus * V) - Sbus
     F = r_[mis[pv].real,
            mis[pq].real,
@@ -141,5 +141,3 @@ def _evaluate_Fx(Ybus, V, Sbus, pv, pq):
 def _check_for_convergence(F, tol):
     # calc infinity norm
     return linalg.norm(F, Inf) < tol
-
-

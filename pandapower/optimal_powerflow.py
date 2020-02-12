@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-# Copyright (c) 2016-2019 by University of Kassel and Fraunhofer Institute for Energy Economics
+# Copyright (c) 2016-2020 by University of Kassel and Fraunhofer Institute for Energy Economics
 # and Energy System Technology (IEE), Kassel. All rights reserved.
 
 
@@ -39,6 +39,7 @@ def _optimal_powerflow(net, verbose, suppress_warnings, **kwargs):
     reset_results(net)
 
     ppc, ppci = _pd2ppc(net)
+
     if not ac:
         ppci["bus"][:, VM] = 1.0
     net["_ppc_opf"] = ppci

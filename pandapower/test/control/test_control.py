@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-# Copyright (c) 2016-2019 by University of Kassel and Fraunhofer Institute for Energy Economics
+# Copyright (c) 2016-2020 by University of Kassel and Fraunhofer Institute for Energy Economics
 # and Energy System Technology (IEE), Kassel. All rights reserved.
 
 import copy
@@ -73,7 +73,7 @@ def test_add_get_controller(net):
     my_controller = ControllerTester(net, 0, -1, 2, name="test")
 
     # assert that we get, what we set
-    assert net.controller.controller.at[my_controller.index] is my_controller
+    assert net.controller.object.at[my_controller.index] is my_controller
 
 
 def test_ctrl_unconverged(net):
@@ -109,9 +109,9 @@ def test_conflicting_controllers(net):
     # several controllers for the same element, with different setpoints
     # this is wrong, ch.run_loadflow must fail in such situation!
     tol = 1e-6
-    ContinuousTapControl(net, 0, u_set=0.98, tol=tol, order=0)
-    ContinuousTapControl(net, 0, u_set=1.02, tol=tol, order=1)
-    ContinuousTapControl(net, 0, u_set=1.05, tol=tol, order=2)
+    ContinuousTapControl(net, 0, vm_set_pu=0.98, tol=tol, order=0)
+    ContinuousTapControl(net, 0, vm_set_pu=1.02, tol=tol, order=1)
+    ContinuousTapControl(net, 0, vm_set_pu=1.05, tol=tol, order=2)
 
     with pytest.raises(ct.ControllerNotConverged):
         pp.runpp(net, run_control=True)

@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-# Copyright (c) 2016-2019 by University of Kassel and Fraunhofer Institute for Energy Economics
+# Copyright (c) 2016-2020 by University of Kassel and Fraunhofer Institute for Energy Economics
 # and Energy System Technology (IEE), Kassel. All rights reserved.
 
 
@@ -41,7 +41,7 @@ def test_cost_mixed():
     pp.create_poly_cost(net, 0, "gen", cp1_eur_per_mw=1)
     pp.runopp(net)
     assert net["OPF_converged"]
-    assert net.res_cost == net.res_gen.p_mw.values[0]
+    assert np.isclose(net.res_cost, net.res_gen.p_mw.values[0])
 
     net.poly_cost.cp1_eur_per_mw.at[0] = 0
     net.poly_cost.cp2_eur_per_mw2.at[0] = 1
@@ -116,6 +116,7 @@ def test_mixed_p_q_pwl():
     pp.runopp(net)
     assert net["OPF_converged"]
     assert np.allclose(net.res_cost, net.res_gen.p_mw.values + net.res_gen.q_mvar.values)
+
 
 if __name__ == "__main__":
     # vm_max = 1.05

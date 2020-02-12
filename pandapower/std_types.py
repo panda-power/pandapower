@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-# Copyright (c) 2016-2019 by University of Kassel and Fraunhofer Institute for Energy Economics
+# Copyright (c) 2016-2020 by University of Kassel and Fraunhofer Institute for Energy Economics
 # and Energy System Technology (IEE), Kassel. All rights reserved.
 
 
@@ -25,7 +25,7 @@ def create_std_type(net, data, name, element="line", overwrite=True, check_requi
     additional parameters can be added and later loaded into pandapower with the function
     "parameter_from_std_type".
 
-    \* only considered in loadflow if calculate_voltage_angles = True
+    ** only considered in loadflow if calculate_voltage_angles = True
 
     The standard type is saved into the pandapower library of the given network by default.
 

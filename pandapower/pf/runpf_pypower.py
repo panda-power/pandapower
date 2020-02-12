@@ -4,7 +4,7 @@
 # Use of this source code is governed by a BSD-style
 # license that can be found in the LICENSE file.
 
-# Copyright (c) 2016-2019 by University of Kassel and Fraunhofer Institute for Energy Economics
+# Copyright (c) 2016-2020 by University of Kassel and Fraunhofer Institute for Energy Economics
 # and Energy System Technology (IEE), Kassel. All rights reserved.
 
 
@@ -119,13 +119,12 @@ def _import_numba_extensions_if_flag_is_true(numba):
 
 
 def _get_Y_bus(ppci, recycle, makeYbus, baseMVA, bus, branch):
-    if recycle["Ybus"] and ppci["internal"]["Ybus"].size:
+    if recycle is not None and not recycle["trafo"] and ppci["internal"]["Ybus"].size:
         Ybus, Yf, Yt = ppci["internal"]['Ybus'], ppci["internal"]['Yf'], ppci["internal"]['Yt']
     else:
         ## build admittance matrices
         Ybus, Yf, Yt = makeYbus(baseMVA, bus, branch)
-        if recycle["Ybus"]:
-            ppci["internal"]['Ybus'], ppci["internal"]['Yf'], ppci["internal"]['Yt'] = Ybus, Yf, Yt
+        ppci["internal"]['Ybus'], ppci["internal"]['Yf'], ppci["internal"]['Yt'] = Ybus, Yf, Yt
 
     return ppci, Ybus, Yf, Yt
 

@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-# Copyright (c) 2016-2019 by University of Kassel and Fraunhofer Institute for Energy Economics
+# Copyright (c) 2016-2020 by University of Kassel and Fraunhofer Institute for Energy Economics
 # and Energy System Technology (IEE), Kassel. All rights reserved.
 
 import tempfile
@@ -20,7 +20,7 @@ from pandapower.timeseries.run_time_series import run_timeseries, control_diagno
 
 logger = logging.getLogger(__name__)
 
-
+@pytest.fixture
 def simple_test_net():
     net = pp.create_empty_network()
     pp.set_user_pf_options(net, init='dc', calculate_voltage_angles=True)
@@ -94,8 +94,8 @@ def setup_output_writer(net, time_steps):
     return ow
 
 
-def test_const_control():
-    net = simple_test_net()
+def test_const_control(simple_test_net):
+    net = simple_test_net
     profiles, ds = create_data_source()
     time_steps = range(0, 10)
     ow = setup_output_writer(net, time_steps)
@@ -111,8 +111,8 @@ def test_const_control():
     assert np.alltrue(profiles['slack_v'].values == ow.output['res_bus.vm_pu'][0].values)
 
 
-def test_false_alarm_trafos():
-    net = simple_test_net()
+def test_false_alarm_trafos(simple_test_net):
+    net = simple_test_net
 
     import io
     s = io.StringIO()
@@ -136,10 +136,10 @@ def test_false_alarm_trafos():
     del s
 
 
-def test_timeseries_results():
+def test_timeseries_results(simple_test_net):
     # This test compares output writer results with input
     # test net
-    net = simple_test_net()
+    net = simple_test_net
     net.user_pf_options = dict()
 
     n_timesteps = 5
@@ -171,11 +171,11 @@ def test_timeseries_results():
     assert np.allclose(ow.output['res_load.p_mw'][0].sum(), profiles["load1"].sum())
 
 
-def test_timeseries_var_func():
+def test_timeseries_var_func(simple_test_net):
     # This test checks if the output writer works with a user defined function
 
     # test net
-    net = simple_test_net()
+    net = simple_test_net
 
     n_timesteps = 5
     profiles, ds = create_data_source(n_timesteps)
@@ -213,8 +213,8 @@ def test_timeseries_var_func():
         time_steps[-1], "mv_bus_min"]
 
 
-def test_time_steps():
-    net = simple_test_net()
+def test_time_steps(simple_test_net):
+    net = simple_test_net
     n_timesteps = 11
     profiles, ds = create_data_source(n_timesteps)
     # 1load
@@ -231,8 +231,8 @@ def test_time_steps():
     run_timeseries(net, time_steps=(0, 10))
 
 
-def test_output_dump_after_time():
-    net = simple_test_net()
+def test_output_dump_after_time(simple_test_net):
+    net = simple_test_net
 
     n_timesteps = 100
     profiles, ds = create_data_source(n_timesteps)

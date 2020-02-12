@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-# Copyright (c) 2016-2019 by University of Kassel and Fraunhofer Institute for Energy Economics
+# Copyright (c) 2016-2020 by University of Kassel and Fraunhofer Institute for Energy Economics
 # and Energy System Technology (IEE), Kassel. All rights reserved.
 
 import warnings
@@ -21,19 +21,22 @@ __all__ = ['BaseAlgebra', 'BaseAlgebraZeroInjConstraints']
 
 class BaseAlgebra:
     def __init__(self, eppci: ExtendedPPCI):
-        np.seterr(divide='ignore', invalid='ignore')
         self.eppci = eppci
 
-        self.fb = eppci.branch[:, F_BUS].real.astype(int)
-        self.tb = eppci.branch[:, T_BUS].real.astype(int)
-        self.n_bus = eppci.bus.shape[0]
-        self.n_branch = eppci.branch.shape[0]
-        self.baseMVA = eppci.baseMVA
-        self.bus_baseKV = eppci.bus_baseKV
+        self.fb = eppci['branch'][:, F_BUS].real.astype(int)
+        self.tb = eppci['branch'][:, T_BUS].real.astype(int)
+        self.n_bus = eppci['bus'].shape[0]
+        self.n_branch = eppci['branch'].shape[0]
+
         self.num_non_slack_bus = eppci.num_non_slack_bus
         self.non_slack_buses = eppci.non_slack_buses
         self.delta_v_bus_mask = eppci.delta_v_bus_mask
         self.non_nan_meas_mask = eppci.non_nan_meas_mask
+
+        self.any_i_meas = eppci.any_i_meas
+        self.any_degree_meas = eppci.any_degree_meas
+        self.delta_v_bus_selector = eppci.delta_v_bus_selector
+        self.non_nan_meas_selector = eppci.non_nan_meas_selector
         self.z = eppci.z
         self.sigma = eppci.r_cov
 
@@ -42,61 +45,50 @@ class BaseAlgebra:
         self.Yt = None
         self.initialize_Y()
 
-        self.v = eppci.v_init.copy()
-        self.delta = eppci.delta_init.copy()
-
-    # Function which builds a node admittance matrix out of the topology data
-    # In addition, it provides the series admittances of lines as G_series and B_series
     def initialize_Y(self):
-        with warnings.catch_warnings():
-            warnings.simplefilter("ignore")
-            Ybus, Yf, Yt = makeYbus(self.eppci["baseMVA"], self.eppci["bus"], self.eppci["branch"])
-            self.eppci['internal']['Yf'], self.eppci['internal']['Yt'],\
-                self.eppci['internal']['Ybus'] = Yf, Yt, Ybus
-
-        # create relevant matrices in sparse form
-        self.Ybus, self.Yf, self.Yt = Ybus, Yf, Yt
-
-    def _e2v(self, E):
-        self.v = E[self.num_non_slack_bus:]
-        self.delta[self.non_slack_buses] = E[:self.num_non_slack_bus]
-        return self.v, self.delta
+        self.Ybus, self.Yf, self.Yt = self.eppci.get_Y()
 
     def create_rx(self, E):
         hx = self.create_hx(E)
         return (self.z - hx).ravel()
 
     def create_hx(self, E):
-        v, delta = self._e2v(E)
         f_bus, t_bus = self.fb, self.tb
-        V = v * np.exp(1j * delta)
-        Sfe = V[f_bus] * np.conj(self.Yf * V) 
+        V = self.eppci.E2V(E)
+        Sfe = V[f_bus] * np.conj(self.Yf * V)
         Ste = V[t_bus] * np.conj(self.Yt * V)
-        Sbuse = V * np.conj(self.Ybus * V) 
-        Ife = np.abs(Sfe)/v[f_bus]
-        Ite = np.abs(Ste)/v[t_bus]
-        hx = np.r_[np.real(Sbuse) * self.baseMVA,
-                   np.real(Sfe) * self.baseMVA,
-                   np.real(Ste) * self.baseMVA,
-                   np.imag(Sbuse) * self.baseMVA,
-                   np.imag(Sfe) * self.baseMVA,
-                   np.imag(Ste) * self.baseMVA,
-                   v,
-                   Ife * self.baseMVA / self.bus_baseKV[f_bus],
-                   Ite * self.baseMVA / self.bus_baseKV[t_bus]] 
-        return hx[self.non_nan_meas_mask]
+        Sbuse = V * np.conj(self.Ybus * V)
+        hx = np.r_[np.real(Sbuse),
+                   np.real(Sfe),
+                   np.real(Ste),
+                   np.imag(Sbuse),
+                   np.imag(Sfe),
+                   np.imag(Ste),
+                   np.abs(V)]
+
+        if self.any_i_meas or self.any_degree_meas:
+            va = np.angle(V)
+            Ife = self.Yf * V
+            ifem = np.abs(Ife)
+            ifea = np.angle(Ife)
+            Ite = self.Yt * V
+            item = np.abs(Ite)
+            itea = np.angle(Ite)
+            hx = np.r_[hx,
+                       va,
+                       ifem,
+                       item,
+                       ifea,
+                       itea]
+        return hx[self.non_nan_meas_selector]
 
     def create_hx_jacobian(self, E):
         # Using sparse matrix in creation sub-jacobian matrix
-        v, delta = self._e2v(E)
-
-        f_bus, t_bus = self.fb, self.tb
-        V = v * np.exp(1j * delta)
+        V = self.eppci.E2V(E)
 
         dSbus_dth, dSbus_dv = self._dSbus_dv(V)
         dSf_dth, dSf_dv, dSt_dth, dSt_dv = self._dSbr_dv(V)
-        dif_dth, dif_dv, dit_dth, dit_dv = self._dibr_dv(V)
-        dv_dth, dv_dv = self._dVbus_dv(V)
+        dvm_dth, dvm_dv = self._dvmbus_dV(V)
 
         s_jac_th = vstack((dSbus_dth.real,
                            dSf_dth.real,
@@ -111,50 +103,80 @@ class BaseAlgebra:
                           dSf_dv.imag,
                           dSt_dv.imag))
 
-        s_jac = hstack((s_jac_th, s_jac_v)).toarray() * self.baseMVA
-        v_jac = np.c_[dv_dth, dv_dv]
-        i_jac = vstack((hstack((dif_dth, dif_dv)),
-                        hstack((dit_dth, dit_dv)))).toarray() *\
-                        (self.baseMVA / np.r_[self.bus_baseKV[f_bus], 
-                                              self.bus_baseKV[t_bus]]).reshape(-1, 1)
-        return np.r_[s_jac,
-                     v_jac,
-                     i_jac][self.non_nan_meas_mask, :][:, self.delta_v_bus_mask]
+        s_jac = hstack((s_jac_th, s_jac_v)).toarray()
+        vm_jac = np.c_[dvm_dth, dvm_dv]
+        jac = np.r_[s_jac,
+                    vm_jac]
+
+        if self.any_i_meas or self.any_degree_meas:
+            dva_dth, dva_dv = self._dvabus_dV(V)
+            va_jac = np.c_[dva_dth, dva_dv]
+            difm_dth, difm_dv, ditm_dth, ditm_dv,\
+                difa_dth, difa_dv, dita_dth, dita_dv = self._dimiabr_dV(V)
+            im_jac_th = np.r_[difm_dth,
+                              ditm_dth]
+            im_jac_v = np.r_[difm_dv,
+                             ditm_dv]
+            ia_jac_th = np.r_[difa_dth,
+                              dita_dth]
+            ia_jac_v = np.r_[difa_dv,
+                             dita_dv]
+
+            im_jac = np.c_[im_jac_th, im_jac_v]
+            ia_jac = np.c_[ia_jac_th, ia_jac_v]
+
+            jac = np.r_[jac,
+                        va_jac,
+                        im_jac,
+                        ia_jac]
+
+        return jac[self.non_nan_meas_selector, :][:, self.delta_v_bus_selector]
 
     def _dSbus_dv(self, V):
         dSbus_dv, dSbus_dth = dSbus_dV(self.Ybus, V)
         return dSbus_dth, dSbus_dv
 
     def _dSbr_dv(self, V):
-        dSf_dth, dSf_dv, dSt_dth, dSt_dv, _, _ = dSbr_dV(self.eppci.branch, self.Yf, self.Yt, V)
+        dSf_dth, dSf_dv, dSt_dth, dSt_dv, _, _ = dSbr_dV(self.eppci['branch'], self.Yf, self.Yt, V)
         return dSf_dth, dSf_dv, dSt_dth, dSt_dv
 
-    def _dVbus_dv(self, V):
-        dv_dth, dv_dv = np.zeros((V.shape[0], V.shape[0])), np.eye(V.shape[0], V.shape[0])
-        return dv_dth, dv_dv
+    def _dvmbus_dV(self, V):
+        dvm_dth, dvm_dv = np.zeros((V.shape[0], V.shape[0])), np.eye(V.shape[0], V.shape[0])
+        return dvm_dth, dvm_dv
 
-    def _dibr_dv(self, V):
+    def _dvabus_dV(self, V):
+        dva_dth, dva_dv = np.eye(V.shape[0], V.shape[0]), np.zeros((V.shape[0], V.shape[0]))
+        return dva_dth, dva_dv
+
+    def _dimiabr_dV(self, V):
         # for current we only interest in the magnitude at the moment
-        dif_dth, dif_dv, dit_dth, dit_dv, _, _ = map(np.abs, dIbr_dV(self.eppci.branch, self.Yf, self.Yt, V))
-        return dif_dth, dif_dv, dit_dth, dit_dv
+        dif_dth, dif_dv, dit_dth, dit_dv, If, It = dIbr_dV(self.eppci['branch'], self.Yf, self.Yt, V)
+        dif_dth, dif_dv, dit_dth, dit_dv = map(lambda m: m.toarray(), (dif_dth, dif_dv, dit_dth, dit_dv))
+        difm_dth = (np.abs(1e-5 * dif_dth + If.reshape((-1, 1))) - np.abs(If.reshape((-1, 1))))/1e-5
+        difm_dv = (np.abs(1e-5 * dif_dv + If.reshape((-1, 1))) - np.abs(If.reshape((-1, 1))))/1e-5
+        ditm_dth = (np.abs(1e-5 * dit_dth + It.reshape((-1, 1))) - np.abs(It.reshape((-1, 1))))/1e-5
+        ditm_dv = (np.abs(1e-5 * dit_dv + It.reshape((-1, 1))) - np.abs(It.reshape((-1, 1))))/1e-5
+        difa_dth = (np.angle(1e-5 * dif_dth + If.reshape((-1, 1))) - np.angle(If.reshape((-1, 1))))/1e-5
+        difa_dv = (np.angle(1e-5 * dif_dv + If.reshape((-1, 1))) - np.angle(If.reshape((-1, 1))))/1e-5
+        dita_dth = (np.angle(1e-5 * dit_dth + It.reshape((-1, 1))) - np.angle(It.reshape((-1, 1))))/1e-5
+        dita_dv = (np.angle(1e-5 * dit_dv + It.reshape((-1, 1))) - np.angle(It.reshape((-1, 1))))/1e-5
+        return difm_dth, difm_dv, ditm_dth, ditm_dv, difa_dth, difa_dv, dita_dth, dita_dv   
 
 
 class BaseAlgebraZeroInjConstraints(BaseAlgebra):
     def create_cx(self, E, p_zero_inj, q_zero_inj):
-        v, delta = self._e2v(E)
-        V = v * np.exp(1j * delta)
+        V = self.eppci.E2V(E)
         Sbus = V * np.conj(self.Ybus * V)
         c = np.r_[Sbus[p_zero_inj].real,
-                  Sbus[q_zero_inj].imag] * self.baseMVA
+                  Sbus[q_zero_inj].imag] * self.eppci['baseMVA']
         return c
 
     def create_cx_jacobian(self, E, p_zero_inj, q_zero_inj):
-        v, delta = self._e2v(E)
-        V = v * np.exp(1j * delta)
+        V = self.eppci.E2V(E)
         dSbus_dth, dSbus_dv = self._dSbus_dv(V)
         c_jac_th = np.r_[dSbus_dth.toarray().real[p_zero_inj],
                          dSbus_dth.toarray().imag[q_zero_inj]]
         c_jac_v = np.r_[dSbus_dv.toarray().real[p_zero_inj],
                         dSbus_dv.toarray().imag[q_zero_inj]]
         c_jac = np.c_[c_jac_th, c_jac_v]
-        return c_jac[:, self.delta_v_bus_mask]  
+        return c_jac[:, self.delta_v_bus_mask]

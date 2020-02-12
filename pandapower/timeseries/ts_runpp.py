@@ -238,7 +238,7 @@ class TimeSeriesRunpp:
                                                                   branch)
 
     def get_update_ctrl(self):
-        controllers = self.net.controller["controller"]
+        controllers = self.net.controller["object"]
         update_pq = False
         update_trafo = False
         for controller in controllers:

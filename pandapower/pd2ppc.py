@@ -1,28 +1,23 @@
 # -*- coding: utf-8 -*-
 
-# Copyright (c) 2016-2019 by University of Kassel and Fraunhofer Institute for Energy Economics
+# Copyright (c) 2016-2020 by University of Kassel and Fraunhofer Institute for Energy Economics
 # and Energy System Technology (IEE), Kassel. All rights reserved.
 
 
-import copy
-
 import numpy as np
 
+import pandapower.auxiliary as aux
+from pandapower.build_branch import _build_branch_ppc, _switch_branches, _branches_with_oos_buses
+from pandapower.build_bus import _build_bus_ppc, _calc_pq_elements_and_add_on_ppc, \
+    _calc_shunts_and_add_on_ppc, _add_gen_impedances_ppc, _add_motor_impedances_ppc
+from pandapower.build_gen import _build_gen_ppc, _check_voltage_setpoints_at_same_bus, \
+    _check_voltage_angles_at_same_bus, _check_for_reference_bus
+from pandapower.opf.make_objective import _make_objective
 from pandapower.pypower.idx_area import PRICE_REF_BUS
 from pandapower.pypower.idx_brch import F_BUS, T_BUS, BR_STATUS
 from pandapower.pypower.idx_bus import NONE, BUS_I, BUS_TYPE
 from pandapower.pypower.idx_gen import GEN_BUS, GEN_STATUS
-
 from pandapower.pypower.run_userfcn import run_userfcn
-
-import pandapower.auxiliary as aux
-from pandapower.build_branch import _build_branch_ppc, _switch_branches, _branches_with_oos_buses, \
-    _update_trafo_trafo3w_ppc
-from pandapower.build_bus import _build_bus_ppc, _calc_pq_elements_and_add_on_ppc, \
-    _calc_shunts_and_add_on_ppc, _add_gen_impedances_ppc, _add_motor_impedances_ppc
-from pandapower.build_gen import _build_gen_ppc, _update_gen_ppc, _check_voltage_setpoints_at_same_bus, \
-    _check_voltage_angles_at_same_bus, _check_for_reference_bus
-from pandapower.opf.make_objective import _make_objective
 
 
 def _pd2ppc(net):
@@ -147,7 +142,7 @@ def _init_ppc(net, mode="pf"):
     return ppc
 
 
-def _ppc2ppci(ppc, net):
+def _ppc2ppci(ppc, net, ppci=None):
     """
     Creates the ppci which is used to run the power flow / OPF...
     The ppci is similar to the ppc except that:
@@ -165,7 +160,8 @@ def _ppc2ppci(ppc, net):
 
     """
     # get empty ppci
-    ppci = _init_ppc(net, mode=net["_options"]["mode"])
+    if ppci is None:
+        ppci = _init_ppc(net, mode=net["_options"]["mode"])
     # BUS Sorting and lookups
     # get bus_lookup
     bus_lookup = net["_pd2ppc_lookups"]["bus"]
@@ -281,45 +277,5 @@ def _init_lookup(net, lookup_name, pandapower_index, ppc_index):
 
     # update lookup
     lookup[pandapower_index] = ppc_index
+
     aux._write_lookup_to_net(net, lookup_name, lookup)
-
-
-def _update_ppc(net):
-    """
-    Updates P, Q values of the ppc with changed values from net
-
-    @param _is_elements:
-    @return:
-    """
-    # select elements in service (time consuming, so we do it once)
-    net["_is_elements"] = aux._select_is_elements_numba(net)
-
-    recycle = net["_options"]["recycle"]
-    # get the old ppc and lookup
-    ppc = net["_ppc"]
-    ppci = copy.deepcopy(ppc)
-    # adds P and Q for loads / sgens in ppc['bus'] (PQ nodes)
-    _calc_pq_elements_and_add_on_ppc(net, ppc)
-    # adds P and Q for shunts, wards and xwards (to PQ nodes)
-    _calc_shunts_and_add_on_ppc(net, ppc)
-    # updates values for gen
-    _update_gen_ppc(net, ppc)
-    # check if any generators connected to the same bus have different voltage setpoints
-    _check_voltage_setpoints_at_same_bus(ppc)
-
-    if not recycle["Ybus"]:
-        # updates trafo and trafo3w values
-        _update_trafo_trafo3w_ppc(net, ppc)
-
-    # get OOS buses and place them at the end of the bus array (so that: 3
-    # (REF), 2 (PV), 1 (PQ), 4 (OOS))
-    oos_busses = ppc['bus'][:, BUS_TYPE] == NONE
-    # there are no OOS busses in the ppci
-    ppci['bus'] = ppc['bus'][~oos_busses]
-    # select in service elements from ppc and put them in ppci
-    brs = ppc["internal"]["branch_is"]
-    gs = ppc["internal"]["gen_is"]
-    ppci["branch"] = ppc["branch"][brs]
-    ppci["gen"] = ppc["gen"][gs]
-
-    return ppc, ppci

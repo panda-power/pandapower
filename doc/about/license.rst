@@ -10,7 +10,7 @@ License
 pandapower is published under the following 3-clause BSD license: ::
 
 
-    Copyright (c) 2018 by University of Kassel and Fraunhofer Institute for Fraunhofer Institute for 
+    Copyright (c) 2020 by University of Kassel and Fraunhofer Institute for Fraunhofer Institute for 
     Energy Economics and Energy System Technology (IEE) Kassel and individual contributors
    (see AUTHORS file for details). All rights reserved.
 

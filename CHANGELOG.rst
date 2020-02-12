@@ -1,18 +1,40 @@
 Change Log
 =============
-- [ADDED] PowerModels.jl converter callable without running the PowerModels optimization
-- [ADDED] A lot of PowerModels features like network data check and different solver
-- [FIXED] Smaller Bugfixes in PowerModels conversion, OPF in general and tests
-- [CHANGED] OPF bounds and settings for gens. limits or fixed values can now be enforced. See #511
-- [FIXED] renew opf_task() toolbox function which got outdated
-- [CHANGED] OPF documentation and _check_necessary_opf_parameters()
-- [FIXED] dtype at element parameter in cost tables
-- [ADDED] reindex_buses() toolbox function
-- [ADDED] toolbox function select_subnet now also copies cost data and net parameters
-- [ADDED] consideration of result tables in toolbox functions drop...
-- [ADDED] jupyter notebook examples for time series
+
+[2.2.1]- 2020-01-29
+----------------------
+- [FIXED] Missing csv files #625
+- [FIXED] deepcopy speed and missing DataFrames in net #620, #631
+- [FIXED] simple plotly error with generic coords #619
+- [FIXED] create line with passed geodata #610
+- [FIXED] ConstControl write to and all_index attribute #609
+- [FIXED] collection plotting issue #608
+
+
+[2.2.0]- 2020-01-17
+----------------------
 - [ADDED] control and timeseries module
-- [ADDED] jupyter notebook for power storage optimization with PowerModels.jl
+- [ADDED] Support phasor measurement in state estimation
+- [ADDED] Support recycle in state estimation
+- [ADDED] PowerModels.jl converter callable without running the PowerModels optimization
+- [ADDED] Other PowerModels features via interface callable (e.g. network data check and different solver)
+- [ADDED] toolbox function select_subnet now also copies cost data and net parameters
+- [ADDED] consideration of result tables in toolbox functions drop
+- [ADDED] new jupyter notebook examples for time series, controller and PowerModels.jl interface
+- [ADDED] reindex_buses() toolbox function
+
+- [FIXED] Bugfixes in PowerModels conversion, OPF in general and tests
+- [FIXED] renew opf_task() toolbox function which got outdated
+- [FIXED] dtype at element parameter in cost tables
+- [FIXED] convert_format.py: added the renaming of controller column and of the controller attributes, added tests for version 2.1.0
+
+- [CHANGED] Unified the mesurement unit conversion of state estimation in ppc conversion
+- [CHANGED] OPF bounds and settings for gens. limits or fixed values can now be enforced. See #511
+- [CHANGED] OPF documentation and _check_necessary_opf_parameters()
+- [CHANGED] JSON I/O: pandapower objects that are derived from JSONSerializableClass are now instantiated using __new__ instead of __init__ (as before), and the serialization has been adjusted; self.update_initialized(locals()) is not necessary anymore and has been removed; restore_json_objects is not needed anymore and has been removed
+- [CHANGED] column name in net.controller: "controller" -> "object"
+- [CHANGED] variable names in ContinuousTapControl ("u_set" -> "vm_set_pu") and in DiscreteTapControl ("u_lower" -> "vm_lower_pu", "u_upper" -> "vm_upper_pu")
+- [CHANGED] __version__ is now changed to 2.2.0
 
 [2.1.0]- 2019-07-08
 ----------------------

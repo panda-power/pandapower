@@ -1,10 +1,11 @@
 # -*- coding: utf-8 -*-
 
-# Copyright (c) 2016-2019 by University of Kassel and Fraunhofer Institute for Energy Economics
+# Copyright (c) 2016-2020 by University of Kassel and Fraunhofer Institute for Energy Economics
 # and Energy System Technology (IEE), Kassel. All rights reserved.
 
 import copy
-from collections import Iterable, defaultdict
+from collections import defaultdict
+from collections.abc import Iterable
 from itertools import chain
 
 import numpy as np
@@ -13,7 +14,8 @@ from packaging import version
 
 from pandapower.auxiliary import get_indices, pandapowerNet, _preserve_dtypes
 from pandapower.create import create_switch, create_line_from_parameters, \
-    create_impedance, create_empty_network, create_gen, create_ext_grid
+    create_impedance, create_empty_network, create_gen, create_ext_grid, \
+    create_load, create_shunt, create_bus, create_sgen
 from pandapower.opf.validate_opf_input import _check_necessary_opf_parameters
 from pandapower.run import runpp
 from pandapower.topology import unsupplied_buses
@@ -61,6 +63,18 @@ def pp_elements(bus=True, bus_elements=True, branch_elements=True, other_element
     if other_elements:
         pp_elms |= {"measurement"}
     return pp_elms
+
+
+def branch_element_bus_dict(include_switch=False):
+    """ """
+    ebts = element_bus_tuples(bus_elements=False, branch_elements=True, res_elements=False)
+    branch_elements = {ebt[0] for ebt in ebts}
+    bebd = {elm: [] for elm in branch_elements}
+    for elm, bus in ebts:
+        bebd[elm].append(bus)
+    if not include_switch:
+        del bebd["switch"]
+    return bebd
 
 
 # def pq_from_cosphi(s, cosphi, qmode, pmode):
@@ -815,7 +829,7 @@ def add_zones_to_elements(net, replace=True, elements=None, **kwargs):
     add_column_from_node_to_elements(net, "zone", replace=replace, elements=elements, **kwargs)
 
 
-def reindex_buses(net, bus_lookup, partial_lookup=False):
+def reindex_buses(net, bus_lookup):
     """
     Changes the index of net.bus and considers the new bus indices in all other pandapower element
     tables.
@@ -824,14 +838,15 @@ def reindex_buses(net, bus_lookup, partial_lookup=False):
       **net** - pandapower network
 
       **bus_lookup** (dict) - the keys are the old bus indices, the values the new bus indices
-
-    OPTIONAL:
-      **partial_lookup** (bool, default False) - flag if bus_lookup is only part of the bus indices
     """
-    if partial_lookup:
-        full_bus_lookup = copy.deepcopy(bus_lookup)
-        full_bus_lookup.update({b: b for b in net.bus.index if b not in bus_lookup.keys()})
-        bus_lookup = full_bus_lookup
+    not_fitting_bus_lookup_keys = set(bus_lookup.keys()) - set(net.bus.index)
+    if len(not_fitting_bus_lookup_keys):
+        logger.error("These bus indices are unknown to net. Thus, they cannot be reindexed: " +
+                     str(not_fitting_bus_lookup_keys))
+
+    missing_bus_indices = sorted(set(net.bus.index) - set(bus_lookup.keys()))
+    if len(missing_bus_indices):
+        bus_lookup.update({b: b for b in missing_bus_indices})
 
     net.bus.index = get_indices(net.bus.index, bus_lookup)
     net.res_bus.index = get_indices(net.res_bus.index, bus_lookup)
@@ -897,8 +912,7 @@ def reindex_elements(net, element, new_indices, old_indices=None):
     lookup = dict(zip(old_indices, new_indices))
 
     if element == "bus":
-        partial = len(new_indices) < net[element].shape[0]
-        reindex_buses(net, lookup, partial_lookup=partial)
+        reindex_buses(net, lookup)
         return
 
     # --- reindex
@@ -925,6 +939,13 @@ def reindex_elements(net, element, new_indices, old_indices=None):
         net["line_geodata"]["index"] = net["line_geodata"].index
         net["line_geodata"].loc[old_indices, "index"] = get_indices(old_indices, lookup)
         net["line_geodata"].set_index("index", inplace=True)
+
+    # adapt index in cost dataframes
+    for cost_df in ["pwl_cost", "poly_cost"]:
+        element_in_cost_df = net[cost_df].et == element
+        if sum(element_in_cost_df):
+            net[cost_df].element.loc[element_in_cost_df] = get_indices(net[cost_df].element[
+                element_in_cost_df], lookup)
 
 
 def create_continuous_elements_index(net, start=0, add_df_to_reindex=set()):
@@ -1097,11 +1118,11 @@ def drop_switches_at_buses(net, buses):
     logger.info("dropped %d switches" % len(i))
 
 
-def drop_elements_at_buses(net, buses):
+def drop_elements_at_buses(net, buses, bus_elements=True, branch_elements=True):
     """
     drop elements connected to given buses
     """
-    for element, column in element_bus_tuples():
+    for element, column in element_bus_tuples(bus_elements, branch_elements, res_elements=False):
         if element == "switch":
             drop_switches_at_buses(net, buses)
 
@@ -1301,7 +1322,12 @@ def select_subnet(net, buses, include_switch_buses=False, include_results=False,
             if tb in buses and s["bus"] != tb:
                 buses.add(fb)
 
-    p2 = create_empty_network()
+    if keep_everything_else:
+        p2 = copy.deepcopy(net)
+        include_results = True  # assumption: the user doesn't want to old results without selection
+    else:
+        p2 = create_empty_network()
+        p2["std_types"] = copy.deepcopy(net["std_types"])
 
     net_parameters = ["name", "f_hz"]
     for net_parameter in net_parameters:
@@ -1363,12 +1389,7 @@ def select_subnet(net, buses, include_switch_buses=False, include_results=False,
            (s["et"] == "l" and s["element"] in p2["line"].index) or
            (s["et"] == "t" and s["element"] in p2["trafo"].index))]
     p2["switch"] = net["switch"].loc[si]
-    # return a pandapowerNet
-    if keep_everything_else:
-        newnet = copy.deepcopy(net)
-        newnet.update(p2)
-        return pandapowerNet(newnet)
-    p2["std_types"] = copy.deepcopy(net["std_types"])
+
     return pandapowerNet(p2)
 
 
@@ -1637,7 +1658,7 @@ def replace_ext_grid_by_gen(net, ext_grids=None):
         p_mw = 0 if ext_grid.Index not in net.res_ext_grid.index else net.res_ext_grid.at[
             ext_grid.Index, "p_mw"]
         idx = create_gen(net, ext_grid.bus, vm_pu=ext_grid.vm_pu, p_mw=p_mw, name=ext_grid.name,
-                         in_service=ext_grid.in_service)
+                         in_service=ext_grid.in_service, controllable=True)
         new_idx.append(idx)
         for col in existing_non_default_col:
             net.gen[col].at[idx] = getattr(ext_grid, col)
@@ -1650,14 +1671,18 @@ def replace_ext_grid_by_gen(net, ext_grids=None):
         if net[table].shape[0]:
             to_change = net[table].index[(net[table].et == "ext_grid") &
                                          (net[table].element.isin(ext_grids))]
-            net[table].et.loc[to_change] = "gen"
-            net[table].element.loc[to_change] = new_idx
+            if len(to_change):
+                net[table].et.loc[to_change] = "gen"
+                net[table].element.loc[to_change] = new_idx
 
     # --- result data
     if net.res_ext_grid.shape[0]:
         to_add = net.res_ext_grid.loc[ext_grids]
         to_add.index = new_idx
-        net.res_gen = pd.concat([net.res_gen, to_add])
+        if version.parse(pd.__version__) < version.parse("0.23"):
+            net.res_gen = pd.concat([net.res_gen, to_add])
+        else:
+            net.res_gen = pd.concat([net.res_gen, to_add], sort=True)
         net.res_ext_grid.drop(ext_grids, inplace=True)
 
 
@@ -1701,15 +1726,132 @@ def replace_gen_by_ext_grid(net, gens=None):
     for table in ["pwl_cost", "poly_cost"]:
         if net[table].shape[0]:
             to_change = net[table].index[(net[table].et == "gen") & (net[table].element.isin(gens))]
-            net[table].et.loc[to_change] = "ext_grid"
-            net[table].element.loc[to_change] = new_idx
+            if len(to_change):
+                net[table].et.loc[to_change] = "ext_grid"
+                net[table].element.loc[to_change] = new_idx
 
     # --- result data
     if net.res_gen.shape[0]:
         to_add = net.res_gen.loc[gens]
         to_add.index = new_idx
-        net.res_ext_grid = pd.concat([net.res_ext_grid, to_add])
+        if version.parse(pd.__version__) < version.parse("0.23"):
+            net.res_ext_grid = pd.concat([net.res_ext_grid, to_add])
+        else:
+            net.res_ext_grid = pd.concat([net.res_ext_grid, to_add], sort=True)
         net.res_gen.drop(gens, inplace=True)
+
+
+def replace_gen_by_sgen(net, gens=None):
+    """ Replaces generators by static generators.
+    INPUT:
+        **net** - pandapower net
+
+    OPTIONAL:
+        **gens** (iterable) - indices of generators which should be replaced
+    """
+    # --- determine gen index
+    if gens is None:
+        gens = net.gen.index
+    else:
+        gens = ensure_iterability(gens)
+
+    # --- consider columns which do not exist in pp net dataframes by default
+    non_default_col = ["max_p_mw", "min_p_mw", "max_q_mvar", "min_q_mvar"]
+    existing_non_default_col = net.gen.loc[gens].dropna(axis=1).columns.intersection(
+        non_default_col)
+    # add missing columns to net.sgen
+    missing_non_default_col = existing_non_default_col.difference(net.sgen.columns)
+    for col in missing_non_default_col:
+        net.sgen[col] = np.nan
+
+    # --- create sgens
+    new_idx = []
+    for gen in net.gen.loc[gens].itertuples():
+        q_mvar = 0. if gen.Index not in net.res_gen.index else net.res_gen.at[gen.Index, "q_mvar"]
+        controllable = True if "controllable" not in net.gen.columns else gen.controllable
+        idx = create_sgen(net, gen.bus, p_mw=gen.p_mw, q_mvar=q_mvar, name=gen.name,
+                          in_service=gen.in_service, controllable=controllable)
+        new_idx.append(idx)
+        for col in existing_non_default_col:
+            net.sgen[col].at[idx] = getattr(gen, col)
+
+    # --- drop replaced gens
+    net.gen.drop(gens, inplace=True)
+
+    # --- adapt cost data
+    for table in ["pwl_cost", "poly_cost"]:
+        if net[table].shape[0]:
+            to_change = net[table].index[(net[table].et == "gen") & (net[table].element.isin(gens))]
+            if len(to_change):
+                net[table].et.loc[to_change] = "sgen"
+                net[table].element.loc[to_change] = new_idx
+
+    # --- result data
+    if net.res_gen.shape[0]:
+        to_add = net.res_gen.loc[gens]
+        to_add.index = new_idx
+        if version.parse(pd.__version__) < version.parse("0.23"):
+            net.res_sgen = pd.concat([net.res_sgen, to_add])
+        else:
+            net.res_sgen = pd.concat([net.res_sgen, to_add], sort=True)
+        net.res_gen.drop(gens, inplace=True)
+
+
+def replace_sgen_by_gen(net, sgens=None):
+    """ Replaces static generators by generators.
+    INPUT:
+        **net** - pandapower net
+
+    OPTIONAL:
+        **sgens** (iterable) - indices of static generators which should be replaced
+    """
+    # --- determine sgen index
+    if sgens is None:
+        sgens = net.sgen.index
+    else:
+        sgens = ensure_iterability(sgens)
+
+    # --- consider columns which do not exist in pp net dataframes by default
+    non_default_col = ["max_p_mw", "min_p_mw", "max_q_mvar", "min_q_mvar"]
+    existing_non_default_col = net.sgen.loc[sgens].dropna(axis=1).columns.intersection(
+        non_default_col)
+    # add missing columns to net.gen
+    missing_non_default_col = existing_non_default_col.difference(net.gen.columns)
+    for col in missing_non_default_col:
+        net.gen[col] = np.nan
+
+    # --- create gens
+    new_idx = []
+    for sgen in net.sgen.loc[sgens].itertuples():
+        vm_pu = 1.0 if sgen.Index not in net.res_sgen.index else net.res_bus.at[sgen.bus, "vm_pu"]
+        controllable = False if "controllable" not in net.sgen.columns else sgen.controllable
+        idx = create_gen(net, sgen.bus, vm_pu=vm_pu, p_mw=sgen.p_mw, name=sgen.name,
+                         in_service=sgen.in_service, controllable=controllable)
+        new_idx.append(idx)
+        for col in existing_non_default_col:
+            net.gen[col].at[idx] = getattr(sgen, col)
+
+    # --- drop replaced sgens
+    net.sgen.drop(sgens, inplace=True)
+
+    # --- adapt cost data
+    for table in ["pwl_cost", "poly_cost"]:
+        if net[table].shape[0]:
+            to_change = net[table].index[(net[table].et == "sgen") &
+                                         (net[table].element.isin(sgens))]
+            if len(to_change):
+                net[table].et.loc[to_change] = "gen"
+                net[table].element.loc[to_change] = new_idx
+
+    # --- result data
+    if net.res_sgen.shape[0]:
+        to_add = net.res_sgen.loc[sgens]
+        to_add.index = new_idx
+        if version.parse(pd.__version__) < version.parse("0.23"):
+            net.res_gen = pd.concat([net.res_gen, to_add])
+        else:
+            net.res_gen = pd.concat([net.res_gen, to_add], sort=True)
+        net.res_sgen.drop(sgens, inplace=True)
 
 
 # --- item/element selections
@@ -1882,7 +2024,7 @@ def get_connected_elements(net, element, buses, respect_switches=True, respect_i
     return connected_elements
 
 
-def get_connected_buses(net, buses, consider=("l", "s", "t", "t3"), respect_switches=True,
+def get_connected_buses(net, buses, consider=("l", "s", "t", "t3", "i"), respect_switches=True,
                         respect_in_service=False):
     """
      Returns buses connected to given buses. The source buses will NOT be returned.
@@ -1904,6 +2046,8 @@ def get_connected_buses(net, buses, consider=("l", "s", "t", "t3"), respect_swit
                                                       l: lines
                                                       s: switches
                                                       t: trafos
+                                                      t3: trafo3ws
+                                                      i: impedances
      OUTPUT:
         **cl** (set) - Returns connected buses.
 
@@ -1954,6 +2098,15 @@ def get_connected_buses(net, buses, consider=("l", "s", "t", "t3"), respect_swit
         cb |= set(net.trafo3w.loc[ct3].hv_bus.values)
         cb |= set(net.trafo3w.loc[ct3].mv_bus.values)
         cb |= set(net.trafo3w.loc[ct3].lv_bus.values)
+
+    if "i" in consider:
+        in_service_constr = net.impedance.in_service if respect_in_service else True
+        connected_fb_impedances = set(net.impedance.index[
+                                     (net.impedance.from_bus.isin(buses)) & (in_service_constr)])
+        connected_tb_impedances = set(net.impedance.index[
+                                     (net.impedance.to_bus.isin(buses)) & (in_service_constr)])
+        cb |= set(net.impedance[net.impedance.index.isin(connected_tb_impedances)].from_bus)
+        cb |= set(net.impedance[net.impedance.index.isin(connected_fb_impedances)].to_bus)
 
     if respect_in_service:
         cb -= set(net.bus[~net.bus.in_service].index)
@@ -2057,7 +2210,7 @@ def get_connected_switches(net, buses, consider=('b', 'l', 't'), status="all"):
 
 
 def get_connected_elements_dict(
-        net, buses, respect_switches=True, respect_in_service=False, remove_empty_lists=True,
+        net, buses, respect_switches=True, respect_in_service=False, include_empty_lists=False,
         connected_buses=True, connected_bus_elements=True, connected_branch_elements=True,
         connected_other_elements=True):
     """ Returns a dict of lists of connected elements. """
@@ -2076,6 +2229,101 @@ def get_connected_elements_dict(
             conn = get_connected_elements(
                 net, elm, buses, respect_switches=respect_switches,
                 respect_in_service=respect_in_service)
-        if not remove_empty_lists or len(conn):
+        if include_empty_lists or len(conn):
             connected[elm] = list(conn)
     return connected
+
+
+def replace_ward_by_internal_elements(net, wards=None):
+    """
+    Replaces wards by loads and shunts
+    INPUT:
+        **net** - pandapower net
+
+    OPTIONAL:
+        **wards** (iterable) - indices of xwards which should be replaced
+
+    OUTPUT:
+        No output - the given wards in pandapower net are replaced by loads and shunts
+
+    """
+    # --- determine wards index
+    if wards is None:
+        wards = net.ward.index
+    else:
+        wards = ensure_iterability(wards)
+
+    # --- create loads and shunts
+    new_load_idx = []
+    new_shunt_idx = []
+    for ward in net.ward.loc[wards].itertuples():
+        load_idx = create_load(net, ward.bus, ward.ps_mw, ward.qs_mvar,
+                               in_service=ward.in_service, name=ward.name)
+        shunt_idx = create_shunt(net, ward.bus, q_mvar=ward.qz_mvar, p_mw=ward.pz_mw,
+                                 in_service=ward.in_service, name=ward.name)
+        new_load_idx.append(load_idx)
+        new_shunt_idx.append(shunt_idx)
+
+    # --- result data
+    if net.res_ward.shape[0]:
+        sign_in_service = np.multiply(net.ward.in_service.values[wards], 1)
+        sign_not_isolated = np.multiply(net.res_ward.vm_pu.values[wards]!=0, 1)
+        to_add_load = net.res_ward.loc[wards,["p_mw", "q_mvar"]]
+        to_add_load.index = new_load_idx
+        to_add_load.p_mw = net.ward.ps_mw[wards].values\
+                            *sign_in_service*sign_not_isolated
+        to_add_load.q_mvar = net.ward.qs_mvar[wards].values\
+                            *sign_in_service*sign_not_isolated
+        net.res_load = pd.concat([net.res_load, to_add_load])
+
+        to_add_shunt = net.res_ward.loc[wards,["p_mw", "q_mvar", "vm_pu"]]
+        to_add_shunt.index = new_shunt_idx
+        to_add_shunt.p_mw = net.res_ward.vm_pu[wards].values**2*net.ward.pz_mw[wards].values\
+                            *sign_in_service*sign_not_isolated
+        to_add_shunt.q_mvar = net.res_ward.vm_pu[wards].values**2*net.ward.qz_mvar[wards].values\
+                            *sign_in_service*sign_not_isolated
+        to_add_shunt.vm_pu = net.res_ward.vm_pu[wards].values
+        net.res_shunt = pd.concat([net.res_shunt, to_add_shunt])
+
+        net.res_ward.drop(wards, inplace=True)
+
+    # --- drop replaced wards
+    net.ward.drop(wards, inplace=True)
+
+def replace_xward_by_internal_elements(net, xwards=None):
+    """
+    Replaces xward by loads, shunts, impedance and generators
+    INPUT:
+        **net** - pandapower net
+
+    OPTIONAL:
+        **xwards** (iterable) - indices of xwards which should be replaced
+
+    OUTPUT:
+        No output - the given xwards in pandapower are replaced by buses, loads, shunts, impadance and generators
+
+    """
+    # --- determine xwards index
+    if xwards is None:
+        xwards = net.xward.index
+    else:
+        xwards = ensure_iterability(xwards)
+
+    # --- create buses, loads, shunts, gens and impedances
+    for xward in net.xward.loc[xwards].itertuples():
+        bus_v = net.bus.vn_kv[xward.bus]
+        bus_idx = create_bus(net, net.bus.vn_kv[xward.bus], in_service=xward.in_service,
+                             name=xward.name)
+        create_load(net, xward.bus, xward.ps_mw, xward.qs_mvar,
+                               in_service=xward.in_service, name=xward.name)
+        create_shunt(net, xward.bus, q_mvar=xward.qz_mvar, p_mw=xward.pz_mw,
+                                 in_service=xward.in_service, name=xward.name)
+        create_gen(net, bus_idx, 0, xward.vm_pu, in_service=xward.in_service,
+                             name=xward.name)
+        create_impedance(net, xward.bus, bus_idx, \
+                            xward.r_ohm/(bus_v**2), xward.x_ohm/(bus_v**2),
+                            net.sn_mva, in_service=xward.in_service, name=xward.name)
+
+    # --- drop replaced wards
+    net.xward.drop(xwards, inplace=True)
+    net.res_xward.drop(xwards, inplace=True)

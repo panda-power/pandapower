@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-# Copyright (c) 2016-2019 by University of Kassel and Fraunhofer Institute for Energy Economics
+# Copyright (c) 2016-2020 by University of Kassel and Fraunhofer Institute for Energy Economics
 # and Energy System Technology (IEE), Kassel. All rights reserved.
 
 
@@ -119,7 +119,7 @@ def from_ppc(ppc, f_hz=50, validate_conversion=False, **kwargs):
     for i in range(len(ppc['bus'])):
         # create buses
         pp.create_bus(net, name=int(ppc['bus'][i, 0]), vn_kv=ppc['bus'][i, 9], type="b",
-                      zone=ppc['bus'][i, 6], in_service=bool(ppc['bus'][i, 1] != 4),
+                      zone=ppc['bus'][i, 10], in_service=bool(ppc['bus'][i, 1] != 4),
                       max_vm_pu=ppc['bus'][i, 11], min_vm_pu=ppc['bus'][i, 12])
         # create sgen, load
         if ppc['bus'][i, 2] > 0:

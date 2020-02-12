@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-# Copyright (c) 2016-2019 by University of Kassel and Fraunhofer Institute for Energy Economics
+# Copyright (c) 2016-2020 by University of Kassel and Fraunhofer Institute for Energy Economics
 # and Energy System Technology (IEE), Kassel. All rights reserved.
 
 from pandapower.timeseries.data_source import DataSource
@@ -31,7 +31,6 @@ class DFData(DataSource):
 
     def __init__(self, df, multi=False):
         super().__init__()
-        self.update_initialized(locals())
         self.df = df
         if multi:
             # casting column and index to int for multi- columns accessing

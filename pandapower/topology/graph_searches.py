@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-# Copyright (c) 2016-2019 by University of Kassel and Fraunhofer Institute for Energy Economics
+# Copyright (c) 2016-2020 by University of Kassel and Fraunhofer Institute for Energy Economics
 # and Energy System Technology (IEE), Kassel. All rights reserved.
 
 
@@ -87,7 +87,7 @@ def connected_components(mg, notravbuses=set()):
 
 
 def calc_distance_to_bus(net, bus, respect_switches=True, nogobuses=None,
-                         notravbuses=None):
+                         notravbuses=None, weight='weight'):
     """
         Calculates the shortest distance between a source bus and all buses connected to it.
 
@@ -106,10 +106,11 @@ def calc_distance_to_bus(net, bus, respect_switches=True, nogobuses=None,
 
         **notravbuses** (integer/list, None) - lines connected to these buses are not being
                                               considered
+        **weight** (string, None) – Edge data key corresponding to the edge weight
 
      OUTPUT:
         **dist** - Returns a pandas series with containing all distances to the source bus
-                   in km.
+                   in km. If weight=None dist is the topological distance (int).
 
      EXAMPLE:
          import pandapower.topology as top
@@ -119,7 +120,7 @@ def calc_distance_to_bus(net, bus, respect_switches=True, nogobuses=None,
     """
     g = create_nxgraph(net, respect_switches=respect_switches,
                        nogobuses=nogobuses, notravbuses=notravbuses)
-    return pd.Series(nx.single_source_dijkstra_path_length(g, bus))
+    return pd.Series(nx.single_source_dijkstra_path_length(g, bus, weight=weight))
 
 
 def unsupplied_buses(net, mg=None, slacks=None, respect_switches=True):
@@ -152,7 +153,8 @@ def unsupplied_buses(net, mg=None, slacks=None, respect_switches=True):
 
     mg = mg or create_nxgraph(net, respect_switches=respect_switches)
     if slacks is None:
-        slacks = set(net.ext_grid[net.ext_grid.in_service].bus.values)
+        slacks = set(net.ext_grid[net.ext_grid.in_service].bus.values) | set(
+            net.gen[net.gen.in_service & net.gen.slack].bus.values)
     not_supplied = set()
     for cc in nx.connected_components(mg):
         if not set(cc) & slacks:

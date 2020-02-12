@@ -44,7 +44,7 @@ Measurements are defined via the pandapower *"create_measurement"* function. The
  - *"v"* for voltage measurements (in per-unit)
  - *"p"* for active power measurements (in MW)
  - *"q"* for reactive power measurements (in MVar)
- - *"i"* for electrical current measurements at a line (in A)
+ - *"i"* for electrical current measurements at a line (in kA)
  
 
 **Element Types**

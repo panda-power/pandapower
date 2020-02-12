@@ -117,6 +117,10 @@ Topology Modification
 
 .. autofunction:: pandapower.replace_gen_by_ext_grid
 
+.. autofunction:: pandapower.replace_gen_by_sgen
+
+.. autofunction:: pandapower.replace_sgen_by_gen
+
 ====================================
 Item/Element Selection
 ====================================

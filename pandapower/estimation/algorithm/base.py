@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-# Copyright (c) 2016-2019 by University of Kassel and Fraunhofer Institute for Energy Economics
+# Copyright (c) 2016-2020 by University of Kassel and Fraunhofer Institute for Energy Economics
 # and Energy System Technology (IEE), Kassel. All rights reserved.
 
 import numpy as np
@@ -140,7 +140,7 @@ class WLSZeroInjectionConstraintsAlgorithm(BaseAlgorithm):
         q_zero_injections = zero_injection_bus
         new_states = np.zeros(len(p_zero_injections) + len(q_zero_injections))
 
-        num_bus = eppci.bus.shape[0]
+        num_bus = eppci["bus"].shape[0]
 
         # matrix calculation object
         sem = BaseAlgebraZeroInjConstraints(eppci)

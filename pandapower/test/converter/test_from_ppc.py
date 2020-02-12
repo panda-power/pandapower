@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-# Copyright (c) 2016-2019 by University of Kassel and Fraunhofer Institute for Energy Economics
+# Copyright (c) 2016-2020 by University of Kassel and Fraunhofer Institute for Energy Economics
 # and Energy System Technology (IEE), Kassel. All rights reserved.
 
 
@@ -64,8 +64,7 @@ def test_validate_from_ppc():
 
 def test_ppc_testgrids():
     # check ppc_testgrids
-    name = ['case2_1', 'case2_2', 'case2_3', 'case2_4', 'case3_1', 'case3_2', 'case6', 'case14',
-            'case57']
+    name = ['case2_1', 'case2_2', 'case2_3', 'case2_4', 'case3_1', 'case3_2', 'case6', 'case14', 'case57']
     for i in name:
         ppc = get_testgrids(i, 'ppc_testgrids.p')
         net = from_ppc(ppc, f_hz=60)

@@ -42,8 +42,7 @@
  
 
   
-pandapower combines the data analysis library `pandas <http://pandas.pydata.org>`_ and the power flow solver `PYPOWER <https://pypi.python.org/pypi/PYPOWER>`_ to create an easy to use network calculation program
-aimed at automation of analysis and optimization in power systems.
+pandapower is an easy to use network calculation program aimed to automate the analysis and optimization of power systems. It uses the data analysis library `pandas <http://pandas.pydata.org>`_ and is compatible with the commonly used MATPOWER / PYPOWER case format. pandapower allows using different solvers including an improved Newton-Raphson power flow implementation, all `PYPOWER <https://pypi.python.org/pypi/PYPOWER>`_ solvers, and the `PowerModels.jl <https://github.com/lanl-ansi/PowerModels.jl/>`_ library.
 
 More information about pandapower can be found on www.pandapower.org:
 

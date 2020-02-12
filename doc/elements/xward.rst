@@ -10,7 +10,7 @@ Create Function
 
 .. autofunction:: pandapower.create_xward
 
-Result Parameters
+Input Parameters
 =========================
 
 *net.xward*

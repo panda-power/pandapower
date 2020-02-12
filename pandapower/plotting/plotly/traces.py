@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-# Copyright (c) 2016-2019 by University of Kassel and Fraunhofer Institute for Energy Economics
+# Copyright (c) 2016-2020 by University of Kassel and Fraunhofer Institute for Energy Economics
 # and Energy System Technology (IEE), Kassel. All rights reserved.
 
 
@@ -12,7 +12,8 @@ from packaging import version
 from collections.abc import Iterable
 
 from pandapower.plotting.plotly.get_colors import get_plotly_color, get_plotly_cmap
-from pandapower.plotting.plotly.mapbox_plot import _on_map_test, _get_mapbox_token, MapboxTokenMissing
+from pandapower.plotting.plotly.mapbox_plot import _on_map_test, _get_mapbox_token, \
+    MapboxTokenMissing
 
 try:
     import pplog as logging
@@ -94,7 +95,8 @@ def create_edge_center_trace(line_trace, size=1, patch_type="circle", color="whi
                 - "diamond" for a diamond
                 - much more pathc types at https://plot.ly/python/reference/#scatter-marker
 
-        **infofunc** (pd.Series, None) - hoverinfo for each trace element. Indices should correspond to the pandapower element indices
+        **infofunc** (pd.Series, None) - hoverinfo for each trace element. Indices should correspond
+            to the pandapower element indices
 
         **trace_name** (String, "buses") - name of the trace which will appear in the legend
 
@@ -145,15 +147,17 @@ def create_bus_trace(net, buses=None, size=5, patch_type="circle", color="blue",
                 - "diamond" for a diamond
                 - much more pathc types at https://plot.ly/python/reference/#scatter-marker
 
-        **infofunc** (pd.Series, None) - hoverinfo for bus elements. Indices should correspond to the pandapower element indices
+        **infofunc** (pd.Series, None) - hoverinfo for bus elements. Indices should correspond to
+            the pandapower element indices
 
         **trace_name** (String, "buses") - name of the trace which will appear in the legend
 
         **color** (String, "blue") - color of buses in the trace
 
-        **cmap** (String, None) - name of a colormap which exists within plotly (Greys, YlGnBu, Greens, YlOrRd,
-        Bluered, RdBu, Reds, Blues, Picnic, Rainbow, Portland, Jet, Hot, Blackbody, Earth, Electric, Viridis)
-        alternatively a custom discrete colormap can be used
+        **cmap** (String, None) - name of a colormap which exists within plotly
+            (Greys, YlGnBu, Greens, YlOrRd, Bluered, RdBu, Reds, Blues, Picnic, Rainbow,
+            Portland, Jet, Hot, Blackbody, Earth, Electric, Viridis) alternatively a custom
+            discrete colormap can be used
 
         **cmap_vals** (list, None) - values used for coloring using colormap
 
@@ -179,10 +183,12 @@ def create_bus_trace(net, buses=None, size=5, patch_type="circle", color="blue",
     bus_trace['x'], bus_trace['y'] = (net.bus_geodata.loc[bus_plot_index, 'x'].tolist(),
                                       net.bus_geodata.loc[bus_plot_index, 'y'].tolist())
 
-    if not isinstance(infofunc, pd.Series) and isinstance(infofunc, Iterable) and len(infofunc) == len(buses):
+    if not isinstance(infofunc, pd.Series) and isinstance(infofunc, Iterable) and \
+            len(infofunc) == len(buses):
         infofunc = pd.Series(index=buses, data=infofunc)
 
-    bus_trace['text'] = net.bus.loc[bus_plot_index, 'name'] if infofunc is None else infofunc.loc[buses]
+    bus_trace['text'] = net.bus.loc[bus_plot_index, 'name'] if infofunc is None else \
+        infofunc.loc[buses]
 
     if legendgroup:
         bus_trace['legendgroup'] = legendgroup
@@ -274,7 +280,8 @@ def create_line_trace(net, lines=None, use_line_geodata=True, respect_switches=F
 
         **respect_switches** (bool, False) - flag for consideration of disconnected lines
 
-        **infofunc** (pd.Series, None) - hoverinfo for line elements. Indices should correspond to the pandapower element indices
+        **infofunc** (pd.Series, None) - hoverinfo for line elements. Indices should correspond to
+            the pandapower element indices
 
         **trace_name** (String, "lines") - name of the trace which will appear in the legend
 
@@ -309,7 +316,8 @@ def create_line_trace(net, lines=None, use_line_geodata=True, respect_switches=F
         return []
 
     if infofunc is not None:
-        if not isinstance(infofunc, pd.Series) and isinstance(infofunc, Iterable) and len(infofunc) == len(lines):
+        if not isinstance(infofunc, pd.Series) and isinstance(infofunc, Iterable) and \
+                len(infofunc) == len(lines):
             infofunc = pd.Series(index=lines, data=infofunc)
         if len(infofunc) != len(lines) and len(infofunc) != len(net.line):
             raise UserWarning("Different amount of hover info than lines to plot")
@@ -318,7 +326,8 @@ def create_line_trace(net, lines=None, use_line_geodata=True, respect_switches=F
 
     no_go_lines = set()
     if respect_switches:
-        no_go_lines = set(lines) & set(net.switch.element[(net.switch.et == "l") & (net.switch.closed == 0)])
+        no_go_lines = set(lines) & set(net.switch.element[(net.switch.et == "l") &
+                                                          (net.switch.closed == 0)])
 
     lines_to_plot = net.line.loc[set(net.line.index) & (set(lines) - no_go_lines)]
     no_go_lines_to_plot = None
@@ -366,12 +375,14 @@ def create_line_trace(net, lines=None, use_line_geodata=True, respect_switches=F
                 line_color = cmap_lines[col_i]
                 line_info = line['name'] if infofunc is None else infofunc.loc[idx]
             except IndexError:
-                logger.warning("No color and info for line {:d} (name: {}) available".format(idx, line['name']))
+                logger.warning("No color and info for line {:d} (name: {}) available".format(
+                    idx, line['name']))
 
         line_trace = dict(type='scatter', text=[], hoverinfo='text', mode='lines', name=trace_name,
                           line=Line(width=width, color=color))
 
-        line_trace['x'], line_trace['y'] = _get_line_geodata_plotly(net, lines_to_plot.loc[idx:idx], use_line_geodata)
+        line_trace['x'], line_trace['y'] = _get_line_geodata_plotly(net, lines_to_plot.loc[idx:idx],
+                                                                    use_line_geodata)
 
         line_trace['line']['color'] = line_color
 
@@ -385,11 +396,15 @@ def create_line_trace(net, lines=None, use_line_geodata=True, respect_switches=F
         cmax = cmax if cmax else cmap_vals.max()
         try:
             # TODO for custom colormaps
-            cbar_cmap_name = 'Jet' if cmap is 'jet' else cmap
+            cbar_cmap_name = 'Jet' if cmap == 'jet' else cmap
             # workaround to get colorbar for lines (an unvisible node is added)
-            lines_cbar = dict(type='scatter', x=[net.bus_geodata.x[0]], y=[net.bus_geodata.y[0]], mode='markers',
+            # get x and y of first line.from_bus:
+            x = [net.bus_geodata.x[net.line.from_bus[net.line.index[0]]]]
+            y = [net.bus_geodata.y[net.line.from_bus[net.line.index[0]]]]
+            lines_cbar = dict(type='scatter', x=x, y=y, mode='markers',
                               marker=Marker(size=0, cmin=cmin, cmax=cmax,
                                             color='rgb(255,255,255)',
+                                            opacity=0,
                                             colorscale=cbar_cmap_name,
                                             colorbar=ColorBar(thickness=10,
                                                               x=cpos),
@@ -411,12 +426,13 @@ def create_line_trace(net, lines=None, use_line_geodata=True, respect_switches=F
                               text=[], hoverinfo='text', mode='lines', name='disconnected lines',
                               line=Line(width=width / 2, color='grey', dash='dot'))
 
-            line_trace['x'], line_trace['y'] = _get_line_geodata_plotly(net, no_go_lines_to_plot.loc[idx:idx], use_line_geodata)
+            line_trace['x'], line_trace['y'] = _get_line_geodata_plotly(
+                net, no_go_lines_to_plot.loc[idx:idx], use_line_geodata)
 
             line_trace['line']['color'] = line_color
             try:
                 line_trace['text'] = infofunc.loc[idx]
-            except (KeyError, IndexError):
+            except (KeyError, IndexError, AttributeError):
                 line_trace["text"] = line['name']
 
             line_traces.append(line_trace)
@@ -426,7 +442,8 @@ def create_line_trace(net, lines=None, use_line_geodata=True, respect_switches=F
 
     # sort infofunc so that it is the correct order lines_to_plot + no_go_lines_to_plot
     if infofunc is not None:
-        if not isinstance(infofunc, pd.Series) and isinstance(infofunc, Iterable) and len(infofunc) == len(net.line):
+        if not isinstance(infofunc, pd.Series) and isinstance(infofunc, Iterable) and \
+                len(infofunc) == len(net.line):
             infofunc = pd.Series(index=net.line.index, data=infofunc)
         assert isinstance(infofunc, pd.Series), \
             "infofunc should be a pandas series with the net.line.index to the infofunc contents"
@@ -442,7 +459,8 @@ def create_line_trace(net, lines=None, use_line_geodata=True, respect_switches=F
 
 
 def create_trafo_trace(net, trafos=None, color='green', width=5, infofunc=None, cmap=None,
-                       trace_name='trafos', cmin=None, cmax=None, cmap_vals=None, use_line_geodata=None):
+                       trace_name='trafos', cmin=None, cmax=None, cmap_vals=None,
+                       use_line_geodata=None):
     """
     Creates a plotly trace of pandapower trafos.
 
@@ -455,14 +473,16 @@ def create_trafo_trace(net, trafos=None, color='green', width=5, infofunc=None, 
 
         **width** (int, 5) - line width
 
-        **infofunc** (pd.Series, None) - hoverinfo for trafo elements. Indices should correspond to the pandapower element indices
+        **infofunc** (pd.Series, None) - hoverinfo for trafo elements. Indices should correspond
+            to the pandapower element indices
 
         **trace_name** (String, "lines") - name of the trace which will appear in the legend
 
         **color** (String, "green") - color of lines in the trace
 
-        **cmap** (bool, False) - name of a colormap which exists within plotly (Greys, YlGnBu, Greens, YlOrRd,
-        Bluered, RdBu, Reds, Blues, Picnic, Rainbow, Portland, Jet, Hot, Blackbody, Earth, Electric, Viridis)
+        **cmap** (bool, False) - name of a colormap which exists within plotly (Greys, YlGnBu,
+            Greens, YlOrRd, Bluered, RdBu, Reds, Blues, Picnic, Rainbow, Portland, Jet, Hot,
+            Blackbody, Earth, Electric, Viridis)
 
         **cmap_vals** (list, None) - values used for coloring using colormap
 
@@ -482,13 +502,14 @@ def create_trafo_trace(net, trafos=None, color='green', width=5, infofunc=None, 
         return []
 
     trafo_buses_with_geodata = net.trafo.hv_bus.isin(net.bus_geodata.index) & \
-                               net.trafo.lv_bus.isin(net.bus_geodata.index)
+        net.trafo.lv_bus.isin(net.bus_geodata.index)
 
     trafos_mask = net.trafo.index.isin(trafos)
     trafos_to_plot = net.trafo[trafo_buses_with_geodata & trafos_mask]
 
     if infofunc is not None:
-        if not isinstance(infofunc, pd.Series) and isinstance(infofunc, Iterable) and len(infofunc) == len(trafos):
+        if not isinstance(infofunc, pd.Series) and isinstance(infofunc, Iterable) and \
+                len(infofunc) == len(trafos):
             infofunc = pd.Series(index=trafos, data=infofunc)
         assert isinstance(infofunc, pd.Series), \
             "infofunc should be a pandas series with the net.trafo.index to the infofunc contents"
@@ -563,10 +584,13 @@ def draw_traces(traces, on_map=False, map_style='basic', showlegend=True, figsiz
 
         **figsize** (float, 1) - aspectratio is multiplied by it in order to get final image size
 
-        **aspectratio** (tuple, 'auto') - when 'auto' it preserves original aspect ratio of the network geodata
-        any custom aspectration can be given as a tuple, e.g. (1.2, 1)
+        **aspectratio** (tuple, 'auto') - when 'auto' it preserves original aspect ratio of the
+            network geodata any custom aspectration can be given as a tuple, e.g. (1.2, 1)
 
         **filename** (str, "temp-plot.html") - plots to a html file called filename
+
+    OUTPUT:
+        **figure** (graph_objs._figure.Figure) figure object
 
     """
 
@@ -671,3 +695,5 @@ def draw_traces(traces, on_map=False, map_style='basic', showlegend=True, figsiz
         from plotly.offline import plot as plot
 
     plot(fig, filename=filename)
+
+    return fig

@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-# Copyright (c) 2016-2019 by University of Kassel and Fraunhofer Institute for Energy Economics
+# Copyright (c) 2016-2020 by University of Kassel and Fraunhofer Institute for Energy Economics
 # and Energy System Technology (IEE), Kassel. All rights reserved.
 from copy import deepcopy
 
@@ -22,7 +22,7 @@ def control_diagnostic(net, respect_in_service=True):
     # --- find and log same type controllers connected to same elements
     indices = list(net.controller.index)
     for idx in indices:
-        current_controller = net.controller.controller.loc[idx]
+        current_controller = net.controller.object.loc[idx]
         parameters = deepcopy(current_controller.matching_params) if "matching_params" in \
                                                                      current_controller.__dict__ else {}
         if respect_in_service:
@@ -41,11 +41,11 @@ def control_diagnostic(net, respect_in_service=True):
     # --- find trafo controller of the same trafo
     trafo_ctrl = []
     for idx in net.controller.index:
-        current_controller = net.controller.controller.loc[idx]
+        current_controller = net.controller.object.loc[idx]
         if issubclass(type(current_controller), TrafoController):
             trafo_ctrl += [idx]
     for idx in trafo_ctrl:
-        current_controller = net.controller.controller.loc[idx]
+        current_controller = net.controller.object.loc[idx]
         parameters = {"tid": current_controller.tid}
         if respect_in_service:
             if not net.controller.in_service.at[idx]:

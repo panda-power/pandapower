@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-# Copyright (c) 2016-2019 by University of Kassel and Fraunhofer Institute for Energy Economics
+# Copyright (c) 2016-2020 by University of Kassel and Fraunhofer Institute for Energy Economics
 # and Energy System Technology (IEE), Kassel. All rights reserved.
 
 
@@ -78,9 +78,7 @@ def test_convert_format():
                                    max_loading_percent=100 * 690)
     # run OPF
     convert_format(net)
-    print(net.gen)
-    print(net.ext_grid)
-    print(net.bus)
+
     for init in ["pf", "flat"]:
         pp.runopp(net, init=init)
         assert net["OPF_converged"]

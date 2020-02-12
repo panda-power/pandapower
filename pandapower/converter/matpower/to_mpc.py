@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-# Copyright (c) 2016-2019 by University of Kassel and Fraunhofer Institute for Energy Economics
+# Copyright (c) 2016-2020 by University of Kassel and Fraunhofer Institute for Energy Economics
 # and Energy System Technology (IEE), Kassel. All rights reserved.
 
 
@@ -42,7 +42,8 @@ def to_mpc(net, filename=None, **kwargs):
     """
     ppc = to_ppc(net, **kwargs)
 
-    mpc = _ppc2mpc(ppc)
+    mpc = dict()
+    mpc["mpc"] = _ppc2mpc(ppc)
     if filename is not None:
         # savemat
         savemat(filename, mpc)

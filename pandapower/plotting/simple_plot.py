@@ -1,12 +1,12 @@
 # -*- coding: utf-8 -*-
 
-# Copyright (c) 2016-2019 by University of Kassel and Fraunhofer Institute for Energy Economics
+# Copyright (c) 2016-2020 by University of Kassel and Fraunhofer Institute for Energy Economics
 # and Energy System Technology (IEE), Kassel. All rights reserved.
 
 
 import matplotlib.pyplot as plt
 
-from pandapower.plotting.geo import get_collection_sizes
+from pandapower.plotting.plotting_toolbox import get_collection_sizes
 from pandapower.plotting.collections import create_bus_collection, create_line_collection, \
     create_trafo_collection, create_trafo3w_collection, \
     create_line_switch_collection, draw_collections, create_bus_bus_switch_collection, create_sgen_collection, \

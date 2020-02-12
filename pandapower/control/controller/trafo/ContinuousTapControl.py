@@ -16,7 +16,7 @@ class ContinuousTapControl(TrafoController):
 
         **tid** (int) - ID of the trafo that is controlled
 
-        **u_set** (float) - Maximum OLTC target voltage at bus in pu
+        **vm_set_pu** (float) - Maximum OLTC target voltage at bus in pu
 
     OPTIONAL:
 
@@ -33,13 +33,12 @@ class ContinuousTapControl(TrafoController):
         **drop_same_existing_ctrl** (bool, False) - Indicates if already existing controllers of the same type and with the same matching parameters (e.g. at same element) should be dropped
     """
 
-    def __init__(self, net, tid, u_set, tol=1e-3, side="lv", trafotype="2W", in_service=True,
+    def __init__(self, net, tid, vm_set_pu, tol=1e-3, side="lv", trafotype="2W", in_service=True,
                  check_tap_bounds=True, level=0, order=0, drop_same_existing_ctrl=False, **kwargs):
         super().__init__(net, tid=tid, side=side, tol=tol, in_service=in_service,
                          trafotype=trafotype,
                          level=level, order=order, drop_same_existing_ctrl=drop_same_existing_ctrl,
                          matching_params={"tid": tid, 'trafotype': trafotype}, **kwargs)
-        self.update_initialized(locals())
 
         self.matching_params = {"tid": tid, 'trafotype': trafotype}
         t = self.net[self.trafotable]
@@ -58,7 +57,7 @@ class ContinuousTapControl(TrafoController):
                          b.at[self.net[self.trafotable].at[tid, "mv_bus"], "vn_kv"]
 
         self.check_tap_bounds = check_tap_bounds
-        self.u_set = u_set
+        self.vm_set_pu = vm_set_pu
         self.trafotype = trafotype
         if trafotype == "2W":
             self.net.trafo["tap_pos"] = self.net.trafo.tap_pos.astype(float)
@@ -70,8 +69,8 @@ class ContinuousTapControl(TrafoController):
         """
         Implements one step of the ContinuousTapControl
         """
-        ud = self.net.res_bus.at[self.controlled_bus, "vm_pu"] - self.u_set
-        tc = ud / self.tap_step_percent * 100 / self.t_nom
+        delta_vm_pu = self.net.res_bus.at[self.controlled_bus, "vm_pu"] - self.vm_set_pu
+        tc = delta_vm_pu / self.tap_step_percent * 100 / self.t_nom
         self.tap_pos += tc * self.tap_side_coeff * self.tap_sign
         if self.check_tap_bounds:
             self.tap_pos = np.clip(self.tap_pos, self.tap_min, self.tap_max)
@@ -87,19 +86,19 @@ class ContinuousTapControl(TrafoController):
 
         if not self.net[self.trafotable].at[self.tid, 'in_service']:
             return True
-        u = self.net.res_bus.at[self.controlled_bus, "vm_pu"]
+        vm_pu = self.net.res_bus.at[self.controlled_bus, "vm_pu"]
         self.tap_pos = self.net[self.trafotable].at[self.tid, 'tap_pos']
-        difference = 1 - self.u_set / u
+        difference = 1 - self.vm_set_pu / vm_pu
 
         if self.check_tap_bounds:
             if self.tap_side_coeff * self.tap_sign == 1:
-                if u < self.u_set and self.tap_pos == self.tap_min:
+                if vm_pu < self.vm_set_pu and self.tap_pos == self.tap_min:
                     return True
-                elif u > self.u_set and self.tap_pos == self.tap_max:
+                elif vm_pu > self.vm_set_pu and self.tap_pos == self.tap_max:
                     return True
             elif self.tap_side_coeff * self.tap_sign == -1:
-                if u > self.u_set and self.tap_pos == self.tap_min:
+                if vm_pu > self.vm_set_pu and self.tap_pos == self.tap_min:
                     return True
-                elif u < self.u_set and self.tap_pos == self.tap_max:
+                elif vm_pu < self.vm_set_pu and self.tap_pos == self.tap_max:
                     return True
         return abs(difference) < self.tol

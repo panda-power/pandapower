@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-# Copyright (c) 2016-2019 by University of Kassel and Fraunhofer Institute for Energy Economics
+# Copyright (c) 2016-2020 by University of Kassel and Fraunhofer Institute for Energy Economics
 # and Energy System Technology (IEE), Kassel. All rights reserved.
 
 import pandapower as pp
@@ -41,7 +41,7 @@ def add_network(net, vector_group):
             "shift_degree": 150, "vector_group": vector_group, "tap_side": "hv",
             "tap_neutral": 0, "tap_min": -9, "tap_max": 9, "tap_step_degree": 0,
             "tap_step_percent": 1.5, "tap_phase_shifter": False, "vk0_percent": 5,
-            "vkr0_percent": 0.4, "mag0_percent": 10, "mag0_rx": 0.4, "mag0_rx": 0.4, 
+            "vkr0_percent": 0.4, "mag0_percent": 10, "mag0_rx": 0.4,
             "si0_hv_partial": 0.9}
     pp.create_std_type(net, transformer_type, vector_group, "trafo")
     t1 = pp.create_transformer(net, b1, b2, std_type=vector_group, parallel=2,

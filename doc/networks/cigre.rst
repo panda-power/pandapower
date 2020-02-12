@@ -11,9 +11,9 @@ integration at high voltage, medium voltage and low voltage and at the desired d
 
 .. note::
 
-    Source for this network is the final Report of Task Force C6.04.02: `"Benchmark Systems for Network Integration of Renewable and Distributed Energy Resources" <http://www.e-cigre.org/Order/select.asp?ID=729590>`_, 2014
+    Source for this network is the final Report of Task Force C6.04.02 [1]: `"Benchmark Systems for Network Integration of Renewable and Distributed Energy Resources" <http://www.e-cigre.org/Order/select.asp?ID=729590>`_, 2014
 
-    See also a correlating Paper with tiny changed network parameters:
+    See also a correlating Paper with tiny changed network parameters [2]:
     `K. Rudion, A. Orths, Z. A. Styczynski and K. Strunz, Design of benchmark of medium voltage distribution network for investigation of DG integration <http://ieeexplore.ieee.org/document/1709447/?arnumber=1709447&tag=1>`_ 2006 IEEE Power Engineering Society General Meeting, Montreal, 2006
 
 High voltage transmission network
@@ -44,6 +44,7 @@ High voltage transmission network
 	:alt: alternate Text
 	:align: center
 
+`[Source: 1] <http://www.e-cigre.org/Order/select.asp?ID=729590>`_
 
 
 
@@ -72,6 +73,8 @@ Medium voltage distribution network
 	:width: 42em
 	:alt: alternate Text
 	:align: center
+
+`[Source: 1] <http://www.e-cigre.org/Order/select.asp?ID=729590>`_
 
 
 ---------------------------
@@ -111,6 +114,8 @@ Although the case study mentions the High Voltage as 220 kV, we assume 110 kV ag
 	:width: 42em
 	:alt: alternate Text
 	:align: center
+
+`[Source: 1] <http://www.e-cigre.org/Order/select.asp?ID=729590>`_
 
 
 ---------------------------
@@ -154,6 +159,8 @@ considered. Although the case study mentions the High Voltage as 220 kV, we assu
 	:alt: alternate Text
 	:align: center
 
+`[Source: 1] <http://www.e-cigre.org/Order/select.asp?ID=729590>`_
+
 
 ---------------------------
 
@@ -183,3 +190,5 @@ Low voltage distribution network
 	:width: 42em
 	:alt: alternate Text
 	:align: center
+
+`[Source: 1] <http://www.e-cigre.org/Order/select.asp?ID=729590>`_

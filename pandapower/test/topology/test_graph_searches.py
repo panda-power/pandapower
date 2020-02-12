@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-# Copyright (c) 2016-2019 by University of Kassel and Fraunhofer Institute for Energy Economics
+# Copyright (c) 2016-2020 by University of Kassel and Fraunhofer Institute for Energy Economics
 # and Energy System Technology (IEE), Kassel. All rights reserved.
 
 
@@ -106,7 +106,9 @@ def test_distance(feeder_network):
     pp.create_switch(net, bus=3, element=2, et="l", closed=False)
     dist = top.calc_distance_to_bus(net, 0)
     assert np.allclose(dist.sort_index().values, [0, 12, 18, 5])
-
+    
+    dist = top.calc_distance_to_bus(net, 0, weight=None)
+    assert np.allclose(dist.sort_index().values, [0, 1, 2, 1])
 
 def test_unsupplied_buses_with_in_service():
     # IS ext_grid --- open switch --- OOS bus --- open switch --- IS bus

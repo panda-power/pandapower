@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-# Copyright (c) 2016-2019 by University of Kassel and Fraunhofer Institute for Energy Economics
+# Copyright (c) 2016-2020 by University of Kassel and Fraunhofer Institute for Energy Economics
 # and Energy System Technology (IEE), Kassel. All rights reserved.
 
 import numpy as np
@@ -28,7 +28,7 @@ ALGORITHM_MAPPING = {'wls': WLSAlgorithm,
                      'opt': OptAlgorithm,
                      'irwls': IRWLSAlgorithm,
                      'lp': LPAlgorithm}
-ALLOWED_OPT_VAR = {"a", "opt_method"}
+ALLOWED_OPT_VAR = {"a", "opt_method", "estimator"}
 
 
 def estimate(net, algorithm='wls',
@@ -161,7 +161,7 @@ class StateEstimation:
     system according to the users needs while one function is used for the actual estimation
     process.
     """
-    def __init__(self, net, tolerance=1e-6, maximum_iterations=10, algorithm='wls', logger=None):
+    def __init__(self, net, tolerance=1e-6, maximum_iterations=10, algorithm='wls', logger=None, recycle=False):
         self.logger = logger
         if self.logger is None:
             self.logger = std_logger
@@ -169,6 +169,9 @@ class StateEstimation:
         self.net = net
         self.solver = ALGORITHM_MAPPING[algorithm](tolerance,
                                                    maximum_iterations, self.logger)
+        self.ppc = None
+        self.eppci = None
+        self.recycle = recycle
 
         # variables for chi^2 / rn_max tests
         self.delta = None
@@ -249,25 +252,28 @@ class StateEstimation:
             if isinstance(fuse_buses_with_bb_switch, str):
                 raise UserWarning("fuse_buses_with_bb_switch parameter is not correctly initialized")
             elif hasattr(fuse_buses_with_bb_switch, '__iter__'):
-                bus_to_be_fused = fuse_buses_with_bb_switch    
+                bus_to_be_fused = fuse_buses_with_bb_switch
             set_bb_switch_impedance(self.net, bus_to_be_fused)
 
-        self.net, ppc, eppci = pp2eppci(self.net, v_start=v_start, delta_start=delta_start, 
-                                        calculate_voltage_angles=calculate_voltage_angles, 
-                                        zero_injection=zero_injection)
+        self.net, self.ppc, self.eppci = pp2eppci(self.net, v_start=v_start, delta_start=delta_start, 
+                                                  calculate_voltage_angles=calculate_voltage_angles, 
+                                                  zero_injection=zero_injection, ppc=self.ppc, eppci=self.eppci)
 
         # Estimate voltage magnitude and angle with the given estimator
-        eppci = self.solver.estimate(eppci, **opt_vars)
+        self.eppci = self.solver.estimate(self.eppci, **opt_vars)
 
         if self.solver.successful:
-            self.net = eppci2pp(self.net, ppc, eppci)
+            self.net = eppci2pp(self.net, self.ppc, self.eppci)
         else:
             self.logger.warning("Estimation failed! Pandapower network failed to update!")
 
         # clear the aux elements and calculation results created for the substitution of bb switches
         if fuse_buses_with_bb_switch != 'all' and not self.net.switch.empty:
             reset_bb_switch_impedance(self.net)
-
+        
+        # if recycle is not wished, reset ppc, ppci
+        if not self.recycle:
+            self.ppc, self.eppci = None, None
         return self.solver.successful
 
     def perform_chi2_test(self, v_in_out=None, delta_in_out=None,

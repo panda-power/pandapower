@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-# Copyright (c) 2016-2019 by University of Kassel and Fraunhofer Institute for Energy Economics
+# Copyright (c) 2016-2020 by University of Kassel and Fraunhofer Institute for Energy Economics
 # and Energy System Technology (IEE), Kassel. All rights reserved.
 
 
@@ -269,61 +269,6 @@ def add_p_constraints(net, element, is_element, ppc, f, t, delta, inverted=False
             ppc["gen"][f:t, PMIN] = - tab["max_p_mw"].values[is_element] - delta
         else:
             ppc["gen"][f:t, PMAX] = tab["max_p_mw"].values[is_element] + delta
-
-
-def _update_gen_ppc(net, ppc):
-    '''
-    Takes the ppc network and updates the gen values from the values in net.
-
-    **INPUT**:
-        **net** -The pandapower format network
-
-        **ppc** - The PYPOWER format network to fill in values
-    '''
-    # get options from net
-    calculate_voltage_angles = net["_options"]["calculate_voltage_angles"]
-    bus_lookup = net["_pd2ppc_lookups"]["bus"]
-    # get in service elements
-    _is_elements = net["_is_elements"]
-    eg_is = _is_elements['ext_grid']
-    gen_is = _is_elements['gen']
-
-    eg_end = len(eg_is)
-    gen_end = eg_end + np.count_nonzero(gen_is)
-    xw_end = gen_end + len(net["xward"])
-
-    # add ext grid / slack data
-    ext_grid_lookup = net["_pd2ppc_lookups"]["ext_grid"]
-    ext_grid_idx_ppc = ext_grid_lookup[net.ext_grid.index[eg_is]]
-    ppc["gen"][ext_grid_idx_ppc, VG] = net["ext_grid"]["vm_pu"].values[eg_is]
-    ppc["gen"][ext_grid_idx_ppc, GEN_STATUS] = eg_is.astype(int)
-
-    # set bus values for external grid buses
-    if calculate_voltage_angles:
-        # eg_buses = bus_lookup[eg_is["bus"].values]
-        ppc["bus"][ext_grid_idx_ppc, VA] = net["ext_grid"]["va_degree"].values[eg_is]
-
-    # add generator / pv data
-    if gen_end > eg_end:
-        gen_lookup = net["_pd2ppc_lookups"]["gen"]
-        gen_idx_ppc = gen_lookup[net["gen"].index[gen_is]]
-        ppc["gen"][gen_idx_ppc, PG] = net["gen"]["p_mw"].values[gen_is] * net["gen"]["scaling"].values[gen_is]
-        ppc["gen"][gen_idx_ppc, VG] = net["gen"]["vm_pu"].values[gen_is]
-
-        # set bus values for generator buses
-        gen_buses = bus_lookup[net["gen"]["bus"].values[gen_is]]
-        ppc["bus"][gen_buses, VM] = net["gen"]["vm_pu"].values[gen_is]
-
-        add_q_constraints(net, "gen", gen_is, ppc, gen_end, eg_end, net._options["delta"])
-        add_p_constraints(net, "gen", gen_is, ppc, gen_end, eg_end, net._options["delta"])
-
-    # add extended ward pv node data
-    if xw_end > gen_end:
-        # ToDo: this must be tested in combination with recycle. Maybe the placement of the updated value in ppc["gen"]
-        # ToDo: is wrong. -> I'll better raise en error
-        raise NotImplementedError("xwards in combination with recycle is not properly implemented")
-        # _build_pp_xward(net, ppc, gen_end, xw_end, q_lim_default,
-        #                           update_lookup=False)
 
 
 def _check_voltage_setpoints_at_same_bus(ppc):

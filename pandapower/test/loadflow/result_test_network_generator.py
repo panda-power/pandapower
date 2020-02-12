@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-# Copyright (c) 2016-2019 by University of Kassel and Fraunhofer Institute for Energy Economics
+# Copyright (c) 2016-2020 by University of Kassel and Fraunhofer Institute for Energy Economics
 # and Energy System Technology (IEE), Kassel. All rights reserved.
 
 
@@ -276,16 +276,16 @@ def add_test_gen(net):
     pl = 1.200
     ql = 1.100
     ps = 0.500
-    u_set = 1.0
+    vm_set_pu = 1.0
 
     b3 = pp.create_bus(net, zone="test_gen", vn_kv=.4)
     pp.create_line_from_parameters(net, b2, b3, 12.2, r_ohm_per_km=0.08, x_ohm_per_km=0.12,
                                    c_nf_per_km=300, max_i_ka=.2, df=.8)
 
     pp.create_load(net, b3, p_mw=pl, q_mvar=ql)
-    pp.create_gen(net, b3, p_mw=ps, vm_pu=u_set)
+    pp.create_gen(net, b3, p_mw=ps, vm_pu=vm_set_pu)
     # adding out of serivce gens should not change the result
-    pp.create_gen(net, b2, p_mw=ps, vm_pu=u_set, in_service=False, index=pp.get_free_id(net.gen) + 1)
+    pp.create_gen(net, b2, p_mw=ps, vm_pu=vm_set_pu, in_service=False, index=pp.get_free_id(net.gen) + 1)
 
     net.last_added_case = "test_gen"
     return net
@@ -297,14 +297,14 @@ def add_test_enforce_qlims(net):
     ql = 1.100
     ps = 0.500
     qmin = -0.200
-    u_set = 1.0
+    vm_set_pu = 1.0
 
     b3 = pp.create_bus(net, zone="test_enforce_qlims", vn_kv=.4)
     pp.create_line_from_parameters(net, b2, b3, 12.2, r_ohm_per_km=0.08, x_ohm_per_km=0.12,
                                    c_nf_per_km=300, max_i_ka=.2, df=.8)
 
     pp.create_load(net, b3, p_mw=pl, q_mvar=ql)
-    pp.create_gen(net, b3, p_mw=ps, vm_pu=u_set, min_q_mvar=qmin)
+    pp.create_gen(net, b3, p_mw=ps, vm_pu=vm_set_pu, min_q_mvar=qmin)
 
     net.last_added_case = "test_enforce_qlims"
     return net
@@ -402,7 +402,7 @@ def add_test_oos_bus_with_is_element(net):
     pl = 1.200
     ql = 1.100
     ps = -0.500
-    u_set = 1.0
+    vm_set_pu = 1.0
 
     pz = 1.200
     qz = 1.100
@@ -426,7 +426,7 @@ def add_test_oos_bus_with_is_element(net):
 
     # in service elements
     pp.create_load(net, b3, p_mw=pl, q_mvar=ql)
-    pp.create_gen(net, b4, p_mw=ps, vm_pu=u_set)
+    pp.create_gen(net, b4, p_mw=ps, vm_pu=vm_set_pu)
     pp.create_sgen(net, b5, p_mw=ps, q_mvar=ql)
     pp.create_ward(net, b3, pz_mw=pz, qz_mvar=qz, ps_mw=ps, qs_mvar=qs)
     pp.create_xward(net, b4, pz_mw=0.5 * pz, qz_mvar=0.5 * qz, ps_mw=0.5 * ps, qs_mvar=0.5 * qs,

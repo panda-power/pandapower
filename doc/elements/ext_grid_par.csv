@@ -11,4 +11,6 @@ s_sc_max_mva***;float;:math:`>` 0;maximum short circuit power provision [MVA]
 s_sc_min_mva***;float;:math:`>` 0;minimum short circuit power provision [MVA]
 rx_max***;float;0...1;maxium R/X ratio of short-circuit impedance
 rx_min***;float;0...1;minimum R/X ratio of short-circuit impedance
+r0x0_max****;float;0...1; maximal R/X-ratio to calculate Zero sequence internal impedance of ext_grid         
+x0x_max****;float;0...1;  maximal X0/X-ratio to calculate Zero sequence internal impedance of ext_grid
 in_service*;boolean;True / False;specifies if the external grid is in service.

@@ -1,0 +1,7 @@
+**Parameter**;**Datatype**;**Explanation**
+p_a_mw;float;resulting active power demand after scaling : Phase A [MW]
+q_a_mvar;float;resulting reactive power demand after scaling : Phase A [MVar]
+p_b_mw;float;resulting active power demand after scaling : Phase B [MW]
+q_b_mvar;float;resulting reactive power demand after scaling : Phase B [MVar]
+p_c_mw;float;resulting active power demand after scaling : Phase C [MW]
+q_c_mvar;float;resulting reactive power demand after scaling : Phase C [MVar]

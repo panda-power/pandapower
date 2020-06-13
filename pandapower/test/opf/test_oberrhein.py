@@ -32,8 +32,8 @@ def test_opf_oberrhein():
     net.sgen["controllable"] = True
     net.load["controllable"] = False
     # run OPF
-    pp.runopp(net)
+    pp.runopp(net, calculate_voltage_angles=False)
     assert net["OPF_converged"]
 
 if __name__ == "__main__":
-    pytest.main(["-xs"])
+    pytest.main([__file__, "-xs"])

@@ -16,7 +16,7 @@ from pandapower.pypower.idx_brch import ANGMIN, ANGMAX, BR_R, BR_X, BR_B, RATE_A
 from pandapower.pypower.idx_bus import ZONE, VA, BASE_KV, BS, GS, BUS_I, BUS_TYPE, VMAX, VMIN, VM, PD, QD
 from pandapower.pypower.idx_cost import MODEL, NCOST, COST
 from pandapower.pypower.idx_gen import PG, QG, GEN_BUS, VG, GEN_STATUS, QMAX, QMIN, PMIN, PMAX
-from pandapower.results import reset_results
+from pandapower.results import init_results
 
 # const value in branch for tnep
 CONSTRUCTION_COST = 23
@@ -87,7 +87,7 @@ def convert_to_pm_structure(net):
     net["OPF_converged"] = False
     net["converged"] = False
     _add_auxiliary_elements(net)
-    reset_results(net)
+    init_results(net)
     ppc, ppci = _pd2ppc(net)
     ppci = build_ne_branch(net, ppci)
     net["_ppc_opf"] = ppci

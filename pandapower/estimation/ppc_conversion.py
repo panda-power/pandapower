@@ -4,25 +4,21 @@
 # and Energy System Technology (IEE), Kassel. All rights reserved.
 
 
-import numpy as np
-import pandas as pd
 from collections import UserDict
 
+import numpy as np
+
+import pandapower.pypower.idx_bus as idx_bus
 from pandapower.auxiliary import _select_is_elements_numba, _add_ppc_options, _add_auxiliary_elements
+from pandapower.estimation.idx_brch import *
+from pandapower.estimation.idx_bus import *
+from pandapower.estimation.results import _copy_power_flow_results
+from pandapower.estimation.util import estimate_voltage_vector
 from pandapower.pd2ppc import _pd2ppc
+from pandapower.pf.run_newton_raphson_pf import _run_dc_pf
 from pandapower.pypower.idx_brch import branch_cols
 from pandapower.pypower.idx_bus import bus_cols
-import pandapower.pypower.idx_bus as idx_bus
 from pandapower.pypower.makeYbus import makeYbus
-from pandapower.pf.run_newton_raphson_pf import _run_dc_pf
-from pandapower.run import rundcpp
-from pandapower.build_branch import get_is_lines
-from pandapower.create import create_buses, create_line_from_parameters
-
-from pandapower.estimation.util import estimate_voltage_vector
-from pandapower.estimation.idx_bus import *
-from pandapower.estimation.idx_brch import *
-from pandapower.estimation.results import _copy_power_flow_results
 
 try:
     import pplog as logging
@@ -82,24 +78,24 @@ def _add_measurements_to_ppci(net, ppci, zero_injection):
 
     # Convert side from string to bus id
     meas["side"] = meas.apply(lambda row:
-                              net['line'].at[row["element"], row["side"]+"_bus"] if
+                              net['line'].at[row["element"], row["side"] + "_bus"] if
                               row["side"] in ("from", "to") else
-                              net[row["element_type"]].at[row["element"], row["side"]+'_bus'] if
+                              net[row["element_type"]].at[row["element"], row["side"] + '_bus'] if
                               row["side"] in ("hv", "mv", "lv") else row["side"], axis=1)
 
     # convert p, q, i measurement to p.u., u already in p.u.
-    meas.loc[meas.measurement_type=="p", ["value", "std_dev"]] /= ppci["baseMVA"]
-    meas.loc[meas.measurement_type=="q", ["value", "std_dev"]] /= ppci["baseMVA"]
-    
+    meas.loc[meas.measurement_type == "p", ["value", "std_dev"]] /= ppci["baseMVA"]
+    meas.loc[meas.measurement_type == "q", ["value", "std_dev"]] /= ppci["baseMVA"]
+
     if not meas.query("measurement_type=='i'").empty:
-        meas_i_mask = (meas.measurement_type=='i')
-        base_i_ka = ppci["baseMVA"] / net.bus.loc[(meas.side.fillna(meas.element))[meas_i_mask].values, 
-                        "vn_kv"].values
-        meas.loc[meas_i_mask, "value"] /= base_i_ka/np.sqrt(3)
-        meas.loc[meas_i_mask, "std_dev"] /= base_i_ka/np.sqrt(3)
+        meas_i_mask = (meas.measurement_type == 'i')
+        base_i_ka = ppci["baseMVA"] / net.bus.loc[(meas.side.fillna(meas.element))[meas_i_mask].values,
+                                                  "vn_kv"].values
+        meas.loc[meas_i_mask, "value"] /= base_i_ka / np.sqrt(3)
+        meas.loc[meas_i_mask, "std_dev"] /= base_i_ka / np.sqrt(3)
 
     if not meas.query("(measurement_type=='ia' )| (measurement_type=='va')").empty:
-        meas_dg_mask = (meas.measurement_type=='ia')|(meas.measurement_type=='va')
+        meas_dg_mask = (meas.measurement_type == 'ia') | (meas.measurement_type == 'va')
         meas.loc[meas_dg_mask, "value"] = np.deg2rad(meas.loc[meas_dg_mask, "value"])
         meas.loc[meas_dg_mask, "std_dev"] = np.deg2rad(meas.loc[meas_dg_mask, "std_dev"])
 
@@ -125,23 +121,23 @@ def _add_measurements_to_ppci(net, ppci, zero_injection):
         trafo_ix_start, trafo_ix_end = trafo_ix_start - trafo_ix_offset, trafo_ix_end - trafo_ix_offset
         map_trafo = {trafo_ix: br_ix for trafo_ix, br_ix in
                      zip(net.trafo.index, range(trafo_ix_start, trafo_ix_end))
-                     if branch_mask[br_ix+trafo_ix_offset]}
+                     if branch_mask[br_ix + trafo_ix_offset]}
 
     if "trafo3w" in net["_pd2ppc_lookups"]["branch"]:
         trafo3w_ix_start, trafo3w_ix_end = net["_pd2ppc_lookups"]["branch"]["trafo3w"]
         trafo3w_ix_offset = np.sum(~branch_mask[:trafo3w_ix_start])
         num_trafo3w = net.trafo3w.shape[0]
         trafo3w_ix_start, trafo3w_ix_end = trafo3w_ix_start - trafo3w_ix_offset, trafo3w_ix_end - trafo3w_ix_offset
-        map_trafo3w = {trafo3w_ix: {'hv': br_ix, 'mv': br_ix+num_trafo3w, 'lv': br_ix+2*num_trafo3w}
-                        for trafo3w_ix, br_ix in
-                       zip(net.trafo3w.index, range(trafo3w_ix_start, trafo3w_ix_start+num_trafo3w))
-                       if branch_mask[br_ix+trafo3w_ix_offset]}
+        map_trafo3w = {trafo3w_ix: {'hv': br_ix, 'mv': br_ix + num_trafo3w, 'lv': br_ix + 2 * num_trafo3w}
+                       for trafo3w_ix, br_ix in
+                       zip(net.trafo3w.index, range(trafo3w_ix_start, trafo3w_ix_start + num_trafo3w))
+                       if branch_mask[br_ix + trafo3w_ix_offset]}
 
     # set measurements for ppc format
     # add 9 columns to ppc[bus] for Vm, Vm std dev, P, P std dev, Q, Q std dev,
     # pandapower measurement indices V, P, Q
     bus_append = np.full((ppci["bus"].shape[0], bus_cols_se), np.nan, dtype=ppci["bus"].dtype)
-    
+
     v_measurements = meas_bus[(meas_bus.measurement_type == "v")]
     if len(v_measurements):
         bus_positions = map_bus[v_measurements.element.values.astype(int)]
@@ -163,7 +159,7 @@ def _add_measurements_to_ppci(net, ppci, zero_injection):
         if len(unique_bus_positions) < len(bus_positions):
             std_logger.debug("P Measurement duplication will be automatically merged!")
             for bus in unique_bus_positions:
-                p_meas_on_bus = p_measurements.iloc[np.argwhere(bus_positions==bus).ravel(), :]
+                p_meas_on_bus = p_measurements.iloc[np.argwhere(bus_positions == bus).ravel(), :]
                 bus_append[bus, P] = p_meas_on_bus.value.sum()
                 bus_append[bus, P_STD] = p_meas_on_bus.std_dev.max()
                 bus_append[bus, P_IDX] = p_meas_on_bus.index[0]
@@ -179,7 +175,7 @@ def _add_measurements_to_ppci(net, ppci, zero_injection):
         if len(unique_bus_positions) < len(bus_positions):
             std_logger.debug("Q Measurement duplication will be automatically merged!")
             for bus in unique_bus_positions:
-                q_meas_on_bus = q_measurements.iloc[np.argwhere(bus_positions==bus).ravel(), :]
+                q_meas_on_bus = q_measurements.iloc[np.argwhere(bus_positions == bus).ravel(), :]
                 bus_append[bus, Q] = q_meas_on_bus.value.sum()
                 bus_append[bus, Q_STD] = q_meas_on_bus.std_dev.max()
                 bus_append[bus, Q_IDX] = q_meas_on_bus.index[0]
@@ -189,7 +185,7 @@ def _add_measurements_to_ppci(net, ppci, zero_injection):
             bus_append[bus_positions, Q_STD] = q_measurements.std_dev.values
             bus_append[bus_positions, Q_IDX] = q_measurements.index.values
 
-    #add zero injection measurement and labels defined in parameter zero_injection
+    # add zero injection measurement and labels defined in parameter zero_injection
     bus_append = _add_zero_injection(net, ppci, bus_append, zero_injection)
     # add virtual measurements for artificial buses, which were created because
     # of an open line switch. p/q are 0. and std dev is 1. (small value)
@@ -206,7 +202,7 @@ def _add_measurements_to_ppci(net, ppci, zero_injection):
                             np.nan, dtype=ppci["branch"].dtype)
 
     if map_line is not None:
-        i_measurements = meas[(meas.measurement_type == "i") & (meas.element_type == "line") &\
+        i_measurements = meas[(meas.measurement_type == "i") & (meas.element_type == "line") & \
                               meas.element.isin(map_line)]
         if len(i_measurements):
             meas_from = i_measurements[(i_measurements.side.values.astype(int) ==
@@ -221,9 +217,9 @@ def _add_measurements_to_ppci(net, ppci, zero_injection):
             branch_append[ix_to, IM_TO] = meas_to.value.values
             branch_append[ix_to, IM_TO_STD] = meas_to.std_dev.values
             branch_append[ix_to, IM_TO_IDX] = meas_to.index.values
-            
+
         ia_measurements = meas[(meas.measurement_type == "ia") & (meas.element_type == "line") & \
-                                  meas.element.isin(map_line)]
+                               meas.element.isin(map_line)]
         if len(ia_measurements):
             dg_meas_from = ia_measurements[(ia_measurements.side.values.astype(int) ==
                                             net.line.from_bus[ia_measurements.element]).values]
@@ -302,12 +298,12 @@ def _add_measurements_to_ppci(net, ppci, zero_injection):
             branch_append[ix_to, IM_TO_IDX] = meas_to.index.values
 
         i_tr_dg_measurements = meas[(meas.measurement_type == "ia") & (meas.element_type == "trafo") &
-                                     meas.element.isin(map_trafo)]
+                                    meas.element.isin(map_trafo)]
         if len(i_tr_dg_measurements):
             dg_meas_from = i_tr_dg_measurements[(i_tr_dg_measurements.side.values.astype(int) ==
-                                           net.trafo.hv_bus[i_tr_dg_measurements.element]).values]
+                                                 net.trafo.hv_bus[i_tr_dg_measurements.element]).values]
             dg_meas_to = i_tr_dg_measurements[(i_tr_dg_measurements.side.values.astype(int) ==
-                                         net.trafo.lv_bus[i_tr_dg_measurements.element]).values]
+                                               net.trafo.lv_bus[i_tr_dg_measurements.element]).values]
             ix_from = [map_trafo[t] for t in dg_meas_from.element.values.astype(int)]
             ix_to = [map_trafo[t] for t in dg_meas_to.element.values.astype(int)]
             branch_append[ix_from, IA_FROM] = dg_meas_from.value.values
@@ -376,14 +372,14 @@ def _add_measurements_to_ppci(net, ppci, zero_injection):
     # Add degree_measurements for trafo3w
     if map_trafo3w is not None:
         i_tr3w_dg_measurements = meas[(meas.measurement_type == "ia") & (meas.element_type == "trafo3w") &
-                                   meas.element.isin(map_trafo3w)]
+                                      meas.element.isin(map_trafo3w)]
         if len(i_tr3w_dg_measurements):
             dg_meas_hv = i_tr3w_dg_measurements[(i_tr3w_dg_measurements.side.values.astype(int) ==
-                                           net.trafo3w.hv_bus[i_tr3w_dg_measurements.element]).values]
+                                                 net.trafo3w.hv_bus[i_tr3w_dg_measurements.element]).values]
             dg_meas_mv = i_tr3w_dg_measurements[(i_tr3w_dg_measurements.side.values.astype(int) ==
-                                           net.trafo3w.mv_bus[i_tr3w_dg_measurements.element]).values]
+                                                 net.trafo3w.mv_bus[i_tr3w_dg_measurements.element]).values]
             dg_meas_lv = i_tr3w_dg_measurements[(i_tr3w_dg_measurements.side.values.astype(int) ==
-                                           net.trafo3w.lv_bus[i_tr3w_dg_measurements.element]).values]
+                                                 net.trafo3w.lv_bus[i_tr3w_dg_measurements.element]).values]
             ix_hv = [map_trafo3w[t]['hv'] for t in dg_meas_hv.element.values.astype(int)]
             ix_mv = [map_trafo3w[t]['mv'] for t in dg_meas_mv.element.values.astype(int)]
             ix_lv = [map_trafo3w[t]['lv'] for t in dg_meas_lv.element.values.astype(int)]
@@ -440,21 +436,21 @@ def _add_measurements_to_ppci(net, ppci, zero_injection):
             branch_append[ix_lv, Q_TO] = meas_lv.value.values
             branch_append[ix_lv, Q_TO_STD] = meas_lv.std_dev.values
             branch_append[ix_lv, Q_TO_IDX] = meas_lv.index.values
-    
+
     # Check append or update
     if ppci["bus"].shape[1] == bus_cols:
         ppci["bus"] = np.hstack((ppci["bus"], bus_append))
     else:
-        ppci["bus"][:, bus_cols: bus_cols+bus_cols_se] = bus_append
-    
+        ppci["bus"][:, bus_cols: bus_cols + bus_cols_se] = bus_append
+
     if ppci["branch"].shape[1] == branch_cols:
         ppci["branch"] = np.hstack((ppci["branch"], branch_append))
     else:
-        ppci["branch"][:, branch_cols: branch_cols+branch_cols_se] = branch_append
+        ppci["branch"][:, branch_cols: branch_cols + branch_cols_se] = branch_append
     return ppci
 
 
-def _add_zero_injection(net, ppci, bus_append, zero_injection): 
+def _add_zero_injection(net, ppci, bus_append, zero_injection):
     """
     Add zero injection labels to the ppci structure and add virtual measurements to those buses
     :param net: pandapower net
@@ -462,20 +458,20 @@ def _add_zero_injection(net, ppci, bus_append, zero_injection):
     :param bus_append: added columns to the ppci bus with zero injection label
     :param zero_injection: parameter to control which bus to be identified as zero injection
     :return bus_append: added columns
-    """   
-    bus_append[:, ZERO_INJ_FLAG] = False   
+    """
+    bus_append[:, ZERO_INJ_FLAG] = False
     if zero_injection is not None:
         # identify aux bus to zero injection
         if net._pd2ppc_lookups['aux']:
-            aux_bus_lookup = np.concatenate([v for k,v in net._pd2ppc_lookups['aux'].items() if k != 'xward'])
+            aux_bus_lookup = np.concatenate([v for k, v in net._pd2ppc_lookups['aux'].items() if k != 'xward'])
             aux_bus = net._pd2ppc_lookups['bus'][aux_bus_lookup]
             bus_append[aux_bus, ZERO_INJ_FLAG] = True
 
         if isinstance(zero_injection, str):
             if zero_injection == 'auto':
                 # identify bus without elements and pq measurements as zero injection
-                zero_inj_bus_mask = (ppci["bus"][:, 1] == 1) & (ppci["bus"][:, 2:6]==0).all(axis=1) &\
-                    np.isnan(bus_append[:, P:(Q_STD+1)]).all(axis=1)
+                zero_inj_bus_mask = (ppci["bus"][:, 1] == 1) & (ppci["bus"][:, 2:6] == 0).all(axis=1) & \
+                                    np.isnan(bus_append[:, P:(Q_STD + 1)]).all(axis=1)
                 bus_append[zero_inj_bus_mask, ZERO_INJ_FLAG] = True
             elif zero_injection != "aux_bus":
                 raise UserWarning("zero injection parameter is not correctly initialized")
@@ -568,8 +564,8 @@ def _build_measurement_vectors(ppci, update_meas_only=False):
                                     i_degree_line_t_not_nan])
         any_i_meas = np.any(np.r_[i_line_f_not_nan, i_line_t_not_nan])
         any_degree_meas = np.any(np.r_[v_degree_bus_not_nan,
-                                       i_degree_line_f_not_nan, 
-                                       i_degree_line_t_not_nan]) 
+                                       i_degree_line_f_not_nan,
+                                       i_degree_line_t_not_nan])
         return z, pp_meas_indices, r_cov, meas_mask, any_i_meas, any_degree_meas
     else:
         return z
@@ -600,8 +596,8 @@ class ExtendedPPCI(UserDict):
         # Measurement relevant parameters
         self.z = None
         self.r_cov = None
-        self.pp_meas_indices = None 
-        self.non_nan_meas_mask = None 
+        self.pp_meas_indices = None
+        self.non_nan_meas_mask = None
         self.non_nan_meas_selector = None
         self.any_i_meas = False
         self.any_degree_meas = False
@@ -623,20 +619,19 @@ class ExtendedPPCI(UserDict):
         self.delta = self.delta_init.copy()
         self.E = self.E_init.copy()
 
-
     def _initialize_meas(self):
         # calculate relevant vectors from ppci measurements
-        self.z, self.pp_meas_indices, self.r_cov, self.non_nan_meas_mask, self.any_i_meas, self.any_degree_meas =\
-             _build_measurement_vectors(self, update_meas_only=False)
+        self.z, self.pp_meas_indices, self.r_cov, self.non_nan_meas_mask, self.any_i_meas, self.any_degree_meas = \
+            _build_measurement_vectors(self, update_meas_only=False)
         self.non_nan_meas_selector = np.flatnonzero(self.non_nan_meas_mask)
-    
+
     def update_meas(self):
         self.z = _build_measurement_vectors(self, update_meas_only=True)
 
     @property
     def V(self):
         return self.v * np.exp(1j * self.delta)
-    
+
     def reset(self):
         self.v, self.delta, self.E = self.v_init.copy(), self.delta_init.copy(), self.E_init.copy()
 
@@ -644,11 +639,11 @@ class ExtendedPPCI(UserDict):
         self.E = E
         self.v = E[self.num_non_slack_bus:]
         self.delta[self.non_slack_buses] = E[:self.num_non_slack_bus]
-    
+
     def E2V(self, E):
         self.update_E(E)
         return self.V
-        
+
     def get_Y(self):
         # Using recycled version if available
         if "Ybus" in self["internal"] and self["internal"]["Ybus"].size:

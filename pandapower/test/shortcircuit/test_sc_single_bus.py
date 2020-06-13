@@ -64,4 +64,4 @@ def test_meshed_network(meshed_grid):
 
 
 if __name__ == '__main__': 
-    pytest.main(__file__)
+    pytest.main([__file__])

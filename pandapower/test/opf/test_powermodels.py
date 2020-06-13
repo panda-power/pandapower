@@ -22,10 +22,12 @@ from pandapower.converter import convert_pp_to_pm
 from pandapower.test.opf.test_basic import simple_opf_test_net
 
 try:
+    from julia.core import UnsupportedPythonError
+except ImportError:
+    UnsupportedPythonError = Exception
+try:
     from julia import Main
-
-    julia_installed = True
-except (ImportError, RuntimeError) as e:
+except (ImportError, RuntimeError, UnsupportedPythonError) as e:
     julia_installed = False
     print(e)
 

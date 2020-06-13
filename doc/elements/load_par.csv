@@ -8,6 +8,7 @@ const_i_percent*;float;:math:`[0,100]`;percentage of p_mw and q_mvar that is ass
 sn_mva;float;:math:`>0`;rated power of the load [kVA]
 scaling *;float;:math:`\geq 0`;scaling factor for active and reactive power
 in_service*;boolean;True / False;specifies if the load is in service.
+type*;String;wye/delta;Connection Type of 3 Phase Load(Valid for three phase load flow only)
 controllable**;bool;;States if load is controllable or not, load will not be used as a flexibilty if it is not controllable
 max_p_mw**;float;;Maximum active power
 min_p_mw**;float;;Minimum active power

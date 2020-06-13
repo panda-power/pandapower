@@ -1,5 +1,5 @@
-Power Flow
-=====================
+Balanced AC Power Flow
+=======================
 
 pandapower uses PYPOWER to solve the power flow problem:
 

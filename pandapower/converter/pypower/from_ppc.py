@@ -40,7 +40,11 @@ def _create_costs(net, ppc, gen_lookup, type, idx):
                            ppc['gencost'][idx, 4:], type)
     elif ppc['gencost'][idx, 0] == 2:
         ncost = ppc['gencost'][idx, NCOST]
-        if ncost == 2:
+        if ncost == 1:
+            cp2 = 0
+            cp1 = 0
+            cp0 = ppc['gencost'][idx, COST]
+        elif ncost == 2:
             cp2 = 0
             cp1 = ppc['gencost'][idx, COST]
             cp0 = ppc['gencost'][idx, COST + 1]
@@ -48,6 +52,14 @@ def _create_costs(net, ppc, gen_lookup, type, idx):
             cp2 = ppc['gencost'][idx, COST]
             cp1 = ppc['gencost'][idx, COST + 1]
             cp0 = ppc['gencost'][idx, COST + 2]
+        elif ncost > 3:
+            logger.warning("The pandapower poly_cost table only supports up to 2nd order " +
+                           "polynomials. The ppc higher order polynomials cannot be converted.")
+            cp2 = ppc['gencost'][idx, COST + ncost - 3]
+            cp1 = ppc['gencost'][idx, COST + ncost - 2]
+            cp0 = ppc['gencost'][idx, COST + ncost - 1]
+        else:
+            raise ValueError("'ncost' must be an positve integer but is " + str(ncost))
         pp.create_poly_cost(net, gen_lookup.element.at[idx], gen_lookup.element_type.at[idx],
                                   cp1_eur_per_mw=cp1, cp2_eur_per_mw2=cp2, cp0_eur=cp0)
     else:

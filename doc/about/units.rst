@@ -6,7 +6,9 @@ Unit System and Conventions
 
 **Naming Conventions**
 
-Parameters are always named in the form of <parameter>_<unit>, such as:
+Parameters are always named in the form of <parameter>_<unit>,
+ 
+However, for three phase load flow the notation is like <parameter>_<phase>_<unit>:
 
 .. tabularcolumns:: |l|l|
 .. csv-table:: 
@@ -24,17 +26,39 @@ Constraint parameters are always named with max or min as the prefix to the vari
 
 It is advised to keep consistent with these naming conventions when extending the framework and introducing new parameters.
    
-**Three Phase System**
+**Three Phase System (Balanced Load Flow)**
 
-For the three phase system, the following conventions apply:
+For balanced three phase systems, the following conventions apply:
 
     - voltage values are given as phase-to-phase voltages
     - current values are given as phase currents
-    - power values are given as three-phase power flows
+    - power values are given as aggregated three-phase power 
 
-The power equation in the three phase system is therefore given as :math:`S = \sqrt3 \cdot V \cdot I`.
+So for balanced system, three-phase power is three times the single phase power i.e. : 
 
-All power values are given in MW / MVA / MVar except the iron losses of transformers which are given in MW (pfe_mw).
+:math:`S = 3 \cdot V_{ph-e} \cdot I_{ph-e}`
+
+Assuming Wye connected loads, phase-to-earth voltage    :math:`v_{ph-e} = \frac{V_{ph-ph}}{\sqrt3}`
+
+The power equation in the balanced three phase system is therefore given as :math:`S = \sqrt3 \cdot V_{ph-ph} \cdot I_{ph-ph}`.
+
+**Three Phase System (Unbalanced Load Flow)**
+
+For unbalanced three phase systems, the following conventions apply:
+	- voltage values are entered as phase-to-phase voltages
+    - current values are entered as phase currents
+    - But, Phase power values can be entered seperately in the new element **asymmetric_load** 
+
+The power equation in each phase is therefore given as :math:`S_{ph-e} = \frac{V_{ph-ph} \cdot I_{ph-ph}}{\sqrt3 }`.
+	
+.. note::
+
+	- Even though voltage values are fed as phase-phase voltage for simplicity, internally its converted to phase-earth for calculation.
+	- So, if you want to take out actual voltage values from p.u values , you need to divide base_kv value by :math:`\sqrt3` :
+
+	:math:`v_{an} = \frac{V_{ab}}{\sqrt3}`
+
+	- All power values are given in MW / MVA / MVar except the iron losses of transformers which are given in kW (pfe_kw).
 
 **Per Unit System**
 

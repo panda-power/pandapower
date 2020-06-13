@@ -11,6 +11,13 @@ vkr_percent*;float;:math:`\geq`  0;"real component of
 short circuit voltage [%]"
 pfe_kw*;float;:math:`\geq` 0;iron losses [kW]
 i0_percent*;float;:math:`\geq` 0;open loop losses in [%]
+vk0_percent***;float;:math:`\geq` 0;zero sequence relative short-circuit voltage
+vkr0_percent***;float;:math:`\geq` 0;real part of zero sequence relative short-circuit voltage
+mag0_percent***;float;:math:`\geq` 0;"z_mag0 / z0
+ratio between magnetizing and short circuit impedance (zero sequence)"
+mag0_rx***;float;;zero sequence magnetizing r/x  ratio 
+si0_hv_partial***;float;:math:`\geq` 0;zero sequence short circuit impedance  distribution in hv side
+vector_group***;String;'Dyn','Yyn','Yzn','YNyn'; Vector Groups ( required for zero sequence model of transformer )
 shift_degree*;float;;transformer phase shift angle
 tap_side;string;"""hv"", ""lv""";defines if tap changer is at the high- or low voltage side
 tap_neutral;integer;;rated tap position
@@ -22,5 +29,5 @@ tap_pos;integer;;current position of tap changer
 tap_phase_shifter;bool;;defines whether the transformer is an ideal phase shifter
 parallel;int;:math:`>` 0;number of parallel transformers
 max_loading_percent**;float;:math:`>` 0;Maximum loading of the transformer with respect to sn_mva and its corresponding current at 1.0 p.u.
-df;float;1 :math:`\geq` df :math:`>`0;derating factor: maximal current of transformer in relation to nominal current of transformer (from 0 to 1)
+df;float;1 :math:`\geq` df :math:`>` 0;derating factor: maximal current of transformer in relation to nominal current of transformer (from 0 to 1)
 in_service*;boolean;True / False;specifies if the transformer is in service.

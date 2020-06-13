@@ -81,8 +81,9 @@ def dcopf_solver(om, ppopt, out_opt=None):
     if alg == 0:
         if have_fcn('cplex'):        ## use CPLEX by default, if available
             alg = 500
-        elif have_fcn('mosek'):      ## if not, then MOSEK, if available
-            alg = 600
+        # MOSEK is currently not supported
+#        elif have_fcn('mosek'):      ## if not, then MOSEK, if available
+#            alg = 600
         elif have_fcn('gurobi'):     ## if not, then Gurobi, if available
             # Error in Gurobi pypower solver -> Issue with pypower 5.1.4. Gurobi won't work. Using alg 200 instead
             # Reason for failure: In qps_gurobi of pypower len(H) raises Error:

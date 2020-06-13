@@ -21,7 +21,6 @@ from pandapower.pf.create_jacobian import create_jacobian_matrix, get_fastest_ja
 
 def newtonpf(Ybus, Sbus, V0, pv, pq, ppci, options):
     """Solves the power flow using a full Newton's method.
-
     Solves for bus voltages given the full system admittance matrix (for
     all buses), the complex bus power injection vector (for all buses),
     the initial vector of complex bus voltages, and column vectors with
@@ -30,12 +29,9 @@ def newtonpf(Ybus, Sbus, V0, pv, pq, ppci, options):
     generator (including ref bus) buses, and the reference angle of the
     swing bus, as well as an initial guess for remaining magnitudes and
     angles.
-
     @see: L{runpf}
-
     @author: Ray Zimmerman (PSERC Cornell)
     @author: Richard Lincoln
-
     Modified by University of Kassel (Florian Schaefer) to use numba
     """
 
@@ -46,6 +42,8 @@ def newtonpf(Ybus, Sbus, V0, pv, pq, ppci, options):
     iwamoto = options["algorithm"] == "iwamoto_nr"
     voltage_depend_loads = options["voltage_depend_loads"]
     v_debug = options["v_debug"]
+    use_umfpack = options["use_umfpack"]
+    permc_spec = options["permc_spec"]
 
     baseMVA = ppci['baseMVA']
     bus = ppci['bus']
@@ -99,7 +97,7 @@ def newtonpf(Ybus, Sbus, V0, pv, pq, ppci, options):
 
         J = create_jacobian_matrix(Ybus, V, pvpq, pq, createJ, pvpq_lookup, npv, npq, numba)
 
-        dx = -1 * spsolve(J, F)
+        dx = -1 * spsolve(J, F, permc_spec=permc_spec, use_umfpack=use_umfpack)
         # update voltage
         if npv and not iwamoto:
             Va[pv] = Va[pv] + dx[j1:j2]

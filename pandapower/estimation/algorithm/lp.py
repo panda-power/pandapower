@@ -6,13 +6,13 @@
 import numpy as np
 from scipy.optimize import linprog
 
-from pandapower.estimation.algorithm.matrix_base import BaseAlgebra
 from pandapower.estimation.algorithm.base import BaseAlgorithm
+from pandapower.estimation.algorithm.matrix_base import BaseAlgebra
 
 
 class LPAlgorithm(BaseAlgorithm):
     def estimate(self, eppci, **kwargs):
-        if "estimator" in kwargs and kwargs["estimator"].lower() != "lav": # pragma: no cover
+        if "estimator" in kwargs and kwargs["estimator"].lower() != "lav":  # pragma: no cover
             self.logger.warning("LP Algorithm supports only LAV Estimator!! Set to LAV!!")
 
         # matrix calculation object
@@ -39,7 +39,7 @@ class LPAlgorithm(BaseAlgorithm):
                 cur_it += 1
                 current_error = np.max(np.abs(d_E))
                 self.logger.debug("Current error: {:.7f}".format(current_error))
-            except np.linalg.linalg.LinAlgError: # pragma: no cover
+            except np.linalg.linalg.LinAlgError:  # pragma: no cover
                 self.logger.error("A problem appeared while using the linear algebra methods."
                                   "Check and change the measurement set.")
                 return False
@@ -54,14 +54,13 @@ class LPAlgorithm(BaseAlgorithm):
         one_m = np.ones((m, 1))
         Im = np.eye(m)
 
-        c_T = np.r_[zero_n, zero_n, one_m, one_m] 
+        c_T = np.r_[zero_n, zero_n, one_m, one_m]
         A = np.c_[H, -H, Im, -Im]
 
         res = linprog(c_T.ravel(), A_eq=A, b_eq=r,
-                      method="simplex", options={'tol': 1e-5, 'disp': True, 'maxiter':20000})
+                      method="simplex", options={'tol': 1e-5, 'disp': True, 'maxiter': 20000})
         if res.success:
-            d_x = np.array(res['x'][:n]).ravel() - np.array(res['x'][n:2*n]).ravel()
+            d_x = np.array(res['x'][:n]).ravel() - np.array(res['x'][n:2 * n]).ravel()
             return d_x
-        else: # pragma: no cover
-            raise np.linalg.linalg.LinAlgError 
-
+        else:  # pragma: no cover
+            raise np.linalg.linalg.LinAlgError

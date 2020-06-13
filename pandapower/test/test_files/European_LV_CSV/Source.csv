@@ -1,0 +1,6 @@
+# Source impedance
+[Source]
+Voltage=11 kV
+pu=1.05 
+ISC3=3000 A
+ISC1=5 A

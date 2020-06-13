@@ -60,7 +60,7 @@ def test_irwls_shgm():
     net = nw.case14()
     pp.runpp(net)
     add_virtual_meas_from_loadflow(net, p_std_dev=0.01, q_std_dev=0.01)
-    success = estimate(net, algorithm="irwls", estimator="shgm", 
+    success = estimate(net, algorithm="irwls", estimator="shgm",
                        a=3, maximum_iterations=50)
     assert success
     assert np.allclose(net.res_bus.vm_pu, net.res_bus_est.vm_pu, 1e-2)
@@ -69,4 +69,3 @@ def test_irwls_shgm():
 
 if __name__ == "__main__":
     pytest.main([__file__, "-xs"])
-    

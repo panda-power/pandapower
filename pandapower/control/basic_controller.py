@@ -90,6 +90,7 @@ class Controller(JSONSerializableClass):
         # deepcopy and update complete __dict__
         state = copy.deepcopy(self.__dict__, memo)
         res.__dict__.update(state)
+        setattr(res, 'net', memo[id(self.net)])
 
         return res
 

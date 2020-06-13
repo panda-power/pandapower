@@ -121,6 +121,11 @@ Topology Modification
 
 .. autofunction:: pandapower.replace_sgen_by_gen
 
+.. autofunction:: pandapower.replace_ward_by_internal_elements
+
+.. autofunction:: pandapower.replace_xward_by_internal_elements
+
+
 ====================================
 Item/Element Selection
 ====================================

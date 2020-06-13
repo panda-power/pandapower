@@ -183,7 +183,7 @@ class OutputWriter(JSONSerializableClass):
                 # if output_list contains functools.partial
                 table = partial.args[0]
                 variable = partial.args[1]
-            if table is not "Parameters":
+            if table != "Parameters":
                 file_path = os.path.join(self.output_path, table)
                 mkdirs_if_not_existent(file_path)
                 if append:
@@ -323,9 +323,9 @@ class OutputWriter(JSONSerializableClass):
         **eval_function** (function, None) - A function to be applied on the table / variable / index combination.
         example: pd.min or pd.mean
 
-        **eval_name** (str, None) - The name for an applied function. If None the name consists of the table, variable,
-        index and eval function
-        example: "Sir_Lancelot"
+        **eval_name** (str, None) - The name for an applied function. It *must* be unique.
+                                    If the name is None the name consists of the table, variable, index and eval function
+                                    example: "max_load_p_mw_values"
 
         EXAMPLE:
             >>> ow.log_variable('res_bus', 'vm_pu') # add logging for bus voltage magnitudes
@@ -338,6 +338,11 @@ class OutputWriter(JSONSerializableClass):
         append = True
         # check if new log_variable is already in log_variables. If so either append or delete
         for i, log_args in enumerate(self.log_variables):
+            if len(log_args) > 4 and eval_name is not None and log_args[4] == eval_name:
+                logger.warning("eval_name '{}' already exists for table '{}' and variable '{}'. "
+                                 "Please choose a unique eval_name. "
+                               "I'll use the default instead.".format(eval_name, log_args[0], log_args[1]))
+                eval_name = None
             if log_args[0] == table and log_args[1] == variable:
                 # table and variable exist in log_variables
                 if eval_function is not None or eval_name is not None:

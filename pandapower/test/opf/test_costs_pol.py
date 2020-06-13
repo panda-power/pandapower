@@ -14,9 +14,6 @@ try:
 except ImportError:
     import logging
 
-logger = logging.getLogger(__name__)
-logger.setLevel("DEBUG")
-
 
 def test_cost_pol_gen():
     """ Testing a very simple network for the resulting cost value
@@ -128,4 +125,6 @@ def test_cost_pol_q():
 
 
 if __name__ == "__main__":
-       pytest.main(["test_costs_pol.py", "-xs"])
+    logger = logging.getLogger(__name__)
+    logger.setLevel("DEBUG")
+    pytest.main(["test_costs_pol.py", "-xs"])

@@ -7,14 +7,13 @@ import numpy as np
 from scipy.sparse import csr_matrix, vstack, hstack
 from scipy.sparse.linalg import spsolve
 
-from pandapower.pypower.idx_bus import BUS_TYPE, VA, VM, bus_cols
-from pandapower.estimation.idx_bus import ZERO_INJ_FLAG, P, P_STD, Q, Q_STD
-from pandapower.estimation.ppc_conversion import _build_measurement_vectors, ExtendedPPCI
-
-from pandapower.estimation.algorithm.matrix_base import BaseAlgebra,\
-    BaseAlgebraZeroInjConstraints
 from pandapower.estimation.algorithm.estimator import BaseEstimatorIRWLS, get_estimator
- 
+from pandapower.estimation.algorithm.matrix_base import BaseAlgebra, \
+    BaseAlgebraZeroInjConstraints
+from pandapower.estimation.idx_bus import ZERO_INJ_FLAG, P, P_STD, Q, Q_STD
+from pandapower.estimation.ppc_conversion import ExtendedPPCI
+from pandapower.pypower.idx_bus import bus_cols
+
 try:
     import pplog as logging
 except ImportError:
@@ -63,7 +62,7 @@ class BaseAlgorithm:
 
     def estimate(self, ppci: ExtendedPPCI, **kwargs):
         # Must be implemented individually!!
-        pass 
+        pass
 
 
 class WLSAlgorithm(BaseAlgorithm):
@@ -84,7 +83,7 @@ class WLSAlgorithm(BaseAlgorithm):
 
         current_error, cur_it = 100., 0
         # invert covariance matrix
-        r_inv = csr_matrix(np.diagflat(1/eppci.r_cov ** 2))
+        r_inv = csr_matrix(np.diagflat(1 / eppci.r_cov ** 2))
         E = eppci.E
         while current_error > self.tolerance and cur_it < self.max_iterations:
             self.logger.debug("Starting iteration {:d}".format(1 + cur_it))
@@ -133,8 +132,8 @@ class WLSZeroInjectionConstraintsAlgorithm(BaseAlgorithm):
     def estimate(self, eppci, **kwargs):
         # state vector built from delta, |V| and zero injections
         # Find pq bus with zero p,q and shunt admittance
-        zero_injection_bus = np.argwhere(eppci["bus"][:, bus_cols+ZERO_INJ_FLAG] == True).ravel()
-        eppci["bus"][zero_injection_bus, [bus_cols+P, bus_cols+P_STD, bus_cols+Q, bus_cols+Q_STD]] = np.NaN
+        zero_injection_bus = np.argwhere(eppci["bus"][:, bus_cols + ZERO_INJ_FLAG] == True).ravel()
+        eppci["bus"][zero_injection_bus, [bus_cols + P, bus_cols + P_STD, bus_cols + Q, bus_cols + Q_STD]] = np.NaN
         # Withn pq buses with zero injection identify those who have also no p or q measurement
         p_zero_injections = zero_injection_bus
         q_zero_injections = zero_injection_bus
@@ -146,7 +145,7 @@ class WLSZeroInjectionConstraintsAlgorithm(BaseAlgorithm):
         sem = BaseAlgebraZeroInjConstraints(eppci)
 
         current_error, cur_it = 100., 0
-        r_inv = csr_matrix((np.diagflat(1/eppci.r_cov) ** 2))
+        r_inv = csr_matrix((np.diagflat(1 / eppci.r_cov) ** 2))
         E = eppci.E
         # update the E matrix
         E_ext = np.r_[eppci.E, new_states]
@@ -195,7 +194,7 @@ class WLSZeroInjectionConstraintsAlgorithm(BaseAlgorithm):
         # check if the estimation is successfull
         self.check_result(current_error, cur_it)
         return eppci
-    
+
 
 class IRWLSAlgorithm(BaseAlgorithm):
     def estimate(self, eppci, estimator="wls", **kwargs):
@@ -238,4 +237,3 @@ class IRWLSAlgorithm(BaseAlgorithm):
         self.check_result(current_error, cur_it)
         # update V/delta
         return eppci
-

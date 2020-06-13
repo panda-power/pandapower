@@ -5,13 +5,13 @@
 
 
 import numpy as np
-from pandapower.pypower.idx_bus import BASE_KV, VM, VA, GS, BS
-from pandapower.pypower.idx_gen import GEN_BUS, MBASE, VG
 import pandas as pd
 
+from pandapower.auxiliary import _sum_by_group
+from pandapower.pypower.idx_bus import BASE_KV
+from pandapower.pypower.idx_gen import GEN_BUS, MBASE
 from pandapower.shortcircuit.idx_brch import IKSS_F, IKSS_T, IP_F, IP_T, ITH_F, ITH_T
 from pandapower.shortcircuit.idx_bus import C_MIN, C_MAX, KAPPA, R_EQUIV, IKSS1, IP, ITH, X_EQUIV, IKSS2, IKCV, M
-from pandapower.auxiliary import _sum_by_group
 
 
 def _calc_ikss(net, ppc):
@@ -57,7 +57,7 @@ def _current_source_current(net, ppc):
     sgen_buses_ppc = bus_lookup[sgen_buses]
     Zbus = ppc["internal"]["Zbus"]
     if not "k" in sgen:
-        raise ValueError("Nominal to short-circuit current has to specified in net.sgen.k")        
+        raise ValueError("Nominal to short-circuit current has to specified in net.sgen.k")
     i_sgen_pu = sgen.sn_mva.values / net.sn_mva * sgen.k.values
     buses, ikcv_pu, _ = _sum_by_group(sgen_buses_ppc, i_sgen_pu, i_sgen_pu)
     ppc["bus"][buses, IKCV] = ikcv_pu
@@ -166,21 +166,19 @@ def _calc_ib_generator(net, ppci):
     # YS = ppci["bus"][gen_buses_ppc, GS] + ppci["bus"][gen_buses_ppc, BS] * 1j
     # I_kG = V_ikss.T[:, gen_buses_ppc] * YS / baseI[gen_buses_ppc]
 
-
     xdss_pu = gen.xdss_pu.values
     rdss_pu = gen.rdss_pu.values
     cosphi = gen.cos_phi.values
     X_dsss = xdss_pu * np.square(gen_vn_kv) / gen_mbase
     R_dsss = rdss_pu * np.square(gen_vn_kv) / gen_mbase
 
-    K_G = ppci['bus'][gen_buses, BASE_KV] / gen_vn_kv * c/(1+xdss_pu*np.sin(np.arccos(cosphi)))
-    Z_G = (R_dsss+1j*X_dsss)
+    K_G = ppci['bus'][gen_buses, BASE_KV] / gen_vn_kv * c / (1 + xdss_pu * np.sin(np.arccos(cosphi)))
+    Z_G = (R_dsss + 1j * X_dsss)
 
     I_kG = c * ppci['bus'][gen_buses, BASE_KV] / np.sqrt(3) / (Z_G * K_G)
 
-    dV_G = 1j*X_dsss*K_G*I_kG
+    dV_G = 1j * X_dsss * K_G * I_kG
     V_Is = c * ppci['bus'][gen_buses, BASE_KV] / np.sqrt(3)
-
 
     # I_kG_contribution = I_kG.sum(axis=1)
     # ratio_SG_ikss = I_kG_contribution / I_ikss
@@ -201,39 +199,41 @@ def _calc_ib_generator(net, ppci):
 
     mu = np.clip(mu, 0, 1)
 
-    I_ikss_G = abs(I_ikss - np.sum((1-mu) * I_kG, axis=1))
+    I_ikss_G = abs(I_ikss - np.sum((1 - mu) * I_kG, axis=1))
 
     # I_ikss_G = I_ikss - np.sum(abs(V_ikss.T[:, gen_buses_ppc]) * (1-mu) * I_kG, axis=1)
 
-    I_ikss_G = abs(I_ikss - np.sum(dV_G/V_Is * (1-mu) * I_kG, axis=1))
+    I_ikss_G = abs(I_ikss - np.sum(dV_G / V_Is * (1 - mu) * I_kG, axis=1))
 
     return I_ikss_G
 
-        
+
 def _calc_single_bus_sc(net, ppc, bus):
     case = net._options["case"]
     bus_idx = net._pd2ppc_lookups["bus"][bus]
     Zbus = ppc["internal"]["Zbus"]
-#    Yf = ppc["internal"]["Yf"]
-#    Yt = ppc["internal"]["Yf"]
+    #    Yf = ppc["internal"]["Yf"]
+    #    Yt = ppc["internal"]["Yf"]
     baseI = ppc["internal"]["baseI"]
-#    fb = np.real(ppc["branch"][:, 0]).astype(int)
-#    tb = np.real(ppc["branch"][:, 1]).astype(int)
+    #    fb = np.real(ppc["branch"][:, 0]).astype(int)
+    #    tb = np.real(ppc["branch"][:, 1]).astype(int)
     c = ppc["bus"][:, C_MIN] if case == "min" else ppc["bus"][:, C_MAX]
 
     # calculate voltage source branch current
     V_ikss = (ppc["bus"][:, IKSS1] * baseI) * Zbus
     V = V_ikss[:, bus_idx]
-#    ikss_all_f = np.conj(Yf.dot(V_ikss))
-#    ikss_all_t = np.conj(Yt.dot(V_ikss))
+    #    ikss_all_f = np.conj(Yf.dot(V_ikss))
+    #    ikss_all_t = np.conj(Yt.dot(V_ikss))
 
     # add current source branch current if there is one
-#    ppc["branch"][:, IKSS_F] = abs(ikss_all_f[:, bus_idx] / baseI[fb])
-#    ppc["branch"][:, IKSS_T] = abs(ikss_all_t[:, bus_idx] / baseI[tb])
+    #    ppc["branch"][:, IKSS_F] = abs(ikss_all_f[:, bus_idx] / baseI[fb])
+    #    ppc["branch"][:, IKSS_T] = abs(ikss_all_t[:, bus_idx] / baseI[tb])
     calc_branch_results(net, ppc, V)
-    
+
+
 from pandapower.pypower.pfsoln import pfsoln as pfsoln_pypower
 from pandapower.pf.ppci_variables import _get_pf_variables_from_ppci
+
 
 def calc_branch_results(net, ppci, V):
     Ybus = ppci["internal"]["Ybus"]

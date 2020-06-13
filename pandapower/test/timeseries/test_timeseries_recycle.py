@@ -37,7 +37,7 @@ def test_batch_output_reader(simple_test_net):
     recycle = dict(trafo=False, gen=False, bus_pq=True)
     only_v = True
     pp.runpp(net, only_v_results=only_v, recycle=recycle)
-    run_timeseries(net, time_steps, recycle=recycle, only_v_results=only_v)
+    run_timeseries(net, time_steps, recycle=recycle, only_v_results=only_v, verbose=False)
 
     vm, va = ow.output["ppc_bus.vm"], ow.output["ppc_bus.va"]
     s, s_abs, i_abs = v_to_i_s(net, vm, va)
@@ -63,7 +63,7 @@ def test_batch_output_reader(simple_test_net):
     ow.log_variable('res_bus', 'va_degree')
 
     pp.runpp(net)
-    run_timeseries(net, time_steps, trafo_loading="current")
+    run_timeseries(net, time_steps, trafo_loading="current", verbose=False)
 
     vm_pu, va_degree = ow.output["res_bus.vm_pu"], ow.output["res_bus.va_degree"]
     i_from_ka_normal, i_to_ka_normal = ow.output["res_line.i_from_ka"], ow.output["res_line.i_to_ka"]
@@ -100,7 +100,7 @@ def test_batch_output_reader(simple_test_net):
 def _run_recycle(net):
     # default log variables are res_bus.vm_pu, res_line.loading_percent
     ow = OutputWriter(net, output_path=tempfile.gettempdir(), output_file_type=".json")
-    run_timeseries(net, time_steps)
+    run_timeseries(net, time_steps, verbose=False)
     vm_pu = copy.deepcopy(ow.output["res_bus.vm_pu"])
     ll = copy.deepcopy(ow.output["res_line.loading_percent"])
     net.controller.drop(index=net.controller.index, inplace=True)
@@ -112,7 +112,7 @@ def _run_recycle(net):
 def _run_normal(net, time_steps=time_steps):
     ow = OutputWriter(net, output_path=tempfile.gettempdir(), output_file_type=".json")
     ow.log_variable("res_bus", "va_degree")
-    run_timeseries(net, time_steps, recycle=False)
+    run_timeseries(net, time_steps, recycle=False, verbose=False)
     return ow
 
 

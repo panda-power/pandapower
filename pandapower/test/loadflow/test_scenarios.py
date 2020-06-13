@@ -15,6 +15,7 @@ from pandapower.test.toolbox import create_test_network2, add_grid_connection
 
 #TODO: 2 gen 2 ext_grid missing
 
+
 def test_2gen_1ext_grid():
     net = create_test_network2()
     net.shunt.q_mvar *= -1
@@ -24,14 +25,15 @@ def test_2gen_1ext_grid():
 
     assert np.allclose(net.res_gen.p_mw.values, [0.100, 0.100])
     assert np.allclose(net.res_gen.q_mvar.values, [-0.447397232056, -0.0518152713776], atol=1e-2)
-    assert np.allclose(net.res_gen.va_degree.values, [0.242527288986,-143.558157703])
+    assert np.allclose(net.res_gen.va_degree.values, [0.242527288986, -143.558157703])
     assert np.allclose(net.res_gen.vm_pu.values, [1.0, 1.0])
 
     assert np.allclose(net.res_bus.vm_pu, [1.000000, 0.956422, 1.000000, 1.000000])
     assert np.allclose(net.res_bus.va_degree, [0.000000, -145.536429154, -143.558157703,
                                                0.242527288986])
     assert np.allclose(net.res_bus.p_mw, [0.06187173, 0.03000000, -0.100, 0.00000])
-    assert np.allclose(net.res_bus.q_mvar, [-.470929980278, 0.002000000, 0.0218152713776, 0.447397232056], atol=1e-2)
+    assert np.allclose(net.res_bus.q_mvar, [-.470929980278, 0.002000000, 0.0218152713776,
+                                            0.447397232056], atol=1e-2)
     assert np.allclose(net.res_ext_grid.p_mw.values, [-0.06187173])
     assert np.allclose(net.res_ext_grid.q_mvar, [0.470927898])
 
@@ -72,25 +74,27 @@ def test_0gen_2ext_grid_decoupled():
     pp.create_std_type(net, {"type": "cs", "r_ohm_per_km": 0.876,  "q_mm2": 35.0,
                              "endtmp_deg": 160.0, "c_nf_per_km": 260.0,
                              "max_i_ka": 0.123, "x_ohm_per_km": 0.1159876},
-                             name="NAYSEY 3x35rm/16 6/10kV" , element="line")
+                       name="NAYSEY 3x35rm/16 6/10kV", element="line")
     pp.create_line(net, 0, auxbus, 1, name="line_to_decoupled_grid",
-                   std_type="NAYSEY 3x35rm/16 6/10kV") #NAYSEY 3x35rm/16 6/10kV
+                   std_type="NAYSEY 3x35rm/16 6/10kV")  # NAYSEY 3x35rm/16 6/10kV
     pp.create_ext_grid(net, auxbus)
     pp.create_switch(net, auxbus, 2, et="l", closed=0, type="LS")
     pp.runpp(net, init='dc', calculate_voltage_angles=True)
 
     assert np.allclose(net.res_bus.p_mw.values*1e3, [-133.158732, 30.000000,
-                                             0.000000, 100.000000, 0.000000])
+                                                     0.000000, 100.000000, 0.000000])
     assert np.allclose(net.res_bus.q_mvar.values*1e3, [39.5843982697, 2.000000,
-                                           -28.5636406913, 0.000000, 0.000000])
+                                                       -28.5636406913, 0.000000, 0.000000])
     assert np.allclose(net.res_bus.va_degree.values, [0.000000, -155.752225311,
                                                       -153.669395244,
                                                       -0.0225931152895, 0.0])
     assert np.allclose(net.res_bus.vm_pu.values,  [1.000000, 0.930961,
                                                    0.975764, 0.998865, 1.0])
 
-    assert np.allclose(net.res_ext_grid.p_mw.values*1e3, [133.158732, 0.000000, 0.000000, -0.000000])
-    assert np.allclose(net.res_ext_grid.q_mvar*1e3, [-39.5843982697, 0.000000, 0.000000, -0.000000])
+    assert np.allclose(net.res_ext_grid.p_mw.values*1e3, [133.158732, 0.000000, 0.000000,
+                                                          -0.000000])
+    assert np.allclose(net.res_ext_grid.q_mvar*1e3, [-39.5843982697, 0.000000, 0.000000,
+                                                     -0.000000])
 
 
 def test_bus_bus_switch_at_eg():
@@ -115,6 +119,7 @@ def test_bb_switch():
     net = add_test_bus_bus_switch(net)
     runpp_with_consistency_checks(net)
 
+
 def test_two_gens_at_one_bus():
     net = pp.create_empty_network()
 
@@ -135,38 +140,41 @@ def test_two_gens_at_one_bus():
     assert net.res_gen.p_mw.at[g1] == p1
     assert net.res_gen.p_mw.at[g2] == p2
 
+
 def test_ext_grid_gen_order_in_ppc():
-    net=pp.create_empty_network()
+    net = pp.create_empty_network()
 
     for b in range(6):
-        pp.create_bus(net,vn_kv=1., name=b)
+        pp.create_bus(net, vn_kv=1., name=b)
 
-    for l_bus in range(0,5,2):
-        pp.create_line(net, from_bus=l_bus, to_bus=l_bus+1, length_km=1, std_type="48-AL1/8-ST1A 10.0")
+    for l_bus in range(0, 5, 2):
+        pp.create_line(net, from_bus=l_bus, to_bus=l_bus+1, length_km=1,
+                       std_type="48-AL1/8-ST1A 10.0")
 
-    for slack_bus in [0,2,5]:
+    for slack_bus in [0, 2, 5]:
         pp.create_ext_grid(net, bus=slack_bus, vm_pu=1.)
 
-    for gen_bus in [ 0, 1, 2, 3, 4, 5, 5, 5, 5, 5, 5, 5, 5, 5]:
+    for gen_bus in [0, 1, 2, 3, 4, 5, 5, 5, 5, 5, 5, 5, 5, 5]:
         pp.create_gen(net, bus=gen_bus, p_mw=1, vm_pu=1.)
 
     pp.rundcpp(net)
-    assert all(net.res_gen.p_mw==net.gen.p_mw)
-    assert all(net.res_ext_grid.p_mw<0)
+    assert all(net.res_gen.p_mw == net.gen.p_mw)
+    assert all(net.res_ext_grid.p_mw < 0)
 
     pp.runpp(net)
-    assert all(net.res_gen.p_mw==net.gen.p_mw)
-    assert all(net.res_ext_grid.p_mw<0)
+    assert all(net.res_gen.p_mw == net.gen.p_mw)
+    assert all(net.res_ext_grid.p_mw < 0)
 
 
 def test_isolated_gen_lookup():
-    net=pp.create_empty_network()
+    net = pp.create_empty_network()
 
-    gen_bus=pp.create_bus(net,vn_kv=1., name='gen_bus')
-    slack_bus=pp.create_bus(net,vn_kv=1., name='slack_bus')
-    gen_iso_bus=pp.create_bus(net,vn_kv=1., name='iso_bus')
+    gen_bus = pp.create_bus(net, vn_kv=1., name='gen_bus')
+    slack_bus = pp.create_bus(net, vn_kv=1., name='slack_bus')
+    gen_iso_bus = pp.create_bus(net, vn_kv=1., name='iso_bus')
 
-    pp.create_line(net, from_bus=slack_bus, to_bus=gen_bus, length_km=1, std_type="48-AL1/8-ST1A 10.0")
+    pp.create_line(net, from_bus=slack_bus, to_bus=gen_bus, length_km=1,
+                   std_type="48-AL1/8-ST1A 10.0")
 
     pp.create_ext_grid(net, bus=slack_bus, vm_pu=1.)
 
@@ -195,6 +203,7 @@ def test_isolated_gen_lookup():
     assert np.allclose(net.res_gen.p_mw.values, [0, 0, 2])
     assert np.allclose(net.res_xward.p_mw.values, [0, 2, 0])
 
+
 def test_transformer_phase_shift():
     net = pp.create_empty_network()
     for side in ["hv", "lv"]:
@@ -202,10 +211,12 @@ def test_transformer_phase_shift():
         b2 = pp.create_bus(net, vn_kv=20.)
         b3 = pp.create_bus(net, vn_kv=0.4)
         pp.create_ext_grid(net, b1)
-        pp.create_transformer_from_parameters(net, b1, b2, 40000, 110, 20, 0.1, 5, 0, 0.1, 30, side,
-                                              # 0, 2, -2, 1.25, 10, 0)
-                                              0, 2, -2, 0, 10, 0, True)
-        pp.create_transformer_from_parameters(net, b2, b3, 630, 20, 0.4, 0.1, 5, 0, 0.1, 20, tap_phase_shifter=True)
+        pp.create_transformer_from_parameters(
+            net, b1, b2, 40000, 110, 20, 0.1, 5, 0, 0.1, 30, side,
+            # 0, 2, -2, 1.25, 10, 0)
+            0, 2, -2, 0, 10, 0, True)
+        pp.create_transformer_from_parameters(
+            net, b2, b3, 630, 20, 0.4, 0.1, 5, 0, 0.1, 20, tap_phase_shifter=True)
     pp.runpp(net, init="dc", calculate_voltage_angles=True)
     b2a_angle = net.res_bus.va_degree.at[1]
     b3a_angle = net.res_bus.va_degree.at[2]
@@ -284,8 +295,9 @@ def test_transformer3w_phase_shift():
                                                 vk_lv_percent=5, vkr_hv_percent=0.1,
                                                 vkr_mv_percent=0.1, vkr_lv_percent=0.1, pfe_kw=0,
                                                 i0_percent=0.1, shift_mv_degree=30,
-                                                shift_lv_degree=60, tap_side=side, tap_step_percent=2,
-                                                tap_step_degree=10, tap_pos=0, tap_neutral=0, tap_min=-2,
+                                                shift_lv_degree=60, tap_side=side,
+                                                tap_step_percent=2, tap_step_degree=10, tap_pos=0,
+                                                tap_neutral=0, tap_min=-2,
                                                 tap_max=2)
         pp.runpp(net, init="dc", calculate_voltage_angles=True)
         assert np.isclose(net.res_bus.vm_pu.at[b2], test_ref[0][0], rtol=1e-4)
@@ -339,6 +351,7 @@ def test_volt_dep_load_at_inactive_bus():
     assert not np.isnan(net.res_bus.p_mw.at[5])
     assert net.res_bus.p_mw.at[3] == 0
 
+
 def test_two_oos_buses():
     net = pp.create_empty_network()
 
@@ -362,6 +375,7 @@ def test_two_oos_buses():
     assert net.res_line.loading_percent.at[l1] > 0
     assert np.isnan(net.res_line.loading_percent.at[l3])
 
+
 def test_oos_buses_at_trafo3w():
     net = pp.create_empty_network()
 
@@ -375,7 +389,8 @@ def test_oos_buses_at_trafo3w():
     l1 = pp.create_line(net, b1, b2, 0.5, std_type="NAYY 4x50 SE", in_service=True)
     l2 = pp.create_line(net, b2, b3, 0.5, std_type="NAYY 4x50 SE", in_service=False)
 
-    tidx = pp.create_transformer3w(net, b3, b4, b5, std_type='63/25/38 MVA 110/20/10 kV', in_service=True)
+    tidx = pp.create_transformer3w(
+        net, b3, b4, b5, std_type='63/25/38 MVA 110/20/10 kV', in_service=True)
 
     pp.runpp(net, trafo3w_losses = 'star', trafo_model= 'pi', init='flat')
 
@@ -393,18 +408,19 @@ def network_with_trafo3ws():
         pp.create_load(net, mv, p_mw=0.8, q_mvar=0)
         lv = pp.create_bus(net, vn_kv=0.4, zone="test_trafo3w")
         pp.create_load(net, lv, p_mw=0.5, q_mvar=0)
-        t3 = pp.create_transformer3w_from_parameters(net, hv_bus=hv, mv_bus=mv, lv_bus=lv, vn_hv_kv=22,
-                                                vn_mv_kv=.64, vn_lv_kv=.42, sn_hv_mva=1,
-                                                sn_mv_mva=0.7, sn_lv_mva=0.3, vk_hv_percent=1.,
-                                                vkr_hv_percent=.03, vk_mv_percent=.5,
-                                                vkr_mv_percent=.02, vk_lv_percent=.25,
-                                                vkr_lv_percent=.01, pfe_kw=.5, i0_percent=0.1,
-                                                name="test", index=pp.get_free_id(net.trafo3w) + 1,
-                                                tap_side="hv", tap_pos=2, tap_step_percent=1.25,
-                                                tap_min=-5, tap_neutral=0, tap_max=5)
+        t3 = pp.create_transformer3w_from_parameters(
+            net, hv_bus=hv, mv_bus=mv, lv_bus=lv, vn_hv_kv=22,
+            vn_mv_kv=.64, vn_lv_kv=.42, sn_hv_mva=1,
+            sn_mv_mva=0.7, sn_lv_mva=0.3, vk_hv_percent=1.,
+            vkr_hv_percent=.03, vk_mv_percent=.5,
+            vkr_mv_percent=.02, vk_lv_percent=.25,
+            vkr_lv_percent=.01, pfe_kw=.5, i0_percent=0.1,
+            name="test", index=pp.get_free_id(net.trafo3w) + 1,
+            tap_side="hv", tap_pos=2, tap_step_percent=1.25,
+            tap_min=-5, tap_neutral=0, tap_max=5)
     return (net, t3, hv, mv, lv)
-        
-    
+
+
 def test_trafo3w_switches(network_with_trafo3ws):
     net, t3, hv, mv, lv = network_with_trafo3ws
 
@@ -445,6 +461,7 @@ def test_trafo3w_switches(network_with_trafo3ws):
     assert net.res_trafo3w.i_mv_ka.at[t3] < 1e-5
     assert 0 < net.res_trafo3w.p_hv_mw.at[t3] < 1
 
+
 def test_generator_as_slack():
     net = pp.create_empty_network()
     b1 = pp.create_bus(net, 110.)
@@ -463,7 +480,8 @@ def test_generator_as_slack():
     net.gen.slack.iloc[0] = False
     with pytest.raises(UserWarning):
         pp.runpp(net)
-        
+
+
 def test_transformer_with_two_open_switches():
     net = pp.create_empty_network()
     b1 = pp.create_bus(net, 110.)
@@ -483,11 +501,11 @@ def test_transformer_with_two_open_switches():
     assert net.res_trafo.vm_hv_pu.at[t] == net.res_bus.vm_pu.at[b1]
     assert net.res_trafo.vm_lv_pu.at[t] != net.res_bus.vm_pu.at[b2]
 
-
     pp.create_switch(net, b1, element=t, et="t", closed=False)
     pp.runpp(net)
     assert net.res_trafo.vm_hv_pu.at[t] != net.res_bus.vm_pu.at[b1]
     assert net.res_trafo.vm_lv_pu.at[t] != net.res_bus.vm_pu.at[b2]
-    
+
+
 if __name__ == "__main__":
     pytest.main(["-xs", __file__])

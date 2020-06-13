@@ -64,7 +64,8 @@ def test_validate_from_ppc():
 
 def test_ppc_testgrids():
     # check ppc_testgrids
-    name = ['case2_1', 'case2_2', 'case2_3', 'case2_4', 'case3_1', 'case3_2', 'case6', 'case14', 'case57']
+    name = ['case2_1', 'case2_2', 'case2_3', 'case2_4', 'case3_1', 'case3_2', 'case6', 'case14',
+            'case57']
     for i in name:
         ppc = get_testgrids(i, 'ppc_testgrids.p')
         net = from_ppc(ppc, f_hz=60)

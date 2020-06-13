@@ -4,16 +4,17 @@
 # and Energy System Technology (IEE), Kassel. All rights reserved.
 
 
-import copy
-
 import numpy as np
 import pandas as pd
 
-from pandapower.results_branch import _get_branch_results
-from pandapower.results_bus import _get_bus_results, _set_buses_out_of_service, \
-    _get_shunt_results, _get_p_q_results, _get_bus_v_results
-from pandapower.results_gen import _get_gen_results
 
+from pandapower.results_branch import _get_branch_results, _get_branch_results_3ph
+from pandapower.results_bus import _get_bus_results, _set_buses_out_of_service, \
+    _get_shunt_results, _get_p_q_results, _get_bus_v_results, _get_bus_v_results_3ph, _get_p_q_results_3ph, \
+    _get_bus_results_3ph
+from pandapower.results_gen import _get_gen_results, _get_gen_results_3ph
+
+suffix_mode = {"sc": "sc", "se": "se", "pf_3ph": "3ph"}
 
 def _extract_results(net, ppc):
     _set_buses_out_of_service(ppc)
@@ -27,6 +28,21 @@ def _extract_results(net, ppc):
     if net._options["mode"] == "opf":
         _get_costs(net, ppc)
 
+
+def _extract_results_3ph(net, ppc0, ppc1, ppc2):
+    # reset_results(net, False)
+    _set_buses_out_of_service(ppc0)
+    _set_buses_out_of_service(ppc1)
+    _set_buses_out_of_service(ppc2)
+    bus_lookup_aranged = _get_aranged_lookup(net)
+
+    _get_bus_v_results_3ph(net, ppc0, ppc1, ppc2)
+    bus_pq = _get_p_q_results_3ph(net, bus_lookup_aranged)
+    # _get_shunt_results(net, ppc, bus_lookup_aranged, bus_pq)
+    _get_branch_results_3ph(net, ppc0, ppc1, ppc2, bus_lookup_aranged, bus_pq)
+    _get_gen_results_3ph(net, ppc0, ppc1, ppc2, bus_lookup_aranged, bus_pq)
+    _get_bus_results_3ph(net, bus_pq)
+    
 
 def _extract_results_se(net, ppc):
     _set_buses_out_of_service(ppc)
@@ -49,33 +65,31 @@ def _get_aranged_lookup(net):
     return bus_lookup_aranged
 
 
-def verify_results(net):
-    elements_to_empty = get_elements_to_empty()
-    elements_to_init = get_elements_to_init()
-
-    for element in elements_to_init + elements_to_empty:
-        res_element, res_empty_element = get_result_tables(element)
+def verify_results(net, mode="pf"):
+    elements = get_relevant_elements(mode)
+    suffix = suffix_mode.get(mode, None)
+    for element in elements:
+        res_element, res_empty_element = get_result_tables(element, suffix)
         if len(net[element]) != len(net[res_element]):
-            if element in elements_to_empty:
-                empty_res_element(net, element)
-            else:
-                init_element(net, element)
-                if element == "bus":
-                    net._options["init_vm_pu"] = "auto"
-                    net._options["init_va_degree"] = "auto"
+            init_element(net, element)
+            if element == "bus":
+                net._options["init_vm_pu"] = "auto"
+                net._options["init_va_degree"] = "auto"
 
 
 def get_result_tables(element, suffix=None):
-    res_empty_element = "_empty_res_" + element
     res_element = "res_" + element
     if suffix is not None:
-        res_element += suffix
-    return res_element, res_empty_element
+        res_element += "_%s"%suffix
+    return res_element, "_empty_%s"%res_element
 
 
 def empty_res_element(net, element, suffix=None):
     res_element, res_empty_element = get_result_tables(element, suffix)
-    net[res_element] = net[res_empty_element].copy()
+    if res_empty_element in net:
+        net[res_element] = net[res_empty_element].copy()
+    else:
+        net[res_element] = pd.DataFrame()
 
 
 def init_element(net, element, suffix=None):
@@ -83,29 +97,41 @@ def init_element(net, element, suffix=None):
     index = net[element].index
     if len(index):
         # init empty dataframe
-        res_columns = net[res_empty_element].columns
-        net[res_element] = pd.DataFrame(np.nan, index=index, columns=res_columns, dtype='float')
+        if res_empty_element in net:
+            columns = net[res_empty_element].columns
+            net[res_element] = pd.DataFrame(np.nan, index=index,
+                                            columns=columns, dtype='float')
+        else:
+            net[res_element] = pd.DataFrame(index=index, dtype='float')            
     else:
         empty_res_element(net, element, suffix)
 
-
-def get_elements_to_empty():
-    return ["bus"]  # ["ext_grid", "load", "sgen", "storage", "shunt", "gen", "ward", "xward", "dcline", "bus"]
-
-
-def get_elements_to_init():
-    return ["line", "trafo", "trafo3w", "impedance", "ext_grid", "load", "sgen", "storage", "shunt", "gen", "ward",
-            "xward", "dcline"]
-
-
-def reset_results(net, suffix=None):
-    elements_to_empty = get_elements_to_empty()
-    for element in elements_to_empty:
-        empty_res_element(net, element, suffix)
-
-    elements_to_init = get_elements_to_init()
-    for element in elements_to_init:
+def get_relevant_elements(mode="pf"):
+    if mode == "pf" or mode == "opf":
+        return ["bus", "line", "trafo", "trafo3w", "impedance", "ext_grid",
+                "load", "sgen", "storage", "shunt", "gen", "ward", "xward",
+                "dcline"]
+    elif mode == "sc":
+        return ["bus", "line", "trafo", "trafo3w", "ext_grid", "gen", "sgen"]
+    elif mode == "se":
+        return ["bus", "line", "trafo", "trafo3w", "impedance", "ext_grid",
+                "load", "sgen", "storage", "shunt", "gen", "ward", "xward",
+                "dcline", "measurement"]        
+    elif mode == "pf_3ph":
+        return ["bus", "line", "trafo", "ext_grid", "shunt",
+                "load", "sgen", "storage", "asymmetric_load", "asymmetric_sgen"]  
+        
+def init_results(net, mode="pf"):
+    elements = get_relevant_elements(mode)
+    suffix = suffix_mode.get(mode, None)
+    for element in elements:
         init_element(net, element, suffix)
+        
+def reset_results(net, mode="pf"):
+    elements = get_relevant_elements(mode)
+    suffix = suffix_mode.get(mode, None)
+    for element in elements:
+        empty_res_element(net, element, suffix)
 
 
 def _ppci_bus_to_ppc(result, ppc):

@@ -1,0 +1,3 @@
+# Substation transformer connected Delta/grounded-wye,,,,,,,,,,
+Name, phases, bus1, bus2, kV_pri, kV_sec, MVA, Conn_pri, Conn_sec, %XHL,% resistance
+TR1,3,SourceBus,1,11,0.416,0.8, Delta, Wye,4,0.4

@@ -39,8 +39,8 @@ BR_Z = 3
 logger = logging.getLogger(__name__)
 
 
-def create_nxgraph(net, respect_switches=True, include_lines=True,
-                   include_trafos=True, include_impedances=True,
+def create_nxgraph(net, respect_switches=True, include_lines=True, include_impedances=True,
+                   include_dclines=True, include_trafos=True, include_trafo3ws=True,
                    nogobuses=None, notravbuses=None, multi=True,
                    calc_branch_impedances=False, branch_impedance_unit="ohm", library="networkx"):
     """
@@ -58,12 +58,20 @@ def create_nxgraph(net, respect_switches=True, include_lines=True,
             considered (no edge between nodes)
             False: open switches are being ignored
 
-        **include_lines** (boolean, True) - determines, whether lines get converted to edges
+        **include_lines** (boolean or index, True) - determines, whether or which lines get
+            converted to edges
 
-        **include_impedances** (boolean, True) - determines, whether per unit impedances
-            (net.impedance) are converted to edges
+        **include_impedances** (boolean or , True) - determines, whether or which per unit
+            impedances (net.impedance) are converted to edges
 
-        **include_trafos** (boolean, True) - determines, whether trafos get converted to edges
+        **include_dclines** (boolean or index, True) - determines, whether or which dclines get
+            converted to edges
+
+        **include_trafos** (boolean or index, True) - determines, whether or which trafos get
+            converted to edges
+
+        **include_trafo3ws** (boolean or index, True) - determines, whether or which trafo3ws get
+            converted to edges
 
         **nogobuses** (integer/list, None) - nogobuses are not being considered in the graph
 
@@ -75,14 +83,14 @@ def create_nxgraph(net, respect_switches=True, include_lines=True,
             False: NetworkX Graph (no multiple parallel edges)
 
 
-        **calc_branch_impedances** (boolean, False) - detrmines wether impedances are calculated
-        and added as a weight to all branches or not. Impedances can be added in ohm or per unit 
-        (see branch_impedance unit parameter)
-            
+        **calc_branch_impedances** (boolean, False) - determines wether impedances are calculated
+            and added as a weight to all branches or not. Impedances can be added in ohm or per unit
+            (see branch_impedance unit parameter). DC Lines are considered as infinity.
+
         **branch_impedance_unit** (str, "ohm") - defines the unit of the branch impedance for
-                    calc_branch_impedances=True. If it is set to "ohm", the parameters 'r_ohm',
-                    'x_ohm' and 'z_ohm' are added to each branch. If it is set to "pu", the
-                    parameters are 'r_pu', 'x_pu' and 'z_pu'.
+            calc_branch_impedances=True. If it is set to "ohm", the parameters 'r_ohm',
+            'x_ohm' and 'z_ohm' are added to each branch. If it is set to "pu", the
+            parameters are 'r_pu', 'x_pu' and 'z_pu'.
 
      OUTPUT:
         **mg** - Returns the required NetworkX graph
@@ -105,12 +113,14 @@ def create_nxgraph(net, respect_switches=True, include_lines=True,
     if branch_impedance_unit not in ["ohm", "pu"]:
         raise ValueError("branch impedance unit can be either 'ohm' or 'pu'")
     if respect_switches:
-        open_sw = net.switch.closed.values == False
+        open_sw = ~net.switch.closed.values.astype(bool)
     if calc_branch_impedances:
         ppc = get_nx_ppc(net)
 
-    if include_lines:
-        line = net.line
+    if isinstance(include_lines, bool):
+        include_lines = net.line.index if include_lines else []
+    if len(include_lines):
+        line = net.line.loc[include_lines]
         indices, parameter, in_service = init_par(line, calc_branch_impedances)
         indices[:, F_BUS] = line.from_bus.values
         indices[:, T_BUS] = line.to_bus.values
@@ -135,8 +145,10 @@ def create_nxgraph(net, respect_switches=True, include_lines=True,
         add_edges(mg, indices, parameter, in_service, net, "line", calc_branch_impedances,
                   branch_impedance_unit)
 
-    if include_impedances and len(net.impedance):
-        impedance = net.impedance
+    if isinstance(include_impedances, bool):
+        include_impedances = net.impedance.index if include_impedances else []
+    if len(include_impedances):
+        impedance = net.impedance.loc[include_impedances]
         indices, parameter, in_service = init_par(impedance, calc_branch_impedances)
         indices[:, F_BUS] = impedance.from_bus.values
         indices[:, T_BUS] = impedance.to_bus.values
@@ -151,8 +163,25 @@ def create_nxgraph(net, respect_switches=True, include_lines=True,
         add_edges(mg, indices, parameter, in_service, net, "impedance",
                   calc_branch_impedances, branch_impedance_unit)
 
-    if include_trafos:
-        trafo = net.trafo
+    if isinstance(include_dclines, bool):
+        include_dclines = net.dcline.index if include_dclines else []
+    if len(include_dclines):
+        dclines = net.dcline.loc[include_dclines]
+        indices, parameter, in_service = init_par(dclines, calc_branch_impedances)
+        indices[:, F_BUS] = dclines.from_bus.values
+        indices[:, T_BUS] = dclines.to_bus.values
+
+        if calc_branch_impedances:
+            parameter[:, BR_R] = np.inf
+            parameter[:, BR_X] = np.inf
+
+        add_edges(mg, indices, parameter, in_service, net, "dcline",
+                  calc_branch_impedances, branch_impedance_unit)
+
+    if isinstance(include_trafos, bool):
+        include_trafos = net.trafo.index if include_trafos else []
+    if len(include_trafos):
+        trafo = net.trafo.loc[include_trafos]
         if len(trafo.index):
             indices, parameter, in_service = init_par(trafo, calc_branch_impedances)
             indices[:, F_BUS] = trafo.hv_bus.values
@@ -175,7 +204,10 @@ def create_nxgraph(net, respect_switches=True, include_lines=True,
             add_edges(mg, indices, parameter, in_service, net, "trafo",
                       calc_branch_impedances, branch_impedance_unit)
 
-        trafo3w = net.trafo3w
+    if isinstance(include_trafo3ws, bool):
+        include_trafo3ws = net.trafo3w.index if include_trafo3ws else []
+    if len(include_trafo3ws):
+        trafo3w = net.trafo3w.loc[include_trafo3ws]
         if len(trafo3w):
             sides = ["hv", "mv", "lv"]
             if calc_branch_impedances:
@@ -201,7 +233,8 @@ def create_nxgraph(net, respect_switches=True, include_lines=True,
                 indices[:, T_BUS] = trafo3w["%s_bus" % t].values
                 if respect_switches and len(open_trafo3w):
                     for BUS in [F_BUS, T_BUS]:
-                        open_switch = np.in1d(indices[:, INDEX] + indices[:, BUS] * 1j, open_trafo3w)
+                        open_switch = np.in1d(indices[:, INDEX] + indices[:, BUS] * 1j,
+                                              open_trafo3w)
                         in_service &= ~open_switch
                 if calc_branch_impedances:
                     parameter[:, BR_R] = (r[f] + r[t]) * baseR

@@ -4,22 +4,11 @@
 # and Energy System Technology (IEE), Kassel. All rights reserved.
 
 
-import copy
 import json
 import os
 import pickle
-import sys
 from packaging import version
 from warnings import warn
-
-try:
-    from fiona.crs import from_epsg
-    from geopandas import GeoDataFrame, GeoSeries
-    from shapely.geometry import Point, LineString
-
-    GEOPANDAS_INSTALLED = True
-except ImportError:
-    GEOPANDAS_INSTALLED = False
 
 import pandas as pd
 
@@ -28,9 +17,7 @@ import numpy
 from pandapower.auxiliary import pandapowerNet
 from pandapower.create import create_empty_network
 from pandapower.convert_format import convert_format
-from pandapower.io_utils import to_dict_of_dfs, from_dict_of_dfs, PPJSONEncoder, PPJSONDecoder, \
-    to_dict_with_coord_transform, get_raw_data_from_pickle, transform_net_with_df_and_geo
-
+import pandapower.io_utils as io_utils
 
 def to_pickle(net, filename):
     """
@@ -52,7 +39,7 @@ def to_pickle(net, filename):
         return
     if not filename.endswith(".p"):
         raise Exception("Please use .p to save pandapower networks!")
-    save_net = to_dict_with_coord_transform(net, ["bus_geodata"], ["line_geodata"])
+    save_net = io_utils.to_dict_with_coord_transform(net, ["bus_geodata"], ["line_geodata"])
 
     with open(filename, "wb") as f:
         pickle.dump(save_net, f, protocol=2)  # use protocol 2 for py2 / py3 compatibility
@@ -79,14 +66,14 @@ def to_excel(net, filename, include_empty_tables=False, include_results=True):
 
     """
     writer = pd.ExcelWriter(filename, engine='xlsxwriter')
-    dict_net = to_dict_of_dfs(net, include_results=include_results,
+    dict_net = io_utils.to_dict_of_dfs(net, include_results=include_results,
                               include_empty_tables=include_empty_tables)
     for item, table in dict_net.items():
         table.to_excel(writer, sheet_name=item)
     writer.save()
 
 
-def to_json(net, filename=None):
+def to_json(net, filename=None, encryption_key=None):
     """
         Saves a pandapower Network in JSON format. The index columns of all pandas DataFrames will
         be saved in ascending order. net elements which name begins with "_" (internal elements)
@@ -95,24 +82,35 @@ def to_json(net, filename=None):
         INPUT:
             **net** (dict) - The pandapower format network
 
-            **filename** (string or file) - The absolute or relative path to the output file or file-like object
+            **filename** (string or file, None) - The absolute or relative path to the output file
+                                                  or a file-like object,
+                                                  if 'None' the function returns a json string
+
+            **encrytion_key** (string, None) - If given, the pandapower network is stored as an
+                                               encrypted json string
+
 
         EXAMPLE:
 
              >>> pp.to_json(net, "example.json")
 
     """
+    json_string = json.dumps(net, cls=io_utils.PPJSONEncoder, indent=2)
+    if encryption_key is not None:
+        json_string = io_utils.encrypt_string(json_string, encryption_key)
+
     if filename is None:
-        return json.dumps(net, cls=PPJSONEncoder, indent=2)
+        return json_string
+
     if hasattr(filename, 'write'):
-        json.dump(net, fp=filename, cls=PPJSONEncoder, indent=2)
+        filename.write(json_string)
     else:
         with open(filename, "w") as fp:
-            json.dump(net, fp=fp, cls=PPJSONEncoder, indent=2)
+            fp.write(json_string)
 
 
 def to_sql(net, con, include_results=True):
-    dodfs = to_dict_of_dfs(net, include_results=include_results)
+    dodfs = io_utils.to_dict_of_dfs(net, include_results=include_results)
     for name, data in dodfs.items():
         data.to_sql(name, con, if_exists="replace")
 
@@ -144,8 +142,8 @@ def from_pickle(filename, convert=True):
 
     """
 
-    net = pandapowerNet(get_raw_data_from_pickle(filename))
-    transform_net_with_df_and_geo(net, ["bus_geodata"], ["line_geodata"])
+    net = pandapowerNet(io_utils.get_raw_data_from_pickle(filename))
+    io_utils.transform_net_with_df_and_geo(net, ["bus_geodata"], ["line_geodata"])
 
     if convert:
         convert_format(net)
@@ -183,7 +181,7 @@ def from_excel(filename, convert=True):
         xls = pd.ExcelFile(filename).parse(sheet_name=None, index_col=0)
 
     try:
-        net = from_dict_of_dfs(xls)
+        net = io_utils.from_dict_of_dfs(xls)
     except:
         net = _from_excel_old(xls)
     if convert:
@@ -214,7 +212,7 @@ def _from_excel_old(xls):
     return net
 
 
-def from_json(filename, convert=True):
+def from_json(filename, convert=True, encryption_key=None):
     """
     Load a pandapower network from a JSON file.
     The index of the returned network is not necessarily in the same order as the original network.
@@ -226,6 +224,8 @@ def from_json(filename, convert=True):
         **convert** (bool, True) - If True, converts the format of the net loaded from json from the older
             version of pandapower to the newer version format
 
+        **encrytion_key** (string, "") - If given, key to decrypt an encrypted pandapower network
+
     OUTPUT:
         **net** (dict) - The pandapower format network
 
@@ -235,27 +235,17 @@ def from_json(filename, convert=True):
 
     """
     if hasattr(filename, 'read'):
-        net = json.load(filename, cls=PPJSONDecoder)
+        json_string = filename.read()
     elif not os.path.isfile(filename):
         raise UserWarning("File {} does not exist!!".format(filename))
     else:
-        with open(filename) as fp:
-            net = json.load(fp, cls=PPJSONDecoder)
-            # this can be removed in the future
-            # now net is saved with "_module", "_class", "_object"..., so json.load already returns
-            # pandapowerNet. Older files don't have it yet, and are loaded as dict.
-            # After some time, this part can be removed.
-            if not isinstance(net, pandapowerNet):
-                warn("This net is saved in older format, which will not be supported in future.\r\n"
-                     "Please resave your grid using the current pandapower version.",
-                     DeprecationWarning)
-                net = from_json_dict(net)
-    if convert:
-        convert_format(net)
-    return net
+        with open(filename, "r") as fp:
+            json_string = fp.read()
+
+    return from_json_string(json_string, convert=convert, encryption_key=encryption_key)
 
 
-def from_json_string(json_string, convert=False):
+def from_json_string(json_string, convert=False, encryption_key=None):
     """
     Load a pandapower network from a JSON string.
     The index of the returned network is not necessarily in the same order as the original network.
@@ -267,6 +257,8 @@ def from_json_string(json_string, convert=False):
         **convert** (bool, False) - If True, converts the format of the net loaded from json_string from the
             older version of pandapower to the newer version format
 
+        **encrytion_key** (string, "") - If given, key to decrypt an encrypted json_string
+
     OUTPUT:
         **net** (dict) - The pandapower format network
 
@@ -275,7 +267,10 @@ def from_json_string(json_string, convert=False):
         >>> net = pp.from_json_string(json_str)
 
     """
-    net = json.loads(json_string, cls=PPJSONDecoder)
+    if encryption_key is not None:
+        json_string = io_utils.decrypt_string(json_string, encryption_key)
+
+    net = json.loads(json_string, cls=io_utils.PPJSONDecoder)
     # this can be removed in the future
     # now net is saved with "_module", "_class", "_object"..., so json.load already returns
     # pandapowerNet. Older files don't have it yet, and are loaded as dict.
@@ -335,7 +330,7 @@ def from_sql(con):
         table = pd.read_sql_query("SELECT * FROM %s" % t, con, index_col="index")
         table.index.name = None
         dodfs[t] = table
-    net = from_dict_of_dfs(dodfs)
+    net = io_utils.from_dict_of_dfs(dodfs)
     return net
 
 

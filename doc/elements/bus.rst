@@ -72,6 +72,25 @@ The power flow bus results are defined as:
     q\_mvar &= Im(\sum_{n=1}^N  \underline{S}_{bus, n}) 
    \end{align*}
 
+*net.res_bus_3ph*
+
+.. tabularcolumns:: |p{0.10\linewidth}|p{0.10\linewidth}|p{0.40\linewidth}|
+.. csv-table:: 
+   :file: bus_res_3ph.csv
+   :delim: ;
+   :widths: 10, 10, 40
+    
+The power flow bus results are defined as:
+
+.. math::
+   :nowrap:
+   
+	\begin{align*}
+    vm\_pu_{phase} &= \lvert \underline{V_{phase}}_{bus} \rvert \\
+    va\_degree_{phase} &= \angle \underline{V_{phase}}_{bus} \\
+    p\_mw_{phase} &= Re(\sum_{n=1}^N  \underline{S_{phase}}_{bus, n}) \\
+    q\_mvar_{phase} &= Im(\sum_{n=1}^N  \underline{S_{phase}}_{bus, n}) 
+   \end{align*}
 
 *net.res_bus_est*
 

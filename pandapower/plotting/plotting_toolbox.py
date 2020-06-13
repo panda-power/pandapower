@@ -48,8 +48,8 @@ def get_collection_sizes(net, bus_size=1.0, ext_grid_size=1.0, trafo_size=1.0, l
     :return: sizes (dict) - dictionary containing all scaled sizes
     """
 
-    mean_distance_between_buses = sum((net['bus_geodata'].max() - net[
-        'bus_geodata'].min()).dropna() / 200)
+    mean_distance_between_buses = sum((net['bus_geodata'].loc[:, ["x", "y"]].max() -
+                                       net['bus_geodata'].loc[:, ["x", "y"]].min()).dropna() / 200)
 
     sizes = {
         "bus": bus_size * mean_distance_between_buses,

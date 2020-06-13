@@ -1,12 +1,13 @@
 =====================
 Run a Power Flow
 =====================
-.. _ppLoadflow:
+.. _ppLoadflowBal:
 
-pandapower provides an AC and linearized (DC) powerflow.
+pandapower provides  AC (Balanced/Unbalanced) and linearized (DC) powerflow.
 
 .. toctree:: 
-    :maxdepth: 2
+    :maxdepth: 3
 
+    ac_3ph
     ac
     dc

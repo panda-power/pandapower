@@ -8,10 +8,12 @@ from scipy.optimize import minimize
 from pandapower.estimation.algorithm.base import BaseAlgorithm
 from pandapower.estimation.algorithm.estimator import BaseEstimatorOpt, get_estimator
 
-#DEFAULT_OPT_METHOD = "Newton-CG"
+# DEFAULT_OPT_METHOD = "Newton-CG"
 DEFAULT_OPT_METHOD = "TNC"
-#DEFAULT_OPT_METHOD = "SLSQP"
-#DEFAULT_OPT_METHOD = 'L-BFGS-B'
+
+
+# DEFAULT_OPT_METHOD = "SLSQP"
+# DEFAULT_OPT_METHOD = 'L-BFGS-B'
 
 
 class OptAlgorithm(BaseAlgorithm):
@@ -22,9 +24,9 @@ class OptAlgorithm(BaseAlgorithm):
         estm = get_estimator(BaseEstimatorOpt, estimator)(eppci, **opt_vars)
 
         jac = estm.create_cost_jacobian
-        res = minimize(estm.cost_function, x0=eppci.E, 
+        res = minimize(estm.cost_function, x0=eppci.E,
                        method=opt_method, jac=jac, tol=self.tolerance,
-                       options={"disp":True})
+                       options={"disp": True})
 
         self.successful = res.success
         if self.successful:

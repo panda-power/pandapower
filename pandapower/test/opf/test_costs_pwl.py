@@ -14,9 +14,6 @@ try:
 except ImportError:
     import logging
 
-logger = logging.getLogger(__name__)
-logger.setLevel("DEBUG")
-
 
 def test_cost_piecewise_linear_gen():
     """ Testing a very simple network for the resulting cost value
@@ -245,4 +242,6 @@ def test_cost_piecewise_linear_sgen_very_unsteady_slopes():
 
 
 if __name__ == "__main__":
+    logger = logging.getLogger(__name__)
+    logger.setLevel("DEBUG")
     pytest.main(["-xs"])

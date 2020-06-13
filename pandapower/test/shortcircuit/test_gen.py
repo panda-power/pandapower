@@ -162,3 +162,16 @@ def test_power_station_unit():
 
 if __name__ == '__main__':
     pytest.main(['test_gen.py'])
+#    net = pp.create_empty_network(sn_mva=2)
+#    b1 = pp.create_bus(net, vn_kv=10.)
+#    b2 = pp.create_bus(net, vn_kv=10.)
+#    b3 = pp.create_bus(net, vn_kv=10.)
+#    pp.create_bus(net, vn_kv=0.4, in_service=False)
+#    pp.create_gen(net, b1, vn_kv=10.5, xdss_pu=0.2, rdss_pu=0.001, cos_phi=0.8, p_mw=0.1, sn_mva=2.5)
+#    pp.create_gen(net, b1, vn_kv=10.5, xdss_pu=0.2, rdss_pu=0.001, cos_phi=0.8, p_mw=0.1, sn_mva=2.5)
+#    l = pp.create_line_from_parameters(net, b2, b1, length_km=1.0, max_i_ka=0.29,
+#                                       r_ohm_per_km=0.1548, x_ohm_per_km=0.0816814, c_nf_per_km=165)
+#    net.line.loc[l, "endtemp_degree"] = 165
+#    pp.create_switch(net, b3, b1, et="b")
+#    sc.calc_sc(net)
+#    pp.reset_results(net, "sc")

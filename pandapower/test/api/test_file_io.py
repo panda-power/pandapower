@@ -13,23 +13,36 @@ import pandas as pd
 import pytest
 
 import pandapower as pp
-import pandapower.control as ct
-import pandapower.networks as nw
-import pandapower.topology as top
+import pandapower.control as control
+import pandapower.networks as networks
+import pandapower.topology as topology
 from pandapower.io_utils import PPJSONEncoder, PPJSONDecoder
-from pandapower.test.toolbox import assert_net_equal, create_test_network, tempdir, net_in
+from pandapower.test.toolbox import assert_net_equal, create_test_network
 from pandapower.timeseries import DFData
 
 
-def test_pickle(net_in, tempdir):
-    filename = os.path.join(tempdir, "testfile.p")
+@pytest.fixture(params=[1])
+def net_in(request):
+    if request.param == 1:
+        net = create_test_network()
+        net.line_geodata.loc[0, "coords"] = [(1.1, 2.2), (3.3, 4.4)]
+        net.line_geodata.loc[11, "coords"] = [(5.5, 5.5), (6.6, 6.6), (7.7, 7.7)]
+        return net
+
+
+#    if request.param == 2:
+#        return networks.case145()
+
+
+def test_pickle(net_in, tmp_path):
+    filename = os.path.abspath(str(tmp_path)) + "testfile.p"
     pp.to_pickle(net_in, filename)
     net_out = pp.from_pickle(filename)
     assert_net_equal(net_in, net_out)
 
 
-def test_excel(net_in, tempdir):
-    filename = os.path.join(tempdir, "testfile.xlsx")
+def test_excel(net_in, tmp_path):
+    filename = os.path.abspath(str(tmp_path)) + "testfile.xlsx"
     pp.to_excel(net_in, filename)
     net_out = pp.from_excel(filename)
     assert_net_equal(net_in, net_out)
@@ -42,9 +55,9 @@ def test_excel(net_in, tempdir):
     assert net_out.user_pf_options == net_in.user_pf_options
 
 
-def test_json_basic(net_in, tempdir):
+def test_json_basic(net_in, tmp_path):
     # tests the basic json functionality with the encoder/decoder classes
-    filename = os.path.join(tempdir, "testfile.json")
+    filename = os.path.abspath(str(tmp_path)) + "testfile.json"
     with open(filename, 'w') as fp:
         json.dump(net_in, fp, cls=PPJSONEncoder)
 
@@ -55,8 +68,8 @@ def test_json_basic(net_in, tempdir):
     assert_net_equal(net_in, net_out)
 
 
-def test_json(net_in, tempdir):
-    filename = os.path.join(tempdir, "testfile.json")
+def test_json(net_in, tmp_path):
+    filename = os.path.join(os.path.abspath(str(tmp_path)), "testfile.json")
     try:
         net_geo = copy.deepcopy(net_in)
         # make GeodataFrame
@@ -74,6 +87,10 @@ def test_json(net_in, tempdir):
         pp.to_json(net_geo, filename)
         net_out = pp.from_json(filename)
         assert_net_equal(net_geo, net_out)
+        # assert isinstance(net_out.line_geodata, gpd.GeoDataFrame)
+        # assert isinstance(net_out.bus_geodata, gpd.GeoDataFrame)
+        assert isinstance(net_out.bus_geodata.geometry.iat[0], Point)
+        assert isinstance(net_out.line_geodata.geometry.iat[0], LineString)
     except (NameError, ImportError):
         pass
 
@@ -85,16 +102,28 @@ def test_json(net_in, tempdir):
     assert_net_equal(net_in, net_out)
 
 
-def test_type_casting_json(net_in, tempdir):
-    filename = os.path.join(tempdir, "testfile.json")
+def test_encrypted_json(net_in, tmp_path):
+    import cryptography.fernet
+    filename = os.path.abspath(str(tmp_path)) + "testfile.json"
+    pp.to_json(net_in, filename, encryption_key="verysecret")
+    with pytest.raises(json.JSONDecodeError):
+        pp.from_json(filename)
+    with pytest.raises(cryptography.fernet.InvalidToken):
+        pp.from_json(filename, encryption_key="wrong")
+    net_out = pp.from_json(filename, encryption_key="verysecret")
+    assert_net_equal(net_in, net_out)
+
+
+def test_type_casting_json(net_in, tmp_path):
+    filename = os.path.abspath(str(tmp_path)) + "testfile.json"
     net_in.sn_kva = 1000
     pp.to_json(net_in, filename)
     net = pp.from_json(filename)
     assert_net_equal(net_in, net)
 
 
-def test_sqlite(net_in, tempdir):
-    filename = os.path.join(tempdir, "testfile.db")
+def test_sqlite(net_in, tmp_path):
+    filename = os.path.abspath(str(tmp_path)) + "testfile.db"
     pp.to_sqlite(net_in, filename)
     net_out = pp.from_sqlite(filename)
     assert_net_equal(net_in, net_out)
@@ -106,8 +135,8 @@ def test_convert_format():  # TODO what is this thing testing ?
     assert net.converged
 
 
-def test_to_json_dtypes(tempdir):
-    filename = os.path.join(tempdir, "testfile.json")
+def test_to_json_dtypes(tmp_path):
+    filename = os.path.abspath(str(tmp_path)) + "testfile.json"
     net = create_test_network()
     pp.runpp(net)
     net['res_test'] = pd.DataFrame(columns=['test'], data=[1, 2, 3])
@@ -123,9 +152,9 @@ def test_to_json_dtypes(tempdir):
 
 
 def test_json_encoding_decoding():
-    net = nw.mv_oberrhein()
+    net = networks.mv_oberrhein()
     net.tuple = (1, "4")
-    net.mg = top.create_nxgraph(net)
+    net.mg = topology.create_nxgraph(net)
     s = set(['1', 4])
     t = tuple(['2', 3])
     f = frozenset(['12', 3])
@@ -178,10 +207,10 @@ def test_json_tuple_in_pandas():
 
 
 def test_new_pp_object_io():
-    net = nw.mv_oberrhein()
+    net = networks.mv_oberrhein()
     ds = DFData(pd.DataFrame(data=np.array([[0, 1, 2], [7, 8, 9]])))
-    pp.control.ConstControl(net, 'sgen', 'p_mw', 42, profile_name=0, data_source=ds)
-    pp.control.ContinuousTapControl(net, 142, 1)
+    control.ConstControl(net, 'sgen', 'p_mw', 42, profile_name=0, data_source=ds)
+    control.ContinuousTapControl(net, 142, 1)
 
     obj = net.controller.object.at[0]
     obj.run = pp.runpp
@@ -203,8 +232,8 @@ def test_new_pp_object_io():
 def test_convert_format_for_pp_objects(net_in):
     pp.create_transformer(net_in, net_in.bus.index.values[0], net_in.bus.index.values[1],
                           '0.25 MVA 20/0.4 kV', tap_pos=0)
-    c1 = pp.control.ContinuousTapControl(net_in, 0, 1.02)
-    c2 = pp.control.DiscreteTapControl(net_in, 0, 1, 1)
+    c1 = control.ContinuousTapControl(net_in, 0, 1.02)
+    c2 = control.DiscreteTapControl(net_in, 0, 1, 1)
     c1.u_set = 0.98
     c2.u_lower = 0.99
     c2.u_upper = 1.1
@@ -231,22 +260,22 @@ def test_convert_format_for_pp_objects(net_in):
     assert obj2.vm_upper_pu == 1.1
 
 
-def test_json_io_same_net(net_in, tempdir):
-    pp.control.ConstControl(net_in, 'load', 'p_mw', 0)
+def test_json_io_same_net(net_in, tmp_path):
+    control.ConstControl(net_in, 'load', 'p_mw', 0)
 
     s = pp.to_json(net_in)
     net1 = pp.from_json_string(s)
     assert net1.controller.object.at[0].net is net1
 
-    filename = os.path.join(tempdir, "testfile.json")
+    filename = os.path.abspath(str(tmp_path)) + "testfile.json"
     pp.to_json(net_in, filename)
     net2 = pp.from_json(filename)
     assert net2.controller.object.at[0].net is net2
 
 
 def test_deepcopy_controller():
-    net = nw.mv_oberrhein()
-    ct.ContinuousTapControl(net, 114, 1.01)
+    net = pp.networks.mv_oberrhein()
+    control.ContinuousTapControl(net, 114, 1.01)
     assert net == net.controller.object.iloc[0].net
     net2 = copy.deepcopy(net)
     assert net2 == net2.controller.object.iloc[0].net

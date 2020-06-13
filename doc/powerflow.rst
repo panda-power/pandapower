@@ -8,7 +8,7 @@ The power flow is the most import static network calculation operation. This sec
 can identify problems using the pandapower diagnostic function.
         
 .. toctree:: 
-    :maxdepth: 2
+    :maxdepth: 3
 
     powerflow/run
     powerflow/caveats

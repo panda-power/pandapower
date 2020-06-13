@@ -29,9 +29,8 @@ References:
 
 DC OPF
 ---------
-.. _opf_dcline_ipynb: ../../../../tutorials/opf_dcline.ipynb
 The dc optimal power flow is a linearized optimization of the grid state. It offers two cost function options, that are fitting special use cases. 
-To understand the usage, the OPF tutorial is recommended (see `opf_dcline_ipynb`_).
+To understand the usage, the `DC OPF tutorial <https://github.com/e2nIEE/pandapower/blob/develop/tutorials/opf_dcline.ipynb>`_ is recommended.
     
 .. autofunction:: pandapower.rundcopp
 

@@ -8,7 +8,7 @@ import numpy as np
 from pandapower.pypower.idx_bus import PD, QD
 from pandapower.pf.ppci_variables import _get_pf_variables_from_ppci
 from pandapower.pf.pfsoln_numba import pfsoln
-from pandapower.results import _copy_results_ppci_to_ppc, _extract_results_se, reset_results
+from pandapower.results import _copy_results_ppci_to_ppc, _extract_results_se, init_results
 from pandapower.auxiliary import _add_pf_options, get_values, _clean_up
 
 def _calc_power_flow(ppci, V):
@@ -17,7 +17,7 @@ def _calc_power_flow(ppci, V):
     baseMVA, bus, gen, branch, ref, pv, pq, _, _, _, ref_gens = _get_pf_variables_from_ppci(ppci)
     Ybus, Yf, Yt = ppci['internal']['Ybus'], ppci['internal']['Yf'], ppci['internal']['Yt']
     ppci['bus'], ppci['gen'], ppci['branch'] = pfsoln(baseMVA, bus, gen, branch, Ybus, Yf, Yt, V, ref, ref_gens)
-    
+
     # calculate bus power injections
     Sbus = np.multiply(V, np.conj(Ybus * V))
     ppci["bus"][:, PD] = -Sbus.real  # saved in per unit, injection -> demand
@@ -64,14 +64,14 @@ def _copy_power_flow_results(net):
     :param net: pandapower grid
     :return:
     """
-    elements_to_init = ["bus", "ext_grid", "line", "load", "sgen", "trafo", "trafo3w",
+    elements_to_init = ["bus", "ext_grid", "line", "load", "load_3ph" "sgen", "sgen_3ph", "trafo", "trafo3w",
                         "shunt", "impedance", "gen", "ward", "xward", "dcline"]
     for element in elements_to_init:
         res_name = "res_" + element
         res_name_pf = res_name + "_power_flow"
         if res_name in net:
             net[res_name_pf] = (net[res_name]).copy()
-    reset_results(net)
+    init_results(net)
 
 
 def _rename_results(net):
@@ -93,7 +93,7 @@ def _rename_results(net):
             net[res_name] = net[res_name_pf]
         else:
             del net[res_name]
-            
+
 def eppci2pp(net, ppc, eppci):
     # calculate the branch power flow and bus power injection based on the estimated voltage vector
     eppci = _calc_power_flow(eppci, eppci.V)

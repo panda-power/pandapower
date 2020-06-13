@@ -136,26 +136,26 @@ def qps_pypower(H, c=None, A=None, l=None, u=None, xmin=None, xmax=None,
         verbose = 0
 
     ##----- call the appropriate solver  -----
-    if alg == 0 or alg == 200 or alg == 250:    ## use MIPS or sc-MIPS
-        ## set up options
-        if 'pips_opt' in opt:
-            pips_opt = opt['pips_opt']
-        else:
-            pips_opt = {}
+    # if alg == 0 or alg == 200 or alg == 250:    ## use MIPS or sc-MIPS
+    ## set up options
+    if 'pips_opt' in opt:
+        pips_opt = opt['pips_opt']
+    else:
+        pips_opt = {}
 
-        if 'max_it' in opt:
-            pips_opt['max_it'] = opt['max_it']
+    if 'max_it' in opt:
+        pips_opt['max_it'] = opt['max_it']
 
-        if alg == 200:
-            pips_opt['step_control'] = False
-        else:
-            pips_opt['step_control'] = True
+    if alg == 200:
+        pips_opt['step_control'] = False
+    else:
+        pips_opt['step_control'] = True
 
-        pips_opt['verbose'] = verbose
+    pips_opt['verbose'] = verbose
 
-        ## call solver
-        x, f, eflag, output, lmbda = \
-            qps_pips(H, c, A, l, u, xmin, xmax, x0, pips_opt)
+    ## call solver
+    x, f, eflag, output, lmbda = \
+        qps_pips(H, c, A, l, u, xmin, xmax, x0, pips_opt)
 #    elif alg == 400:                    ## use IPOPT
 #        x, f, eflag, output, lmbda = \
 #            qps_ipopt(H, c, A, l, u, xmin, xmax, x0, opt)
@@ -168,8 +168,8 @@ def qps_pypower(H, c=None, A=None, l=None, u=None, xmin=None, xmax=None,
 #    elif 700:                           ## use Gurobi
 #        x, f, eflag, output, lmbda = \
 #            qps_gurobi(H, c, A, l, u, xmin, xmax, x0, opt)
-    else:
-        sys.stderr.write('qps_pypower: %d is not a valid algorithm code\n', alg)
+#     else:
+#         print('qps_pypower: {} is not a valid algorithm code\n'.format(alg))
 
     if 'alg' not in output:
         output['alg'] = alg

@@ -1,5 +1,1104 @@
 {
-    "_module": "pandapower.auxiliary",
-    "_class": "pandapowerNet",
-    "_object": "{\"OPF_converged\":false,\"bus\":{\n    \"_module\": \"pandas.core.frame\",\n    \"_class\": \"DataFrame\",\n    \"_object\": \"{\\\"columns\\\":[\\\"in_service\\\",\\\"max_vm_pu\\\",\\\"min_vm_pu\\\",\\\"name\\\",\\\"type\\\",\\\"vn_kv\\\",\\\"zone\\\"],\\\"index\\\":[0,1,10,11,12,13,14,15,16,17,18,19,2,20,21,22,23,24,25,26,27,28,3,4,5,6,7,8,9],\\\"data\\\":[[true,1.1,0.9,0,\\\"b\\\",275.0,1.0],[true,1.1,0.9,1,\\\"b\\\",275.0,1.0],[true,1.1,0.9,10,\\\"b\\\",400.0,1.0],[true,1.1,0.9,11,\\\"b\\\",400.0,1.0],[true,1.1,0.9,12,\\\"b\\\",400.0,1.0],[true,1.1,0.9,13,\\\"b\\\",400.0,1.0],[true,1.1,0.9,14,\\\"b\\\",400.0,1.0],[true,1.1,0.9,15,\\\"b\\\",400.0,1.0],[true,1.1,0.9,16,\\\"b\\\",400.0,1.0],[true,1.1,0.9,17,\\\"b\\\",400.0,1.0],[true,1.1,0.9,18,\\\"b\\\",400.0,1.0],[true,1.1,0.9,19,\\\"b\\\",400.0,1.0],[true,1.1,0.9,2,\\\"b\\\",132.0,1.0],[true,1.1,0.9,20,\\\"b\\\",400.0,1.0],[true,1.1,0.9,21,\\\"b\\\",400.0,1.0],[true,1.1,0.9,22,\\\"b\\\",400.0,1.0],[true,1.1,0.9,23,\\\"b\\\",400.0,1.0],[true,1.1,0.9,24,\\\"b\\\",400.0,1.0],[true,1.1,0.9,25,\\\"b\\\",400.0,1.0],[true,1.1,0.9,26,\\\"b\\\",400.0,1.0],[true,1.1,0.9,27,\\\"b\\\",400.0,1.0],[true,1.1,0.9,28,\\\"b\\\",400.0,1.0],[true,1.1,0.9,3,\\\"b\\\",275.0,1.0],[true,1.1,0.9,4,\\\"b\\\",400.0,1.0],[true,1.1,0.9,5,\\\"b\\\",400.0,1.0],[true,1.1,0.9,6,\\\"b\\\",400.0,1.0],[true,1.1,0.9,7,\\\"b\\\",400.0,1.0],[true,1.1,0.9,8,\\\"b\\\",400.0,1.0],[true,1.1,0.9,9,\\\"b\\\",400.0,1.0]]}\",\n    \"dtype\": {\n        \"in_service\": \"bool\",\n        \"max_vm_pu\": \"float64\",\n        \"min_vm_pu\": \"float64\",\n        \"name\": \"object\",\n        \"type\": \"object\",\n        \"vn_kv\": \"float64\",\n        \"zone\": \"object\"\n    },\n    \"orient\": \"split\"\n},\"bus_geodata\":{\n    \"_module\": \"pandas.core.frame\",\n    \"_class\": \"DataFrame\",\n    \"_object\": \"{\\\"columns\\\":[\\\"x\\\",\\\"y\\\",\\\"coords\\\"],\\\"index\\\":[0,1,10,11,12,13,14,15,16,17,18,19,2,20,21,22,23,24,25,26,27,28,3,4,5,6,7,8,9],\\\"data\\\":[[0.4547712237,-3.3551312574,null],[0.3720237935,-2.3015211945,null],[-1.0714054232,1.5554725152,null],[-0.4581256809,2.5810382487,null],[-1.3772171442,2.4080399234,null],[-2.719830972,2.1203004533,null],[-2.1402662804,1.8527242569,null],[-2.9311102326,2.8854357274,null],[-2.0466159916,3.4826032141,null],[-1.0510703204,3.5219672558,null],[-4.118877048,3.0637623107,null],[-4.594422093,4.1421486215,null],[-0.3934443266,-2.7315808859,null],[-3.5982690886,3.725573529,null],[-2.6949758916,4.0064689065,null],[-1.6137002971,4.5864123255,null],[-2.4137671185,5.3982240978,null],[-3.3834217046,4.8000126369,null],[-4.2962382978,5.3445908289,null],[-3.7078336534,6.421328652,null],[-2.4652328471,6.4185808963,null],[-1.399879733,5.7291653716,null],[-0.5631254584,-1.6778037508,null],[-1.6480702257,-1.7718489874,null],[-1.1939932169,-0.8332070171,null],[-0.2095321958,-0.7092506319,null],[-0.6068404444,0.282741895,null],[-1.3297797538,0.3174900356,null],[-1.9969767921,0.7386230554,null]]}\",\n    \"dtype\": {\n        \"x\": \"float64\",\n        \"y\": \"float64\",\n        \"coords\": \"object\"\n    },\n    \"orient\": \"split\"\n},\"converged\":true,\"dcline\":{\n    \"_module\": \"pandas.core.frame\",\n    \"_class\": \"DataFrame\",\n    \"_object\": \"{\\\"columns\\\":[\\\"cost_per_mw\\\",\\\"from_bus\\\",\\\"in_service\\\",\\\"loss_mw\\\",\\\"loss_percent\\\",\\\"max_p_mw\\\",\\\"max_q_from_mvar\\\",\\\"max_q_to_mvar\\\",\\\"min_q_from_mvar\\\",\\\"min_q_to_mvar\\\",\\\"name\\\",\\\"p_mw\\\",\\\"to_bus\\\",\\\"vm_from_pu\\\",\\\"vm_to_pu\\\"],\\\"index\\\":[],\\\"data\\\":[]}\",\n    \"dtype\": {\n        \"cost_per_mw\": \"float64\",\n        \"from_bus\": \"uint32\",\n        \"in_service\": \"bool\",\n        \"loss_mw\": \"float64\",\n        \"loss_percent\": \"float64\",\n        \"max_p_mw\": \"float64\",\n        \"max_q_from_mvar\": \"float64\",\n        \"max_q_to_mvar\": \"float64\",\n        \"min_q_from_mvar\": \"float64\",\n        \"min_q_to_mvar\": \"float64\",\n        \"name\": \"object\",\n        \"p_mw\": \"float64\",\n        \"to_bus\": \"uint32\",\n        \"vm_from_pu\": \"float64\",\n        \"vm_to_pu\": \"float64\"\n    },\n    \"orient\": \"split\"\n},\"ext_grid\":{\n    \"_module\": \"pandas.core.frame\",\n    \"_class\": \"DataFrame\",\n    \"_object\": \"{\\\"columns\\\":[\\\"bus\\\",\\\"in_service\\\",\\\"name\\\",\\\"va_degree\\\",\\\"vm_pu\\\",\\\"max_p_mw\\\",\\\"min_p_mw\\\",\\\"max_q_mvar\\\",\\\"min_q_mvar\\\"],\\\"index\\\":[0],\\\"data\\\":[[26,true,null,0.0,1.0,1081.0,0.0,666.029999999999973,-541.789999999999964]]}\",\n    \"dtype\": {\n        \"bus\": \"uint32\",\n        \"in_service\": \"bool\",\n        \"name\": \"object\",\n        \"va_degree\": \"float64\",\n        \"vm_pu\": \"float64\",\n        \"max_p_mw\": \"float64\",\n        \"min_p_mw\": \"float64\",\n        \"max_q_mvar\": \"float64\",\n        \"min_q_mvar\": \"float64\"\n    },\n    \"orient\": \"split\"\n},\"f_hz\":50.0,\"gen\":{\n    \"_module\": \"pandas.core.frame\",\n    \"_class\": \"DataFrame\",\n    \"_object\": \"{\\\"columns\\\":[\\\"bus\\\",\\\"controllable\\\",\\\"in_service\\\",\\\"name\\\",\\\"p_mw\\\",\\\"scaling\\\",\\\"sn_mva\\\",\\\"type\\\",\\\"vm_pu\\\",\\\"slack\\\",\\\"max_p_mw\\\",\\\"min_p_mw\\\",\\\"max_q_mvar\\\",\\\"min_q_mvar\\\"],\\\"index\\\":[0,1,10,11,12,13,14,15,16,17,18,19,2,20,21,22,23,24,25,26,27,28,29,3,30,31,32,33,34,35,36,37,38,39,4,40,41,42,43,44,45,46,47,48,49,5,50,51,52,53,54,55,56,57,58,59,6,60,61,62,63,7,8,9],\\\"data\\\":[[0,true,true,null,493.5,1.0,null,null,1.0,false,668.0,0.0,139.219999999999999,-188.460000000000008],[0,true,true,null,549.580000000000041,1.0,null,null,1.0,false,554.279999999999973,0.0,105.230000000000004,-66.299999999999997],[2,true,true,null,15.119999999999999,1.0,null,null,1.0,false,15.119999999999999,0.0,6.51,-7.29],[3,true,true,null,25.199999999999999,1.0,null,null,1.0,false,35.0,0.0,10.66,-12.34],[3,true,true,null,2284.0,1.0,null,null,1.0,false,2284.0,0.0,641.470000000000027,-679.0],[3,true,true,null,340.0,1.0,null,null,1.0,false,440.0,0.0,150.340000000000003,-137.860000000000014],[3,true,true,null,259.0,1.0,null,null,1.0,false,259.0,0.0,137.27000000000001,-122.950000000000003],[4,true,true,null,1074.0,1.0,null,null,1.0,false,1074.0,0.0,416.470000000000027,-429.769999999999982],[4,true,true,null,23.199999999999999,1.0,null,null,1.0,false,23.199999999999999,0.0,15.390000000000001,-9.94],[5,true,true,null,1001.519999999999982,1.0,null,null,1.0,false,1390.920000000000073,0.0,439.660000000000025,-484.800000000000011],[5,true,true,null,33.0,1.0,null,null,1.0,false,33.0,0.0,24.800000000000001,-25.5],[5,true,true,null,49.399999999999999,1.0,null,null,1.0,false,49.399999999999999,0.0,12.09,-17.489999999999998],[0,true,true,null,0.0,1.0,null,null,1.0,false,300.0,0.0,180.0,-100.0],[6,true,true,null,226.800000000000011,1.0,null,null,1.0,false,314.25,0.0,125.760000000000005,-131.02000000000001],[6,true,true,null,1216.0,1.0,null,null,1.0,false,1215.0,0.0,681.340000000000032,-469.069999999999993],[6,true,true,null,1104.0,1.0,null,null,1.0,false,1102.0,0.0,220.340000000000003,-205.240000000000009],[9,true,true,null,1208.0,1.0,null,null,1.0,false,1207.0,0.0,559.190000000000055,-539.680000000000064],[9,true,true,null,1875.0,1.0,null,null,1.0,false,1875.0,0.0,697.169999999999959,-829.629999999999996],[9,true,true,null,420.0,1.0,null,null,1.0,false,420.0,0.0,167.950000000000017,-138.039999999999992],[10,true,true,null,130.319999999999993,1.0,null,null,1.0,false,180.0,0.0,-57.600000000000001,-57.600000000000001],[10,true,true,null,2406.0,1.0,null,null,1.0,false,2406.0,0.0,1216.100000000000136,-1006.32000000000005],[10,true,true,null,1961.0,1.0,null,null,1.0,false,1987.0,0.0,873.220000000000027,-571.460000000000036],[10,true,true,null,155.0,1.0,null,null,1.0,false,155.0,0.0,94.219999999999999,-75.210000000000008],[0,true,true,null,18.719999999999999,1.0,null,null,1.0,false,18.719999999999999,0.0,7.8,-8.99],[10,true,true,null,1039.0,1.0,null,null,1.0,false,1039.0,0.0,670.32000000000005,-539.07000000000005],[11,true,true,null,980.0,1.0,null,null,1.0,false,980.0,0.0,579.980000000000018,-418.120000000000005],[11,true,true,null,1885.0,1.0,null,null,1.0,false,1885.0,0.0,960.050000000000068,-853.060000000000059],[11,true,true,null,210.0,1.0,null,null,1.0,false,210.0,0.0,116.420000000000002,-94.969999999999999],[11,true,true,null,1096.0,1.0,null,null,1.0,false,2004.0,0.0,344.480000000000018,-575.519999999999982],[14,true,true,null,7800.0,1.0,null,null,1.0,false,7832.0,0.0,3535.0300000000002,-2527.869999999999891],[15,true,true,null,3972.0,1.0,null,null,1.0,false,3987.0,0.0,1587.059999999999945,-1289.620000000000118],[15,true,true,null,7041.0,1.0,null,null,1.0,false,7040.0,0.0,3653.230000000000018,-3354.579999999999927],[15,true,true,null,1218.0,1.0,null,null,1.0,false,1218.0,0.0,767.330000000000041,-562.850000000000023],[16,true,true,null,2000.0,1.0,null,null,1.0,false,2021.0,0.0,814.230000000000018,-405.939999999999998],[1,true,true,null,36.43,1.0,null,null,1.0,false,50.600000000000001,0.0,14.33,-17.670000000000002],[17,true,true,null,1960.0,1.0,null,null,1.0,false,1982.0,0.0,884.970000000000027,-534.169999999999959],[17,true,true,null,228.0,1.0,null,null,1.0,false,228.0,0.0,40.020000000000003,-73.579999999999998],[18,true,true,null,2845.0,1.0,null,null,1.0,false,2845.0,0.0,1336.630000000000109,-1468.980000000000018],[18,true,true,null,406.800000000000011,1.0,null,null,1.0,false,406.800000000000011,0.0,162.700000000000017,-162.700000000000017],[19,true,true,null,1200.0,1.0,null,null,1.0,false,1200.0,0.0,621.139999999999986,-523.379999999999995],[19,true,true,null,360.0,1.0,null,null,1.0,false,360.0,0.0,236.640000000000015,236.640000000000015],[20,true,true,null,665.0,1.0,null,null,1.0,false,665.0,0.0,326.150000000000034,-306.069999999999993],[21,true,true,null,401.100000000000023,1.0,null,null,1.0,false,401.0,0.0,189.719999999999999,-232.680000000000007],[22,true,true,null,3772.0,1.0,null,null,1.0,false,3801.0,0.0,1589.670000000000073,-1388.269999999999982],[22,true,true,null,363.0,1.0,null,null,1.0,false,363.0,0.0,84.810000000000002,-153.990000000000009],[1,true,true,null,1524.0,1.0,null,null,1.0,false,1524.0,0.0,1108.509999999999991,-473.360000000000014],[22,true,true,null,470.0,1.0,null,null,1.0,false,470.400000000000034,0.0,317.759999999999991,-211.430000000000007],[22,true,true,null,3081.010000000000218,1.0,null,null,1.0,false,4431.0,0.0,1200.809999999999945,-1262.240000000000009],[22,true,true,null,0.0,1.0,null,null,1.0,false,100.0,0.0,0.0,0.0],[24,true,true,null,2123.0,1.0,null,null,1.0,false,2123.0,0.0,949.379999999999995,-947.420000000000073],[24,true,true,null,0.0,1.0,null,null,1.0,false,1245.0,0.0,0.0,0.0],[25,true,true,null,1940.0,1.0,null,null,1.0,false,1966.0,0.0,881.440000000000055,-431.350000000000023],[25,true,true,null,1104.0,1.0,null,null,1.0,false,1131.0,0.0,384.110000000000014,-294.620000000000004],[25,true,true,null,2465.0,1.0,null,null,1.0,false,3165.0,0.0,1254.529999999999973,-1114.6400000000001],[25,true,true,null,0.0,1.0,null,null,1.0,false,1355.0,0.0,0.0,0.0],[27,true,true,null,1320.0,1.0,null,null,1.0,false,1320.0,0.0,657.82000000000005,-579.700000000000046],[1,true,true,null,12.0,1.0,null,null,1.0,false,12.0,0.0,0.0,0.0],[27,true,true,null,208.0,1.0,null,null,1.0,false,208.0,0.0,60.789999999999999,-71.210000000000008],[28,true,true,null,1261.0,1.0,null,null,1.0,false,1261.0,0.0,455.319999999999993,-480.430000000000007],[28,true,true,null,905.0,1.0,null,null,1.0,false,905.0,0.0,403.350000000000023,-412.03000000000003],[28,true,true,null,0.0,1.0,null,null,1.0,false,140.0,0.0,0.0,0.0],[2,true,true,null,387.900000000000034,1.0,null,null,1.0,false,550.990000000000009,0.0,128.340000000000003,-158.140000000000015],[2,true,true,null,13.539999999999999,1.0,null,null,1.0,false,19.0,0.0,-3.51,-3.51],[2,true,true,null,553.0,1.0,null,null,1.0,false,553.120000000000005,0.0,144.789999999999992,-66.170000000000002]]}\",\n    \"dtype\": {\n        \"bus\": \"uint32\",\n        \"controllable\": \"bool\",\n        \"in_service\": \"bool\",\n        \"name\": \"object\",\n        \"p_mw\": \"float64\",\n        \"scaling\": \"float64\",\n        \"sn_mva\": \"float64\",\n        \"type\": \"object\",\n        \"vm_pu\": \"float64\",\n        \"slack\": \"bool\",\n        \"max_p_mw\": \"float64\",\n        \"min_p_mw\": \"float64\",\n        \"max_q_mvar\": \"float64\",\n        \"min_q_mvar\": \"float64\"\n    },\n    \"orient\": \"split\"\n},\"impedance\":{\n    \"_module\": \"pandas.core.frame\",\n    \"_class\": \"DataFrame\",\n    \"_object\": \"{\\\"columns\\\":[\\\"name\\\",\\\"from_bus\\\",\\\"to_bus\\\",\\\"rft_pu\\\",\\\"xft_pu\\\",\\\"rtf_pu\\\",\\\"xtf_pu\\\",\\\"sn_mva\\\",\\\"in_service\\\"],\\\"index\\\":[],\\\"data\\\":[]}\",\n    \"dtype\": {\n        \"name\": \"object\",\n        \"from_bus\": \"uint32\",\n        \"to_bus\": \"uint32\",\n        \"rft_pu\": \"float64\",\n        \"xft_pu\": \"float64\",\n        \"rtf_pu\": \"float64\",\n        \"xtf_pu\": \"float64\",\n        \"sn_mva\": \"float64\",\n        \"in_service\": \"bool\"\n    },\n    \"orient\": \"split\"\n},\"line\":{\n    \"_module\": \"pandas.core.frame\",\n    \"_class\": \"DataFrame\",\n    \"_object\": \"{\\\"columns\\\":[\\\"name\\\",\\\"std_type\\\",\\\"from_bus\\\",\\\"to_bus\\\",\\\"length_km\\\",\\\"r_ohm_per_km\\\",\\\"x_ohm_per_km\\\",\\\"c_nf_per_km\\\",\\\"g_us_per_km\\\",\\\"max_i_ka\\\",\\\"df\\\",\\\"parallel\\\",\\\"type\\\",\\\"in_service\\\"],\\\"index\\\":[0,1,10,11,12,13,14,15,16,17,18,19,2,20,21,22,23,24,25,26,27,28,29,3,30,31,32,33,34,35,36,37,38,39,4,40,41,42,43,44,45,46,47,48,49,5,50,51,52,53,54,55,56,57,58,59,6,60,61,62,63,64,65,66,67,68,69,7,70,71,72,73,74,75,76,77,78,79,8,80,81,82,83,84,85,9],\\\"data\\\":[[null,null,0,1,1.0,9.22625,15.125,360.295223237500011,0.0,1.1022141503,1.0,1,\\\"ol\\\",true],[null,null,0,1,1.0,9.22625,15.125,1197.055624868399946,0.0,1.1022141503,1.0,1,\\\"ol\\\",true],[null,null,6,5,1.0,4.8,320.0,584.695472183900051,0.0,1.3712068893,1.0,1,\\\"ol\\\",true],[null,null,6,5,1.0,4.8,320.0,584.695472183900051,0.0,1.3712068893,1.0,1,\\\"ol\\\",true],[null,null,7,9,1.0,1.328,28.0,1317.802928800899963,0.0,4.431163316,1.0,1,\\\"ol\\\",true],[null,null,7,9,1.0,1.328,28.0,1317.802928800899963,0.0,4.431163316,1.0,1,\\\"ol\\\",true],[null,null,8,10,1.0,2.624,26.079999999999998,968.457828714199991,0.0,2.0062921854,1.0,1,\\\"ol\\\",true],[null,null,8,10,1.0,2.624,26.079999999999998,968.457828714199991,0.0,2.0062921854,1.0,1,\\\"ol\\\",true],[null,null,8,9,1.0,5.632,39.247999999999998,377.595102485499979,0.0,1.2340862004,1.0,1,\\\"ol\\\",true],[null,null,8,9,1.0,7.872,54.880000000000002,497.75708451989999,0.0,1.1186161466,1.0,1,\\\"ol\\\",true],[null,null,9,14,1.0,0.848,13.359999999999999,10689.243865409400314,0.0,6.9859382572,1.0,1,\\\"ol\\\",true],[null,null,9,14,1.0,0.832,10.08,2115.964968406699882,0.0,5.8023702054,1.0,1,\\\"ol\\\",true],[null,null,1,3,1.0,0.3025,49.15625,1874.713696611700016,0.0,1.5955861985,1.0,1,\\\"ol\\\",true],[null,null,10,14,1.0,1.12,67.200000000000003,777.272953325000003,0.0,3.6373066959,1.0,1,\\\"ol\\\",true],[null,null,10,14,1.0,1.584,67.200000000000003,1141.53882932660008,0.0,3.6373066959,1.0,1,\\\"ol\\\",true],[null,null,10,12,1.0,0.64,8.32,496.961309804400003,0.0,3.1321252104,1.0,1,\\\"ol\\\",true],[null,null,10,12,1.0,0.64,8.32,529.985960495999962,0.0,3.1898602373,1.0,1,\\\"ol\\\",true],[null,null,10,11,1.0,0.16,13.6,158.757055734200009,0.0,4.7920072343,1.0,1,\\\"ol\\\",true],[null,null,10,11,1.0,0.16,13.6,158.757055734200009,0.0,4.7920072343,1.0,1,\\\"ol\\\",true],[null,null,11,12,1.0,1.536,17.248000000000001,765.933163629699948,0.0,4.4744645862,1.0,1,\\\"ol\\\",true],[null,null,11,17,1.0,1.552,14.4,762.949008446800008,0.0,3.4641016151,1.0,1,\\\"ol\\\",true],[null,null,12,17,1.0,0.784,11.199999999999999,386.547568034400001,0.0,3.4641016151,1.0,1,\\\"ol\\\",true],[null,null,12,17,1.0,1.344,11.199999999999999,1543.60400431249991,0.0,3.4641016151,1.0,1,\\\"ol\\\",true],[null,null,1,3,1.0,0.3025,49.15625,2333.921743985600188,0.0,1.5955861985,1.0,1,\\\"ol\\\",true],[null,null,12,14,1.0,2.192,36.799999999999997,1321.582858699300004,0.0,1.7897858345,1.0,1,\\\"ol\\\",true],[null,null,12,14,1.0,2.624,36.799999999999997,219.633821466799986,0.0,1.3784237677,1.0,1,\\\"ol\\\",true],[null,null,12,13,1.0,1.712,18.608,2336.593508267899779,0.0,1.5011106999,1.0,1,\\\"ol\\\",true],[null,null,12,13,1.0,1.312,19.216000000000001,2412.192106236499967,0.0,1.5011106999,1.0,1,\\\"ol\\\",true],[null,null,13,15,1.0,0.8,25.600000000000001,556.047582427299972,0.0,3.7239092363,1.0,1,\\\"ol\\\",true],[null,null,13,15,1.0,8.0,28.800000000000001,291.651433215899999,0.0,0.9021097956,1.0,1,\\\"ol\\\",true],[null,null,14,15,1.0,0.528,8.32,703.066961108400051,0.0,3.9981506141,1.0,1,\\\"ol\\\",true],[null,null,14,15,1.0,0.256,2.752,794.183166028599999,0.0,7.9963012283,1.0,1,\\\"ol\\\",true],[null,null,14,13,1.0,0.304,3.552,1510.380409942099959,0.0,7.2168783649,1.0,1,\\\"ol\\\",true],[null,null,14,13,1.0,0.288,3.552,1108.71312231389993,0.0,7.2168783649,1.0,1,\\\"ol\\\",true],[null,null,4,5,1.0,1.36,16.815999999999999,761.039149129700036,0.0,2.0062921854,1.0,1,\\\"ol\\\",true],[null,null,15,18,1.0,0.896,22.559999999999999,894.450780176499961,0.0,4.0125843709,1.0,1,\\\"ol\\\",true],[null,null,15,18,1.0,0.896,22.559999999999999,894.450780176499961,0.0,5.5136950708,1.0,1,\\\"ol\\\",true],[null,null,16,15,1.0,1.6,17.152000000000001,527.39969267080005,0.0,3.1032576969,1.0,1,\\\"ol\\\",true],[null,null,16,15,1.0,1.6,17.152000000000001,909.76944344900005,0.0,2.7279800219,1.0,1,\\\"ol\\\",true],[null,null,16,21,1.0,1.088,15.52,908.376837697000042,0.0,3.0310889132,1.0,1,\\\"ol\\\",true],[null,null,16,21,1.0,1.104,15.52,909.968387127899973,0.0,3.0310889132,1.0,1,\\\"ol\\\",true],[null,null,17,16,1.0,0.672,2.88,467.318701653599987,0.0,4.4744645862,1.0,1,\\\"ol\\\",true],[null,null,17,16,1.0,0.672,2.88,467.318701653599987,0.0,4.9940798285,1.0,1,\\\"ol\\\",true],[null,null,17,22,1.0,2.208,15.359999999999999,960.699025238499985,0.0,2.8434500758,1.0,1,\\\"ol\\\",true],[null,null,17,22,1.0,1.872,15.359999999999999,820.045844280999972,0.0,2.8434500758,1.0,1,\\\"ol\\\",true],[null,null,4,5,1.0,2.416,25.808,1179.656438197099988,0.0,2.0062921854,1.0,1,\\\"ol\\\",true],[null,null,19,25,1.0,0.56,3.68,447.424333767099995,0.0,4.0125843709,1.0,1,\\\"ol\\\",true],[null,null,19,25,1.0,0.56,3.68,447.424333767099995,0.0,4.0125843709,1.0,1,\\\"ol\\\",true],[null,null,19,18,1.0,2.848,34.079999999999998,1329.341662175100055,0.0,2.29496732,1.0,1,\\\"ol\\\",true],[null,null,19,18,1.0,2.112,22.879999999999999,727.338089930000024,0.0,2.29496732,1.0,1,\\\"ol\\\",true],[null,null,20,15,1.0,2.32,29.184000000000001,1824.114591512000061,0.0,4.0125843709,1.0,1,\\\"ol\\\",true],[null,null,20,15,1.0,2.32,29.184000000000001,1824.114591512000061,0.0,4.0125843709,1.0,1,\\\"ol\\\",true],[null,null,20,24,1.0,0.4,16.0,315.524674679700013,0.0,4.0125843709,1.0,1,\\\"ol\\\",true],[null,null,20,24,1.0,0.4,16.0,315.524674679700013,0.0,4.0125843709,1.0,1,\\\"ol\\\",true],[null,null,20,19,1.0,1.92,7.68,884.503596233200028,0.0,4.0125843709,1.0,1,\\\"ol\\\",true],[null,null,20,19,1.0,1.92,7.68,1392.605752054100094,0.0,4.0125843709,1.0,1,\\\"ol\\\",true],[null,null,5,8,1.0,1.248,13.632,146.621491323399994,0.0,3.0310889132,1.0,1,\\\"ol\\\",true],[null,null,20,18,1.0,0.592,9.44,584.894415862700043,0.0,4.3734282891,1.0,1,\\\"ol\\\",true],[null,null,20,18,1.0,0.592,9.44,587.878571045700028,0.0,4.0125843709,1.0,1,\\\"ol\\\",true],[null,null,21,15,1.0,2.848,27.52,1671.723733501499964,0.0,2.9011851027,1.0,1,\\\"ol\\\",true],[null,null,21,15,1.0,2.848,27.52,1247.376866482700052,0.0,2.9011851027,1.0,1,\\\"ol\\\",true],[null,null,21,24,1.0,0.592,6.56,815.27119598820002,0.0,4.727055329,1.0,1,\\\"ol\\\",true],[null,null,21,24,1.0,0.544,6.56,853.46838233029996,0.0,4.727055329,1.0,1,\\\"ol\\\",true],[null,null,21,20,1.0,0.304,1.776,245.098612361499988,0.0,4.0125843709,1.0,1,\\\"ol\\\",true],[null,null,21,20,1.0,0.768,9.76,604.987727428100016,0.0,4.0125843709,1.0,1,\\\"ol\\\",true],[null,null,22,28,1.0,2.416,29.120000000000001,1054.401497983800027,0.0,2.9011851027,1.0,1,\\\"ol\\\",true],[null,null,22,23,1.0,1.376,1.28,1914.236078037800098,0.0,4.0125843709,1.0,1,\\\"ol\\\",true],[null,null,5,8,1.0,1.248,13.632,922.103951538700016,0.0,3.0310889132,1.0,1,\\\"ol\\\",true],[null,null,22,23,1.0,0.368,1.12,5659.350832668899784,0.0,6.3508529611,1.0,1,\\\"ol\\\",true],[null,null,22,21,1.0,0.88,4.8,689.936678303399958,0.0,4.0125843709,1.0,1,\\\"ol\\\",true],[null,null,22,21,1.0,0.624,4.8,490.595112080799993,0.0,3.9981506141,1.0,1,\\\"ol\\\",true],[null,null,22,28,1.0,2.416,29.120000000000001,1054.401497983800027,0.0,2.9011851027,1.0,1,\\\"ol\\\",true],[null,null,23,27,1.0,1.088,11.199999999999999,475.077505129299993,0.0,3.1898602373,1.0,1,\\\"ol\\\",true],[null,null,23,24,1.0,1.664,14.56,580.51765492770005,0.0,2.0062921854,1.0,1,\\\"ol\\\",true],[null,null,23,24,1.0,1.664,14.56,580.51765492770005,0.0,2.0062921854,1.0,1,\\\"ol\\\",true],[null,null,23,27,1.0,1.088,11.199999999999999,475.077505129299993,0.0,3.1898602373,1.0,1,\\\"ol\\\",true],[null,null,24,25,1.0,0.32,9.119999999999999,1058.380371561099992,0.0,10.0458946839,1.0,1,\\\"ol\\\",true],[null,null,24,25,1.0,0.32,9.119999999999999,1058.380371561099992,0.0,7.9963012283,1.0,1,\\\"ol\\\",true],[null,null,6,7,1.0,0.64,0.16,1448.309982136200006,0.0,3.1465589671,1.0,1,\\\"ol\\\",true],[null,null,26,25,1.0,0.32,8.048,357.501790920199994,0.0,4.4744645862,1.0,1,\\\"ol\\\",true],[null,null,26,25,1.0,0.32,8.048,357.501790920199994,0.0,4.4744645862,1.0,1,\\\"ol\\\",true],[null,null,27,26,1.0,0.608,11.375999999999999,596.433149236900022,0.0,4.431163316,1.0,1,\\\"ol\\\",true],[null,null,27,26,1.0,0.608,11.375999999999999,596.433149236900022,0.0,4.431163316,1.0,1,\\\"ol\\\",true],[null,null,28,27,1.0,0.816,12.736000000000001,676.40850814060002,0.0,4.0125843709,1.0,1,\\\"ol\\\",true],[null,null,28,27,1.0,0.816,12.736000000000001,676.40850814060002,0.0,4.0125843709,1.0,1,\\\"ol\\\",true],[null,null,6,7,1.0,0.64,0.16,2560.803034348599795,0.0,3.6084391824,1.0,1,\\\"ol\\\",true]]}\",\n    \"dtype\": {\n        \"name\": \"object\",\n        \"std_type\": \"object\",\n        \"from_bus\": \"uint32\",\n        \"to_bus\": \"uint32\",\n        \"length_km\": \"float64\",\n        \"r_ohm_per_km\": \"float64\",\n        \"x_ohm_per_km\": \"float64\",\n        \"c_nf_per_km\": \"float64\",\n        \"g_us_per_km\": \"float64\",\n        \"max_i_ka\": \"float64\",\n        \"df\": \"float64\",\n        \"parallel\": \"uint32\",\n        \"type\": \"object\",\n        \"in_service\": \"bool\"\n    },\n    \"orient\": \"split\"\n},\"line_geodata\":{\n    \"_module\": \"pandas.core.frame\",\n    \"_class\": \"DataFrame\",\n    \"_object\": \"{\\\"columns\\\":[\\\"coords\\\"],\\\"index\\\":[],\\\"data\\\":[]}\",\n    \"dtype\": {\n        \"coords\": \"object\"\n    },\n    \"orient\": \"split\"\n},\"load\":{\n    \"_module\": \"pandas.core.frame\",\n    \"_class\": \"DataFrame\",\n    \"_object\": \"{\\\"columns\\\":[\\\"name\\\",\\\"bus\\\",\\\"p_mw\\\",\\\"q_mvar\\\",\\\"const_z_percent\\\",\\\"const_i_percent\\\",\\\"sn_mva\\\",\\\"scaling\\\",\\\"in_service\\\",\\\"type\\\"],\\\"index\\\":[0,1,10,11,12,13,14,15,16,17,18,19,2,20,21,22,23,24,25,26,27,28,3,4,5,6,7,8,9],\\\"data\\\":[[null,0,468.0,102.0,0.0,0.0,null,1.0,true,null],[null,1,513.0,113.0,0.0,0.0,null,1.0,true,null],[null,10,3360.0,760.0,0.0,0.0,null,1.0,true,null],[null,11,1189.0,338.0,0.0,0.0,null,1.0,true,null],[null,12,2524.0,766.0,0.0,0.0,null,1.0,true,null],[null,13,1831.0,566.5,0.0,0.0,null,1.0,true,null],[null,14,2633.0,694.600000000000023,0.0,0.0,null,1.0,true,null],[null,15,1607.0,655.0,0.0,0.0,null,1.0,true,null],[null,16,1081.0,371.0,0.0,0.0,null,1.0,true,null],[null,17,5362.0,1935.0,0.0,0.0,null,1.0,true,null],[null,18,2019.0,648.0,0.0,0.0,null,1.0,true,null],[null,19,1027.3599999999999,305.800000000000011,0.0,0.0,null,1.0,true,null],[null,2,555.0,105.0,0.0,0.0,null,1.0,true,null],[null,20,702.0,202.200000000000017,0.0,0.0,null,1.0,true,null],[null,21,1820.0,665.0,0.0,0.0,null,1.0,true,null],[null,22,4734.0,1337.0,0.0,0.0,null,1.0,true,null],[null,23,1418.0,528.0,0.0,0.0,null,1.0,true,null],[null,24,9734.0,2902.0,0.0,0.0,null,1.0,true,null],[null,25,1424.0,434.0,0.0,0.0,null,1.0,true,null],[null,26,457.0,138.0,0.0,0.0,null,1.0,true,null],[null,27,2751.0,841.0,0.0,0.0,null,1.0,true,null],[null,28,2577.0,356.0,0.0,0.0,null,1.0,true,null],[null,3,1308.0,317.0,0.0,0.0,null,1.0,true,null],[null,4,502.0,128.0,0.0,0.0,null,1.0,true,null],[null,5,1176.0,315.0,0.0,0.0,null,1.0,true,null],[null,6,745.0,171.0,0.0,0.0,null,1.0,true,null],[null,7,117.5,37.399999999999999,0.0,0.0,null,1.0,true,null],[null,8,130.0,53.0,0.0,0.0,null,1.0,true,null],[null,9,2561.0,465.0,0.0,0.0,null,1.0,true,null]]}\",\n    \"dtype\": {\n        \"name\": \"object\",\n        \"bus\": \"uint32\",\n        \"p_mw\": \"float64\",\n        \"q_mvar\": \"float64\",\n        \"const_z_percent\": \"float64\",\n        \"const_i_percent\": \"float64\",\n        \"sn_mva\": \"float64\",\n        \"scaling\": \"float64\",\n        \"in_service\": \"bool\",\n        \"type\": \"object\"\n    },\n    \"orient\": \"split\"\n},\"measurement\":{\n    \"_module\": \"pandas.core.frame\",\n    \"_class\": \"DataFrame\",\n    \"_object\": \"{\\\"columns\\\":[\\\"name\\\",\\\"measurement_type\\\",\\\"element_type\\\",\\\"element\\\",\\\"value\\\",\\\"std_dev\\\",\\\"side\\\"],\\\"index\\\":[],\\\"data\\\":[]}\",\n    \"dtype\": {\n        \"name\": \"object\",\n        \"measurement_type\": \"object\",\n        \"element_type\": \"object\",\n        \"element\": \"uint32\",\n        \"value\": \"float64\",\n        \"std_dev\": \"float64\",\n        \"side\": \"object\"\n    },\n    \"orient\": \"split\"\n},\"name\":\"\",\"poly_cost\":{\n    \"_module\": \"pandas.core.frame\",\n    \"_class\": \"DataFrame\",\n    \"_object\": \"{\\\"columns\\\":[\\\"element\\\",\\\"et\\\",\\\"cp0_eur\\\",\\\"cp1_eur_per_mw\\\",\\\"cp2_eur_per_mw2\\\",\\\"cq0_eur\\\",\\\"cq1_eur_per_mvar\\\",\\\"cq2_eur_per_mvar2\\\"],\\\"index\\\":[0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32,33,34,35,36,37,38,39,40,41,42,43,44,45,46,47,48,49,50,51,52,53,54,55,56,57,58,59,60,61,62,63,64,65],\\\"data\\\":[[0.0,\\\"gen\\\",0.01,0.01,0.0,0.0,0.0,0.0],[1.0,\\\"gen\\\",395.370000000000005,4.42,0.0,0.0,0.0,0.0],[10.0,\\\"gen\\\",0.01,0.01,0.0,0.0,0.0,0.0],[11.0,\\\"gen\\\",0.01,0.01,0.0,0.0,0.0,0.0],[12.0,\\\"gen\\\",382.240000000000009,12.380000000000001,0.33,0.0,0.0,0.0],[13.0,\\\"gen\\\",86.379999999999995,56.560000000000009,0.33,0.0,0.0,0.0],[14.0,\\\"gen\\\",400.680000000000007,130.0,0.0,0.0,0.0,0.0],[15.0,\\\"gen\\\",86.379999999999995,118.000000000000014,0.0,0.0,0.0,0.0],[16.0,\\\"gen\\\",400.680000000000007,130.0,0.0,0.0,0.0,0.0],[17.0,\\\"gen\\\",0.01,0.01,0.0,0.0,0.0,0.0],[18.0,\\\"gen\\\",395.370000000000005,4.42,0.0,0.0,0.0,0.0],[19.0,\\\"gen\\\",0.01,0.01,0.0,0.0,0.0,0.0],[2.0,\\\"gen\\\",86.379999999999995,56.560000000000009,0.33,0.0,0.0,0.0],[20.0,\\\"gen\\\",0.01,0.01,0.0,0.0,0.0,0.0],[21.0,\\\"gen\\\",86.379999999999995,118.000000000000014,0.0,0.0,0.0,0.0],[22.0,\\\"gen\\\",400.680000000000007,16.379999999999999,0.39,0.0,0.0,0.0],[23.0,\\\"gen\\\",86.379999999999995,118.000000000000014,0.0,0.0,0.0,0.0],[24.0,\\\"gen\\\",400.680000000000007,130.0,0.0,0.0,0.0,0.0],[25.0,\\\"gen\\\",639.980000000000018,19.379999999999999,0.1,0.0,0.0,0.0],[26.0,\\\"gen\\\",0.01,0.01,0.0,0.0,0.0,0.0],[27.0,\\\"gen\\\",86.379999999999995,118.000000000000014,0.0,0.0,0.0,0.0],[28.0,\\\"gen\\\",382.240000000000009,12.380000000000001,0.33,0.0,0.0,0.0],[29.0,\\\"gen\\\",400.680000000000007,130.0,0.0,0.0,0.0,0.0],[3.0,\\\"gen\\\",0.01,0.01,0.0,0.0,0.0,0.0],[30.0,\\\"gen\\\",400.680000000000007,130.0,0.0,0.0,0.0,0.0],[31.0,\\\"gen\\\",382.149999999999977,10.300000000000001,0.01,0.0,0.0,0.0],[32.0,\\\"gen\\\",400.680000000000007,130.0,0.0,0.0,0.0,0.0],[33.0,\\\"gen\\\",400.680000000000007,130.0,0.0,0.0,0.0,0.0],[34.0,\\\"gen\\\",86.379999999999995,56.560000000000009,0.33,0.0,0.0,0.0],[35.0,\\\"gen\\\",382.240000000000009,12.380000000000001,0.33,0.0,0.0,0.0],[36.0,\\\"gen\\\",382.240000000000009,12.380000000000001,0.33,0.0,0.0,0.0],[37.0,\\\"gen\\\",400.680000000000007,130.0,0.0,0.0,0.0,0.0],[38.0,\\\"gen\\\",400.680000000000007,130.0,0.0,0.0,0.0,0.0],[39.0,\\\"gen\\\",382.240000000000009,12.380000000000001,0.33,0.0,0.0,0.0],[4.0,\\\"gen\\\",0.01,0.01,0.0,0.0,0.0,0.0],[40.0,\\\"gen\\\",382.240000000000009,12.380000000000001,0.33,0.0,0.0,0.0],[41.0,\\\"gen\\\",400.680000000000007,130.0,0.0,0.0,0.0,0.0],[42.0,\\\"gen\\\",400.680000000000007,130.0,0.0,0.0,0.0,0.0],[43.0,\\\"gen\\\",0.01,0.01,0.0,0.0,0.0,0.0],[44.0,\\\"gen\\\",392.149999999999977,10.300000000000001,0.01,0.0,0.0,0.0],[45.0,\\\"gen\\\",0.01,0.01,0.0,0.0,0.0,0.0],[46.0,\\\"gen\\\",400.680000000000007,130.0,0.0,0.0,0.0,0.0],[47.0,\\\"gen\\\",400.680000000000007,130.0,0.0,0.0,0.0,0.0],[48.0,\\\"gen\\\",382.240000000000009,12.380000000000001,0.33,0.0,0.0,0.0],[49.0,\\\"gen\\\",639.980000000000018,19.379999999999999,0.1,0.0,0.0,0.0],[5.0,\\\"gen\\\",400.680000000000007,130.0,0.0,0.0,0.0,0.0],[50.0,\\\"gen\\\",382.149999999999977,10.300000000000001,0.01,0.0,0.0,0.0],[51.0,\\\"gen\\\",400.680000000000007,130.0,0.0,0.0,0.0,0.0],[52.0,\\\"gen\\\",650.0,130.0,0.0,0.0,0.0,0.0],[53.0,\\\"gen\\\",400.680000000000007,130.0,0.0,0.0,0.0,0.0],[54.0,\\\"gen\\\",665.110000000000014,11.84,0.33,0.0,0.0,0.0],[55.0,\\\"gen\\\",382.240000000000009,12.380000000000001,0.33,0.0,0.0,0.0],[56.0,\\\"gen\\\",400.680000000000007,16.379999999999999,0.39,0.0,0.0,0.0],[57.0,\\\"gen\\\",400.680000000000007,130.0,0.0,0.0,0.0,0.0],[58.0,\\\"gen\\\",665.110000000000014,11.84,0.33,0.0,0.0,0.0],[0.0,\\\"ext_grid\\\",86.379999999999995,118.000000000000014,0.0,0.0,0.0,0.0],[6.0,\\\"gen\\\",400.680000000000007,130.0,0.0,0.0,0.0,0.0],[0.0,\\\"sgen\\\",0.01,0.01,0.0,0.0,0.0,0.0],[59.0,\\\"gen\\\",400.680000000000007,130.0,0.0,0.0,0.0,0.0],[60.0,\\\"gen\\\",400.680000000000007,130.0,0.0,0.0,0.0,0.0],[61.0,\\\"gen\\\",86.379999999999995,118.000000000000014,0.0,0.0,0.0,0.0],[62.0,\\\"gen\\\",400.680000000000007,130.0,0.0,0.0,0.0,0.0],[63.0,\\\"gen\\\",650.0,130.0,0.0,0.0,0.0,0.0],[7.0,\\\"gen\\\",0.01,0.01,0.0,0.0,0.0,0.0],[8.0,\\\"gen\\\",0.01,0.01,0.0,0.0,0.0,0.0],[9.0,\\\"gen\\\",395.370000000000005,4.42,0.0,0.0,0.0,0.0]]}\",\n    \"dtype\": {\n        \"element\": \"object\",\n        \"et\": \"object\",\n        \"cp0_eur\": \"float64\",\n        \"cp1_eur_per_mw\": \"float64\",\n        \"cp2_eur_per_mw2\": \"float64\",\n        \"cq0_eur\": \"float64\",\n        \"cq1_eur_per_mvar\": \"float64\",\n        \"cq2_eur_per_mvar2\": \"float64\"\n    },\n    \"orient\": \"split\"\n},\"pwl_cost\":{\n    \"_module\": \"pandas.core.frame\",\n    \"_class\": \"DataFrame\",\n    \"_object\": \"{\\\"columns\\\":[\\\"power_type\\\",\\\"element\\\",\\\"et\\\",\\\"points\\\"],\\\"index\\\":[],\\\"data\\\":[]}\",\n    \"dtype\": {\n        \"power_type\": \"object\",\n        \"element\": \"object\",\n        \"et\": \"object\",\n        \"points\": \"object\"\n    },\n    \"orient\": \"split\"\n},\"res_bus\":{\n    \"_module\": \"pandas.core.frame\",\n    \"_class\": \"DataFrame\",\n    \"_object\": \"{\\\"columns\\\":[\\\"vm_pu\\\",\\\"va_degree\\\",\\\"p_mw\\\",\\\"q_mvar\\\"],\\\"index\\\":[],\\\"data\\\":[]}\",\n    \"dtype\": {\n        \"vm_pu\": \"float64\",\n        \"va_degree\": \"float64\",\n        \"p_mw\": \"float64\",\n        \"q_mvar\": \"float64\"\n    },\n    \"orient\": \"split\"\n},\"res_dcline\":{\n    \"_module\": \"pandas.core.frame\",\n    \"_class\": \"DataFrame\",\n    \"_object\": \"{\\\"columns\\\":[\\\"p_from_mw\\\",\\\"q_from_mvar\\\",\\\"p_to_mw\\\",\\\"q_to_mvar\\\",\\\"pl_mw\\\",\\\"vm_from_pu\\\",\\\"va_from_degree\\\",\\\"vm_to_pu\\\",\\\"va_to_degree\\\"],\\\"index\\\":[],\\\"data\\\":[]}\",\n    \"dtype\": {\n        \"p_from_mw\": \"float64\",\n        \"q_from_mvar\": \"float64\",\n        \"p_to_mw\": \"float64\",\n        \"q_to_mvar\": \"float64\",\n        \"pl_mw\": \"float64\",\n        \"vm_from_pu\": \"float64\",\n        \"va_from_degree\": \"float64\",\n        \"vm_to_pu\": \"float64\",\n        \"va_to_degree\": \"float64\"\n    },\n    \"orient\": \"split\"\n},\"res_ext_grid\":{\n    \"_module\": \"pandas.core.frame\",\n    \"_class\": \"DataFrame\",\n    \"_object\": \"{\\\"columns\\\":[\\\"p_mw\\\",\\\"q_mvar\\\"],\\\"index\\\":[0],\\\"data\\\":[[null,null]]}\",\n    \"dtype\": {\n        \"p_mw\": \"float64\",\n        \"q_mvar\": \"float64\"\n    },\n    \"orient\": \"split\"\n},\"res_gen\":{\n    \"_module\": \"pandas.core.frame\",\n    \"_class\": \"DataFrame\",\n    \"_object\": \"{\\\"columns\\\":[\\\"p_mw\\\",\\\"q_mvar\\\",\\\"va_degree\\\",\\\"vm_pu\\\"],\\\"index\\\":[0,1,10,11,12,13,14,15,16,17,18,19,2,20,21,22,23,24,25,26,27,28,29,3,30,31,32,33,34,35,36,37,38,39,4,40,41,42,43,44,45,46,47,48,49,5,50,51,52,53,54,55,56,57,58,59,6,60,61,62,63,7,8,9],\\\"data\\\":[[null,null,null,null],[null,null,null,null],[null,null,null,null],[null,null,null,null],[null,null,null,null],[null,null,null,null],[null,null,null,null],[null,null,null,null],[null,null,null,null],[null,null,null,null],[null,null,null,null],[null,null,null,null],[null,null,null,null],[null,null,null,null],[null,null,null,null],[null,null,null,null],[null,null,null,null],[null,null,null,null],[null,null,null,null],[null,null,null,null],[null,null,null,null],[null,null,null,null],[null,null,null,null],[null,null,null,null],[null,null,null,null],[null,null,null,null],[null,null,null,null],[null,null,null,null],[null,null,null,null],[null,null,null,null],[null,null,null,null],[null,null,null,null],[null,null,null,null],[null,null,null,null],[null,null,null,null],[null,null,null,null],[null,null,null,null],[null,null,null,null],[null,null,null,null],[null,null,null,null],[null,null,null,null],[null,null,null,null],[null,null,null,null],[null,null,null,null],[null,null,null,null],[null,null,null,null],[null,null,null,null],[null,null,null,null],[null,null,null,null],[null,null,null,null],[null,null,null,null],[null,null,null,null],[null,null,null,null],[null,null,null,null],[null,null,null,null],[null,null,null,null],[null,null,null,null],[null,null,null,null],[null,null,null,null],[null,null,null,null],[null,null,null,null],[null,null,null,null],[null,null,null,null],[null,null,null,null]]}\",\n    \"dtype\": {\n        \"p_mw\": \"float64\",\n        \"q_mvar\": \"float64\",\n        \"va_degree\": \"float64\",\n        \"vm_pu\": \"float64\"\n    },\n    \"orient\": \"split\"\n},\"res_impedance\":{\n    \"_module\": \"pandas.core.frame\",\n    \"_class\": \"DataFrame\",\n    \"_object\": \"{\\\"columns\\\":[\\\"p_from_mw\\\",\\\"q_from_mvar\\\",\\\"p_to_mw\\\",\\\"q_to_mvar\\\",\\\"pl_mw\\\",\\\"ql_mvar\\\",\\\"i_from_ka\\\",\\\"i_to_ka\\\"],\\\"index\\\":[],\\\"data\\\":[]}\",\n    \"dtype\": {\n        \"p_from_mw\": \"float64\",\n        \"q_from_mvar\": \"float64\",\n        \"p_to_mw\": \"float64\",\n        \"q_to_mvar\": \"float64\",\n        \"pl_mw\": \"float64\",\n        \"ql_mvar\": \"float64\",\n        \"i_from_ka\": \"float64\",\n        \"i_to_ka\": \"float64\"\n    },\n    \"orient\": \"split\"\n},\"res_line\":{\n    \"_module\": \"pandas.core.frame\",\n    \"_class\": \"DataFrame\",\n    \"_object\": \"{\\\"columns\\\":[\\\"p_from_mw\\\",\\\"q_from_mvar\\\",\\\"p_to_mw\\\",\\\"q_to_mvar\\\",\\\"pl_mw\\\",\\\"ql_mvar\\\",\\\"i_from_ka\\\",\\\"i_to_ka\\\",\\\"i_ka\\\",\\\"vm_from_pu\\\",\\\"va_from_degree\\\",\\\"vm_to_pu\\\",\\\"va_to_degree\\\",\\\"loading_percent\\\"],\\\"index\\\":[0,1,10,11,12,13,14,15,16,17,18,19,2,20,21,22,23,24,25,26,27,28,29,3,30,31,32,33,34,35,36,37,38,39,4,40,41,42,43,44,45,46,47,48,49,5,50,51,52,53,54,55,56,57,58,59,6,60,61,62,63,64,65,66,67,68,69,7,70,71,72,73,74,75,76,77,78,79,8,80,81,82,83,84,85,9],\\\"data\\\":[[null,null,null,null,null,null,null,null,null,null,null,null,null,null],[null,null,null,null,null,null,null,null,null,null,null,null,null,null],[null,null,null,null,null,null,null,null,null,null,null,null,null,null],[null,null,null,null,null,null,null,null,null,null,null,null,null,null],[null,null,null,null,null,null,null,null,null,null,null,null,null,null],[null,null,null,null,null,null,null,null,null,null,null,null,null,null],[null,null,null,null,null,null,null,null,null,null,null,null,null,null],[null,null,null,null,null,null,null,null,null,null,null,null,null,null],[null,null,null,null,null,null,null,null,null,null,null,null,null,null],[null,null,null,null,null,null,null,null,null,null,null,null,null,null],[null,null,null,null,null,null,null,null,null,null,null,null,null,null],[null,null,null,null,null,null,null,null,null,null,null,null,null,null],[null,null,null,null,null,null,null,null,null,null,null,null,null,null],[null,null,null,null,null,null,null,null,null,null,null,null,null,null],[null,null,null,null,null,null,null,null,null,null,null,null,null,null],[null,null,null,null,null,null,null,null,null,null,null,null,null,null],[null,null,null,null,null,null,null,null,null,null,null,null,null,null],[null,null,null,null,null,null,null,null,null,null,null,null,null,null],[null,null,null,null,null,null,null,null,null,null,null,null,null,null],[null,null,null,null,null,null,null,null,null,null,null,null,null,null],[null,null,null,null,null,null,null,null,null,null,null,null,null,null],[null,null,null,null,null,null,null,null,null,null,null,null,null,null],[null,null,null,null,null,null,null,null,null,null,null,null,null,null],[null,null,null,null,null,null,null,null,null,null,null,null,null,null],[null,null,null,null,null,null,null,null,null,null,null,null,null,null],[null,null,null,null,null,null,null,null,null,null,null,null,null,null],[null,null,null,null,null,null,null,null,null,null,null,null,null,null],[null,null,null,null,null,null,null,null,null,null,null,null,null,null],[null,null,null,null,null,null,null,null,null,null,null,null,null,null],[null,null,null,null,null,null,null,null,null,null,null,null,null,null],[null,null,null,null,null,null,null,null,null,null,null,null,null,null],[null,null,null,null,null,null,null,null,null,null,null,null,null,null],[null,null,null,null,null,null,null,null,null,null,null,null,null,null],[null,null,null,null,null,null,null,null,null,null,null,null,null,null],[null,null,null,null,null,null,null,null,null,null,null,null,null,null],[null,null,null,null,null,null,null,null,null,null,null,null,null,null],[null,null,null,null,null,null,null,null,null,null,null,null,null,null],[null,null,null,null,null,null,null,null,null,null,null,null,null,null],[null,null,null,null,null,null,null,null,null,null,null,null,null,null],[null,null,null,null,null,null,null,null,null,null,null,null,null,null],[null,null,null,null,null,null,null,null,null,null,null,null,null,null],[null,null,null,null,null,null,null,null,null,null,null,null,null,null],[null,null,null,null,null,null,null,null,null,null,null,null,null,null],[null,null,null,null,null,null,null,null,null,null,null,null,null,null],[null,null,null,null,null,null,null,null,null,null,null,null,null,null],[null,null,null,null,null,null,null,null,null,null,null,null,null,null],[null,null,null,null,null,null,null,null,null,null,null,null,null,null],[null,null,null,null,null,null,null,null,null,null,null,null,null,null],[null,null,null,null,null,null,null,null,null,null,null,null,null,null],[null,null,null,null,null,null,null,null,null,null,null,null,null,null],[null,null,null,null,null,null,null,null,null,null,null,null,null,null],[null,null,null,null,null,null,null,null,null,null,null,null,null,null],[null,null,null,null,null,null,null,null,null,null,null,null,null,null],[null,null,null,null,null,null,null,null,null,null,null,null,null,null],[null,null,null,null,null,null,null,null,null,null,null,null,null,null],[null,null,null,null,null,null,null,null,null,null,null,null,null,null],[null,null,null,null,null,null,null,null,null,null,null,null,null,null],[null,null,null,null,null,null,null,null,null,null,null,null,null,null],[null,null,null,null,null,null,null,null,null,null,null,null,null,null],[null,null,null,null,null,null,null,null,null,null,null,null,null,null],[null,null,null,null,null,null,null,null,null,null,null,null,null,null],[null,null,null,null,null,null,null,null,null,null,null,null,null,null],[null,null,null,null,null,null,null,null,null,null,null,null,null,null],[null,null,null,null,null,null,null,null,null,null,null,null,null,null],[null,null,null,null,null,null,null,null,null,null,null,null,null,null],[null,null,null,null,null,null,null,null,null,null,null,null,null,null],[null,null,null,null,null,null,null,null,null,null,null,null,null,null],[null,null,null,null,null,null,null,null,null,null,null,null,null,null],[null,null,null,null,null,null,null,null,null,null,null,null,null,null],[null,null,null,null,null,null,null,null,null,null,null,null,null,null],[null,null,null,null,null,null,null,null,null,null,null,null,null,null],[null,null,null,null,null,null,null,null,null,null,null,null,null,null],[null,null,null,null,null,null,null,null,null,null,null,null,null,null],[null,null,null,null,null,null,null,null,null,null,null,null,null,null],[null,null,null,null,null,null,null,null,null,null,null,null,null,null],[null,null,null,null,null,null,null,null,null,null,null,null,null,null],[null,null,null,null,null,null,null,null,null,null,null,null,null,null],[null,null,null,null,null,null,null,null,null,null,null,null,null,null],[null,null,null,null,null,null,null,null,null,null,null,null,null,null],[null,null,null,null,null,null,null,null,null,null,null,null,null,null],[null,null,null,null,null,null,null,null,null,null,null,null,null,null],[null,null,null,null,null,null,null,null,null,null,null,null,null,null],[null,null,null,null,null,null,null,null,null,null,null,null,null,null],[null,null,null,null,null,null,null,null,null,null,null,null,null,null],[null,null,null,null,null,null,null,null,null,null,null,null,null,null],[null,null,null,null,null,null,null,null,null,null,null,null,null,null]]}\",\n    \"dtype\": {\n        \"p_from_mw\": \"float64\",\n        \"q_from_mvar\": \"float64\",\n        \"p_to_mw\": \"float64\",\n        \"q_to_mvar\": \"float64\",\n        \"pl_mw\": \"float64\",\n        \"ql_mvar\": \"float64\",\n        \"i_from_ka\": \"float64\",\n        \"i_to_ka\": \"float64\",\n        \"i_ka\": \"float64\",\n        \"vm_from_pu\": \"float64\",\n        \"va_from_degree\": \"float64\",\n        \"vm_to_pu\": \"float64\",\n        \"va_to_degree\": \"float64\",\n        \"loading_percent\": \"float64\"\n    },\n    \"orient\": \"split\"\n},\"res_load\":{\n    \"_module\": \"pandas.core.frame\",\n    \"_class\": \"DataFrame\",\n    \"_object\": \"{\\\"columns\\\":[\\\"p_mw\\\",\\\"q_mvar\\\"],\\\"index\\\":[0,1,10,11,12,13,14,15,16,17,18,19,2,20,21,22,23,24,25,26,27,28,3,4,5,6,7,8,9],\\\"data\\\":[[null,null],[null,null],[null,null],[null,null],[null,null],[null,null],[null,null],[null,null],[null,null],[null,null],[null,null],[null,null],[null,null],[null,null],[null,null],[null,null],[null,null],[null,null],[null,null],[null,null],[null,null],[null,null],[null,null],[null,null],[null,null],[null,null],[null,null],[null,null],[null,null]]}\",\n    \"dtype\": {\n        \"p_mw\": \"float64\",\n        \"q_mvar\": \"float64\"\n    },\n    \"orient\": \"split\"\n},\"res_sgen\":{\n    \"_module\": \"pandas.core.frame\",\n    \"_class\": \"DataFrame\",\n    \"_object\": \"{\\\"columns\\\":[\\\"p_mw\\\",\\\"q_mvar\\\"],\\\"index\\\":[0],\\\"data\\\":[[null,null]]}\",\n    \"dtype\": {\n        \"p_mw\": \"float64\",\n        \"q_mvar\": \"float64\"\n    },\n    \"orient\": \"split\"\n},\"res_shunt\":{\n    \"_module\": \"pandas.core.frame\",\n    \"_class\": \"DataFrame\",\n    \"_object\": \"{\\\"columns\\\":[\\\"p_mw\\\",\\\"q_mvar\\\",\\\"vm_pu\\\"],\\\"index\\\":[],\\\"data\\\":[]}\",\n    \"dtype\": {\n        \"p_mw\": \"float64\",\n        \"q_mvar\": \"float64\",\n        \"vm_pu\": \"float64\"\n    },\n    \"orient\": \"split\"\n},\"res_storage\":{\n    \"_module\": \"pandas.core.frame\",\n    \"_class\": \"DataFrame\",\n    \"_object\": \"{\\\"columns\\\":[\\\"p_mw\\\",\\\"q_mvar\\\"],\\\"index\\\":[],\\\"data\\\":[]}\",\n    \"dtype\": {\n        \"p_mw\": \"float64\",\n        \"q_mvar\": \"float64\"\n    },\n    \"orient\": \"split\"\n},\"res_trafo\":{\n    \"_module\": \"pandas.core.frame\",\n    \"_class\": \"DataFrame\",\n    \"_object\": \"{\\\"columns\\\":[\\\"p_hv_mw\\\",\\\"q_hv_mvar\\\",\\\"p_lv_mw\\\",\\\"q_lv_mvar\\\",\\\"pl_mw\\\",\\\"ql_mvar\\\",\\\"i_hv_ka\\\",\\\"i_lv_ka\\\",\\\"vm_hv_pu\\\",\\\"va_hv_degree\\\",\\\"vm_lv_pu\\\",\\\"va_lv_degree\\\",\\\"loading_percent\\\"],\\\"index\\\":[0,1,10,11,12,2,3,4,5,6,7,8,9],\\\"data\\\":[[null,null,null,null,null,null,null,null,null,null,null,null,null],[null,null,null,null,null,null,null,null,null,null,null,null,null],[null,null,null,null,null,null,null,null,null,null,null,null,null],[null,null,null,null,null,null,null,null,null,null,null,null,null],[null,null,null,null,null,null,null,null,null,null,null,null,null],[null,null,null,null,null,null,null,null,null,null,null,null,null],[null,null,null,null,null,null,null,null,null,null,null,null,null],[null,null,null,null,null,null,null,null,null,null,null,null,null],[null,null,null,null,null,null,null,null,null,null,null,null,null],[null,null,null,null,null,null,null,null,null,null,null,null,null],[null,null,null,null,null,null,null,null,null,null,null,null,null],[null,null,null,null,null,null,null,null,null,null,null,null,null],[null,null,null,null,null,null,null,null,null,null,null,null,null]]}\",\n    \"dtype\": {\n        \"p_hv_mw\": \"float64\",\n        \"q_hv_mvar\": \"float64\",\n        \"p_lv_mw\": \"float64\",\n        \"q_lv_mvar\": \"float64\",\n        \"pl_mw\": \"float64\",\n        \"ql_mvar\": \"float64\",\n        \"i_hv_ka\": \"float64\",\n        \"i_lv_ka\": \"float64\",\n        \"vm_hv_pu\": \"float64\",\n        \"va_hv_degree\": \"float64\",\n        \"vm_lv_pu\": \"float64\",\n        \"va_lv_degree\": \"float64\",\n        \"loading_percent\": \"float64\"\n    },\n    \"orient\": \"split\"\n},\"res_trafo3w\":{\n    \"_module\": \"pandas.core.frame\",\n    \"_class\": \"DataFrame\",\n    \"_object\": \"{\\\"columns\\\":[\\\"p_hv_mw\\\",\\\"q_hv_mvar\\\",\\\"p_mv_mw\\\",\\\"q_mv_mvar\\\",\\\"p_lv_mw\\\",\\\"q_lv_mvar\\\",\\\"pl_mw\\\",\\\"ql_mvar\\\",\\\"i_hv_ka\\\",\\\"i_mv_ka\\\",\\\"i_lv_ka\\\",\\\"vm_hv_pu\\\",\\\"va_hv_degree\\\",\\\"vm_mv_pu\\\",\\\"va_mv_degree\\\",\\\"vm_lv_pu\\\",\\\"va_lv_degree\\\",\\\"va_internal_degree\\\",\\\"vm_internal_pu\\\",\\\"loading_percent\\\"],\\\"index\\\":[],\\\"data\\\":[]}\",\n    \"dtype\": {\n        \"p_hv_mw\": \"float64\",\n        \"q_hv_mvar\": \"float64\",\n        \"p_mv_mw\": \"float64\",\n        \"q_mv_mvar\": \"float64\",\n        \"p_lv_mw\": \"float64\",\n        \"q_lv_mvar\": \"float64\",\n        \"pl_mw\": \"float64\",\n        \"ql_mvar\": \"float64\",\n        \"i_hv_ka\": \"float64\",\n        \"i_mv_ka\": \"float64\",\n        \"i_lv_ka\": \"float64\",\n        \"vm_hv_pu\": \"float64\",\n        \"va_hv_degree\": \"float64\",\n        \"vm_mv_pu\": \"float64\",\n        \"va_mv_degree\": \"float64\",\n        \"vm_lv_pu\": \"float64\",\n        \"va_lv_degree\": \"float64\",\n        \"va_internal_degree\": \"float64\",\n        \"vm_internal_pu\": \"float64\",\n        \"loading_percent\": \"float64\"\n    },\n    \"orient\": \"split\"\n},\"res_ward\":{\n    \"_module\": \"pandas.core.frame\",\n    \"_class\": \"DataFrame\",\n    \"_object\": \"{\\\"columns\\\":[\\\"p_mw\\\",\\\"q_mvar\\\",\\\"vm_pu\\\"],\\\"index\\\":[],\\\"data\\\":[]}\",\n    \"dtype\": {\n        \"p_mw\": \"float64\",\n        \"q_mvar\": \"float64\",\n        \"vm_pu\": \"float64\"\n    },\n    \"orient\": \"split\"\n},\"res_xward\":{\n    \"_module\": \"pandas.core.frame\",\n    \"_class\": \"DataFrame\",\n    \"_object\": \"{\\\"columns\\\":[\\\"p_mw\\\",\\\"q_mvar\\\",\\\"vm_pu\\\",\\\"va_internal_degree\\\",\\\"vm_internal_pu\\\"],\\\"index\\\":[],\\\"data\\\":[]}\",\n    \"dtype\": {\n        \"p_mw\": \"float64\",\n        \"q_mvar\": \"float64\",\n        \"vm_pu\": \"float64\",\n        \"va_internal_degree\": \"float64\",\n        \"vm_internal_pu\": \"float64\"\n    },\n    \"orient\": \"split\"\n},\"sgen\":{\n    \"_module\": \"pandas.core.frame\",\n    \"_class\": \"DataFrame\",\n    \"_object\": \"{\\\"columns\\\":[\\\"bus\\\",\\\"controllable\\\",\\\"in_service\\\",\\\"name\\\",\\\"p_mw\\\",\\\"q_mvar\\\",\\\"scaling\\\",\\\"sn_mva\\\",\\\"type\\\",\\\"current_source\\\",\\\"max_p_mw\\\",\\\"min_p_mw\\\",\\\"max_q_mvar\\\",\\\"min_q_mvar\\\"],\\\"index\\\":[0],\\\"data\\\":[[26,true,true,null,216.0,35.5,1.0,null,\\\"\\\",true,300.0,0.0,0.0,-71.0]]}\",\n    \"dtype\": {\n        \"bus\": \"int64\",\n        \"controllable\": \"bool\",\n        \"in_service\": \"bool\",\n        \"name\": \"object\",\n        \"p_mw\": \"float64\",\n        \"q_mvar\": \"float64\",\n        \"scaling\": \"float64\",\n        \"sn_mva\": \"float64\",\n        \"type\": \"object\",\n        \"current_source\": \"bool\",\n        \"max_p_mw\": \"float64\",\n        \"min_p_mw\": \"float64\",\n        \"max_q_mvar\": \"float64\",\n        \"min_q_mvar\": \"float64\"\n    },\n    \"orient\": \"split\"\n},\"shunt\":{\n    \"_module\": \"pandas.core.frame\",\n    \"_class\": \"DataFrame\",\n    \"_object\": \"{\\\"columns\\\":[\\\"bus\\\",\\\"name\\\",\\\"q_mvar\\\",\\\"p_mw\\\",\\\"vn_kv\\\",\\\"step\\\",\\\"max_step\\\",\\\"in_service\\\"],\\\"index\\\":[],\\\"data\\\":[]}\",\n    \"dtype\": {\n        \"bus\": \"uint32\",\n        \"name\": \"object\",\n        \"q_mvar\": \"float64\",\n        \"p_mw\": \"float64\",\n        \"vn_kv\": \"float64\",\n        \"step\": \"uint32\",\n        \"max_step\": \"uint32\",\n        \"in_service\": \"bool\"\n    },\n    \"orient\": \"split\"\n},\"sn_mva\":1.0,\"std_types\":{\n    \"line\": {\n        \"N2XS(FL)2Y 1x300 RM/35 64/110 kV\": {\n            \"type\": \"cs\",\n            \"r_ohm_per_km\": 0.06,\n            \"q_mm2\": 300,\n            \"x_ohm_per_km\": 0.144,\n            \"c_nf_per_km\": 144.0,\n            \"max_i_ka\": 0.588\n        },\n        \"149-AL1/24-ST1A 10.0\": {\n            \"type\": \"ol\",\n            \"r_ohm_per_km\": 0.194,\n            \"q_mm2\": 149,\n            \"x_ohm_per_km\": 0.315,\n            \"c_nf_per_km\": 11.25,\n            \"max_i_ka\": 0.47\n        },\n        \"15-AL1/3-ST1A 0.4\": {\n            \"type\": \"ol\",\n            \"r_ohm_per_km\": 1.8769,\n            \"q_mm2\": 16,\n            \"x_ohm_per_km\": 0.35,\n            \"c_nf_per_km\": 11.0,\n            \"max_i_ka\": 0.105\n        },\n        \"NAYY 4x120 SE\": {\n            \"type\": \"cs\",\n            \"r_ohm_per_km\": 0.225,\n            \"q_mm2\": 120,\n            \"x_ohm_per_km\": 0.08,\n            \"c_nf_per_km\": 264.0,\n            \"max_i_ka\": 0.242\n        },\n        \"48-AL1/8-ST1A 10.0\": {\n            \"type\": \"ol\",\n            \"r_ohm_per_km\": 0.5939,\n            \"q_mm2\": 48,\n            \"x_ohm_per_km\": 0.35,\n            \"c_nf_per_km\": 10.1,\n            \"max_i_ka\": 0.21\n        },\n        \"NAYY 4x150 SE\": {\n            \"type\": \"cs\",\n            \"r_ohm_per_km\": 0.208,\n            \"q_mm2\": 150,\n            \"x_ohm_per_km\": 0.08,\n            \"c_nf_per_km\": 261.0,\n            \"max_i_ka\": 0.27\n        },\n        \"243-AL1/39-ST1A 20.0\": {\n            \"type\": \"ol\",\n            \"r_ohm_per_km\": 0.1188,\n            \"q_mm2\": 243,\n            \"x_ohm_per_km\": 0.32,\n            \"c_nf_per_km\": 11.0,\n            \"max_i_ka\": 0.645\n        },\n        \"184-AL1/30-ST1A 110.0\": {\n            \"type\": \"ol\",\n            \"r_ohm_per_km\": 0.1571,\n            \"q_mm2\": 184,\n            \"x_ohm_per_km\": 0.4,\n            \"c_nf_per_km\": 8.8,\n            \"max_i_ka\": 0.535\n        },\n        \"149-AL1/24-ST1A 110.0\": {\n            \"type\": \"ol\",\n            \"r_ohm_per_km\": 0.194,\n            \"q_mm2\": 149,\n            \"x_ohm_per_km\": 0.41,\n            \"c_nf_per_km\": 8.75,\n            \"max_i_ka\": 0.47\n        },\n        \"NA2XS2Y 1x240 RM/25 12/20 kV\": {\n            \"type\": \"cs\",\n            \"r_ohm_per_km\": 0.122,\n            \"q_mm2\": 240,\n            \"x_ohm_per_km\": 0.112,\n            \"c_nf_per_km\": 304.0,\n            \"max_i_ka\": 0.421\n        },\n        \"48-AL1/8-ST1A 20.0\": {\n            \"type\": \"ol\",\n            \"r_ohm_per_km\": 0.5939,\n            \"q_mm2\": 48,\n            \"x_ohm_per_km\": 0.372,\n            \"c_nf_per_km\": 9.5,\n            \"max_i_ka\": 0.21\n        },\n        \"24-AL1/4-ST1A 0.4\": {\n            \"type\": \"ol\",\n            \"r_ohm_per_km\": 1.2012,\n            \"q_mm2\": 24,\n            \"x_ohm_per_km\": 0.335,\n            \"c_nf_per_km\": 11.25,\n            \"max_i_ka\": 0.14\n        },\n        \"N2XS(FL)2Y 1x240 RM/35 64/110 kV\": {\n            \"type\": \"cs\",\n            \"r_ohm_per_km\": 0.075,\n            \"q_mm2\": 240,\n            \"x_ohm_per_km\": 0.149,\n            \"c_nf_per_km\": 135.0,\n            \"max_i_ka\": 0.526\n        },\n        \"94-AL1/15-ST1A 20.0\": {\n            \"type\": \"ol\",\n            \"r_ohm_per_km\": 0.306,\n            \"q_mm2\": 94,\n            \"x_ohm_per_km\": 0.35,\n            \"c_nf_per_km\": 10.0,\n            \"max_i_ka\": 0.35\n        },\n        \"NAYY 4x50 SE\": {\n            \"type\": \"cs\",\n            \"r_ohm_per_km\": 0.642,\n            \"q_mm2\": 50,\n            \"x_ohm_per_km\": 0.083,\n            \"c_nf_per_km\": 210.0,\n            \"max_i_ka\": 0.142\n        },\n        \"490-AL1/64-ST1A 380.0\": {\n            \"type\": \"ol\",\n            \"r_ohm_per_km\": 0.059,\n            \"q_mm2\": 490,\n            \"x_ohm_per_km\": 0.253,\n            \"c_nf_per_km\": 11.0,\n            \"max_i_ka\": 0.96\n        },\n        \"48-AL1/8-ST1A 0.4\": {\n            \"type\": \"ol\",\n            \"r_ohm_per_km\": 0.5939,\n            \"q_mm2\": 48,\n            \"x_ohm_per_km\": 0.3,\n            \"c_nf_per_km\": 12.2,\n            \"max_i_ka\": 0.21\n        },\n        \"94-AL1/15-ST1A 10.0\": {\n            \"type\": \"ol\",\n            \"r_ohm_per_km\": 0.306,\n            \"q_mm2\": 94,\n            \"x_ohm_per_km\": 0.33,\n            \"c_nf_per_km\": 10.75,\n            \"max_i_ka\": 0.35\n        },\n        \"94-AL1/15-ST1A 0.4\": {\n            \"type\": \"ol\",\n            \"r_ohm_per_km\": 0.306,\n            \"q_mm2\": 94,\n            \"x_ohm_per_km\": 0.29,\n            \"c_nf_per_km\": 13.2,\n            \"max_i_ka\": 0.35\n        },\n        \"NA2XS2Y 1x185 RM/25 12/20 kV\": {\n            \"type\": \"cs\",\n            \"r_ohm_per_km\": 0.161,\n            \"q_mm2\": 185,\n            \"x_ohm_per_km\": 0.117,\n            \"c_nf_per_km\": 273.0,\n            \"max_i_ka\": 0.362\n        },\n        \"243-AL1/39-ST1A 110.0\": {\n            \"type\": \"ol\",\n            \"r_ohm_per_km\": 0.1188,\n            \"q_mm2\": 243,\n            \"x_ohm_per_km\": 0.39,\n            \"c_nf_per_km\": 9.0,\n            \"max_i_ka\": 0.645\n        },\n        \"490-AL1/64-ST1A 220.0\": {\n            \"type\": \"ol\",\n            \"r_ohm_per_km\": 0.059,\n            \"q_mm2\": 490,\n            \"x_ohm_per_km\": 0.285,\n            \"c_nf_per_km\": 10.0,\n            \"max_i_ka\": 0.96\n        },\n        \"N2XS(FL)2Y 1x185 RM/35 64/110 kV\": {\n            \"type\": \"cs\",\n            \"r_ohm_per_km\": 0.099,\n            \"q_mm2\": 185,\n            \"x_ohm_per_km\": 0.156,\n            \"c_nf_per_km\": 125.0,\n            \"max_i_ka\": 0.457\n        },\n        \"N2XS(FL)2Y 1x120 RM/35 64/110 kV\": {\n            \"type\": \"cs\",\n            \"r_ohm_per_km\": 0.153,\n            \"q_mm2\": 120,\n            \"x_ohm_per_km\": 0.166,\n            \"c_nf_per_km\": 112.0,\n            \"max_i_ka\": 0.366\n        },\n        \"NA2XS2Y 1x95 RM/25 12/20 kV\": {\n            \"type\": \"cs\",\n            \"r_ohm_per_km\": 0.313,\n            \"q_mm2\": 95,\n            \"x_ohm_per_km\": 0.132,\n            \"c_nf_per_km\": 216.0,\n            \"max_i_ka\": 0.252\n        },\n        \"184-AL1/30-ST1A 20.0\": {\n            \"type\": \"ol\",\n            \"r_ohm_per_km\": 0.1571,\n            \"q_mm2\": 184,\n            \"x_ohm_per_km\": 0.33,\n            \"c_nf_per_km\": 10.75,\n            \"max_i_ka\": 0.535\n        },\n        \"149-AL1/24-ST1A 20.0\": {\n            \"type\": \"ol\",\n            \"r_ohm_per_km\": 0.194,\n            \"q_mm2\": 149,\n            \"x_ohm_per_km\": 0.337,\n            \"c_nf_per_km\": 10.5,\n            \"max_i_ka\": 0.47\n        },\n        \"305-AL1/39-ST1A 110.0\": {\n            \"type\": \"ol\",\n            \"r_ohm_per_km\": 0.0949,\n            \"q_mm2\": 305,\n            \"x_ohm_per_km\": 0.38,\n            \"c_nf_per_km\": 9.2,\n            \"max_i_ka\": 0.74\n        }\n    },\n    \"trafo\": {\n        \"0.4 MVA 20/0.4 kV\": {\n            \"shift_degree\": 150,\n            \"vector_group\": \"Dyn5\",\n            \"pfe_kw\": 1.35,\n            \"vn_hv_kv\": 20.0,\n            \"i0_percent\": 0.3375,\n            \"vn_lv_kv\": 0.4,\n            \"sn_mva\": 0.4,\n            \"tap_neutral\": 0,\n            \"tap_min\": -2,\n            \"vkr_percent\": 1.425,\n            \"tap_step_percent\": 2.5,\n            \"tap_side\": \"hv\",\n            \"vk_percent\": 6.0,\n            \"tap_max\": 2\n        },\n        \"0.25 MVA 20/0.4 kV\": {\n            \"shift_degree\": 150,\n            \"vector_group\": \"Yzn5\",\n            \"pfe_kw\": 0.8,\n            \"vn_hv_kv\": 20.0,\n            \"i0_percent\": 0.32,\n            \"vn_lv_kv\": 0.4,\n            \"sn_mva\": 0.25,\n            \"tap_neutral\": 0,\n            \"tap_min\": -2,\n            \"vkr_percent\": 1.44,\n            \"tap_step_percent\": 2.5,\n            \"tap_side\": \"hv\",\n            \"vk_percent\": 6.0,\n            \"tap_max\": 2\n        },\n        \"0.25 MVA 10/0.4 kV\": {\n            \"shift_degree\": 150,\n            \"vector_group\": \"Dyn5\",\n            \"pfe_kw\": 0.6,\n            \"vn_hv_kv\": 10.0,\n            \"i0_percent\": 0.24,\n            \"vn_lv_kv\": 0.4,\n            \"sn_mva\": 0.25,\n            \"tap_neutral\": 0,\n            \"tap_min\": -2,\n            \"vkr_percent\": 1.2,\n            \"tap_step_percent\": 2.5,\n            \"tap_side\": \"hv\",\n            \"vk_percent\": 4.0,\n            \"tap_max\": 2\n        },\n        \"160 MVA 380/110 kV\": {\n            \"shift_degree\": 0,\n            \"vector_group\": \"Yy0\",\n            \"pfe_kw\": 60.0,\n            \"vn_hv_kv\": 380.0,\n            \"i0_percent\": 0.06,\n            \"vn_lv_kv\": 110.0,\n            \"sn_mva\": 160.0,\n            \"tap_neutral\": 0,\n            \"tap_min\": -9,\n            \"vkr_percent\": 0.25,\n            \"tap_step_percent\": 1.5,\n            \"tap_side\": \"hv\",\n            \"vk_percent\": 12.2,\n            \"tap_max\": 9\n        },\n        \"63 MVA 110/10 kV\": {\n            \"shift_degree\": 150,\n            \"vector_group\": \"YNd5\",\n            \"pfe_kw\": 31.51,\n            \"vn_hv_kv\": 110.0,\n            \"i0_percent\": 0.078,\n            \"vn_lv_kv\": 10.0,\n            \"sn_mva\": 63.0,\n            \"tap_neutral\": 0,\n            \"tap_min\": -9,\n            \"vkr_percent\": 0.31,\n            \"tap_step_percent\": 1.5,\n            \"tap_side\": \"hv\",\n            \"vk_percent\": 10.04,\n            \"tap_max\": 9\n        },\n        \"0.63 MVA 20/0.4 kV\": {\n            \"shift_degree\": 150,\n            \"vector_group\": \"Dyn5\",\n            \"pfe_kw\": 1.65,\n            \"vn_hv_kv\": 20.0,\n            \"i0_percent\": 0.2619,\n            \"vn_lv_kv\": 0.4,\n            \"sn_mva\": 0.63,\n            \"tap_neutral\": 0,\n            \"tap_min\": -2,\n            \"vkr_percent\": 1.206,\n            \"tap_step_percent\": 2.5,\n            \"tap_side\": \"hv\",\n            \"vk_percent\": 6.0,\n            \"tap_max\": 2\n        },\n        \"0.4 MVA 10/0.4 kV\": {\n            \"shift_degree\": 150,\n            \"vector_group\": \"Dyn5\",\n            \"pfe_kw\": 0.95,\n            \"vn_hv_kv\": 10.0,\n            \"i0_percent\": 0.2375,\n            \"vn_lv_kv\": 0.4,\n            \"sn_mva\": 0.4,\n            \"tap_neutral\": 0,\n            \"tap_min\": -2,\n            \"vkr_percent\": 1.325,\n            \"tap_step_percent\": 2.5,\n            \"tap_side\": \"hv\",\n            \"vk_percent\": 4.0,\n            \"tap_max\": 2\n        },\n        \"0.63 MVA 10/0.4 kV\": {\n            \"shift_degree\": 150,\n            \"vector_group\": \"Dyn5\",\n            \"pfe_kw\": 1.18,\n            \"vn_hv_kv\": 10.0,\n            \"i0_percent\": 0.1873,\n            \"vn_lv_kv\": 0.4,\n            \"sn_mva\": 0.63,\n            \"tap_neutral\": 0,\n            \"tap_min\": -2,\n            \"vkr_percent\": 1.0794,\n            \"tap_step_percent\": 2.5,\n            \"tap_side\": \"hv\",\n            \"vk_percent\": 4.0,\n            \"tap_max\": 2\n        },\n        \"63 MVA 110/20 kV\": {\n            \"shift_degree\": 150,\n            \"vector_group\": \"YNd5\",\n            \"pfe_kw\": 33.0,\n            \"vn_hv_kv\": 110.0,\n            \"i0_percent\": 0.086,\n            \"vn_lv_kv\": 20.0,\n            \"sn_mva\": 63.0,\n            \"tap_neutral\": 0,\n            \"tap_min\": -9,\n            \"vkr_percent\": 0.322,\n            \"tap_step_percent\": 1.5,\n            \"tap_side\": \"hv\",\n            \"vk_percent\": 11.2,\n            \"tap_max\": 9\n        },\n        \"100 MVA 220/110 kV\": {\n            \"shift_degree\": 0,\n            \"vector_group\": \"Yy0\",\n            \"pfe_kw\": 55.0,\n            \"vn_hv_kv\": 220.0,\n            \"i0_percent\": 0.06,\n            \"vn_lv_kv\": 110.0,\n            \"sn_mva\": 100.0,\n            \"tap_neutral\": 0,\n            \"tap_min\": -9,\n            \"vkr_percent\": 0.26,\n            \"tap_step_percent\": 1.5,\n            \"tap_side\": \"hv\",\n            \"vk_percent\": 12.0,\n            \"tap_max\": 9\n        },\n        \"25 MVA 110/10 kV\": {\n            \"shift_degree\": 150,\n            \"vector_group\": \"YNd5\",\n            \"pfe_kw\": 28.51,\n            \"vn_hv_kv\": 110.0,\n            \"i0_percent\": 0.073,\n            \"vn_lv_kv\": 10.0,\n            \"sn_mva\": 25.0,\n            \"tap_neutral\": 0,\n            \"tap_min\": -9,\n            \"vkr_percent\": 0.276,\n            \"tap_step_percent\": 1.5,\n            \"tap_side\": \"hv\",\n            \"vk_percent\": 10.04,\n            \"tap_max\": 9\n        },\n        \"40 MVA 110/20 kV\": {\n            \"shift_degree\": 150,\n            \"vector_group\": \"YNd5\",\n            \"pfe_kw\": 31.0,\n            \"vn_hv_kv\": 110.0,\n            \"i0_percent\": 0.08,\n            \"vn_lv_kv\": 20.0,\n            \"sn_mva\": 40.0,\n            \"tap_neutral\": 0,\n            \"tap_min\": -9,\n            \"vkr_percent\": 0.302,\n            \"tap_step_percent\": 1.5,\n            \"tap_side\": \"hv\",\n            \"vk_percent\": 11.2,\n            \"tap_max\": 9\n        },\n        \"25 MVA 110/20 kV\": {\n            \"shift_degree\": 150,\n            \"vector_group\": \"YNd5\",\n            \"pfe_kw\": 29.0,\n            \"vn_hv_kv\": 110.0,\n            \"i0_percent\": 0.071,\n            \"vn_lv_kv\": 20.0,\n            \"sn_mva\": 25.0,\n            \"tap_neutral\": 0,\n            \"tap_min\": -9,\n            \"vkr_percent\": 0.282,\n            \"tap_step_percent\": 1.5,\n            \"tap_side\": \"hv\",\n            \"vk_percent\": 11.2,\n            \"tap_max\": 9\n        },\n        \"40 MVA 110/10 kV\": {\n            \"shift_degree\": 150,\n            \"vector_group\": \"YNd5\",\n            \"pfe_kw\": 30.45,\n            \"vn_hv_kv\": 110.0,\n            \"i0_percent\": 0.076,\n            \"vn_lv_kv\": 10.0,\n            \"sn_mva\": 40.0,\n            \"tap_neutral\": 0,\n            \"tap_min\": -9,\n            \"vkr_percent\": 0.295,\n            \"tap_step_percent\": 1.5,\n            \"tap_side\": \"hv\",\n            \"vk_percent\": 10.04,\n            \"tap_max\": 9\n        }\n    },\n    \"trafo3w\": {\n        \"63/25/38 MVA 110/10/10 kV\": {\n            \"vector_group\": \"YN0yn0yn0\",\n            \"vn_mv_kv\": 10,\n            \"vn_lv_kv\": 10,\n            \"shift_lv_degree\": 0,\n            \"shift_mv_degree\": 0,\n            \"pfe_kw\": 35,\n            \"vn_hv_kv\": 110,\n            \"i0_percent\": 0.89,\n            \"sn_lv_mva\": 38.0,\n            \"sn_hv_mva\": 63.0,\n            \"sn_mv_mva\": 25.0,\n            \"vkr_lv_percent\": 0.35,\n            \"tap_neutral\": 0,\n            \"tap_min\": -10,\n            \"vk_mv_percent\": 10.4,\n            \"vkr_hv_percent\": 0.28,\n            \"vk_lv_percent\": 10.4,\n            \"tap_max\": 10,\n            \"vkr_mv_percent\": 0.32,\n            \"tap_step_percent\": 1.2,\n            \"tap_side\": \"hv\",\n            \"vk_hv_percent\": 10.4\n        },\n        \"63/25/38 MVA 110/20/10 kV\": {\n            \"vector_group\": \"YN0yn0yn0\",\n            \"vn_mv_kv\": 20,\n            \"vn_lv_kv\": 10,\n            \"shift_lv_degree\": 0,\n            \"shift_mv_degree\": 0,\n            \"pfe_kw\": 35,\n            \"vn_hv_kv\": 110,\n            \"i0_percent\": 0.89,\n            \"sn_lv_mva\": 38.0,\n            \"sn_hv_mva\": 63.0,\n            \"sn_mv_mva\": 25.0,\n            \"vkr_lv_percent\": 0.35,\n            \"tap_neutral\": 0,\n            \"tap_min\": -10,\n            \"vk_mv_percent\": 10.4,\n            \"vkr_hv_percent\": 0.28,\n            \"vk_lv_percent\": 10.4,\n            \"tap_max\": 10,\n            \"vkr_mv_percent\": 0.32,\n            \"tap_step_percent\": 1.2,\n            \"tap_side\": \"hv\",\n            \"vk_hv_percent\": 10.4\n        }\n    }\n},\"storage\":{\n    \"_module\": \"pandas.core.frame\",\n    \"_class\": \"DataFrame\",\n    \"_object\": \"{\\\"columns\\\":[\\\"name\\\",\\\"bus\\\",\\\"p_mw\\\",\\\"q_mvar\\\",\\\"sn_mva\\\",\\\"soc_percent\\\",\\\"min_e_mwh\\\",\\\"max_e_mwh\\\",\\\"scaling\\\",\\\"in_service\\\",\\\"type\\\"],\\\"index\\\":[],\\\"data\\\":[]}\",\n    \"dtype\": {\n        \"name\": \"object\",\n        \"bus\": \"int64\",\n        \"p_mw\": \"float64\",\n        \"q_mvar\": \"float64\",\n        \"sn_mva\": \"float64\",\n        \"soc_percent\": \"float64\",\n        \"min_e_mwh\": \"float64\",\n        \"max_e_mwh\": \"float64\",\n        \"scaling\": \"float64\",\n        \"in_service\": \"bool\",\n        \"type\": \"object\"\n    },\n    \"orient\": \"split\"\n},\"switch\":{\n    \"_module\": \"pandas.core.frame\",\n    \"_class\": \"DataFrame\",\n    \"_object\": \"{\\\"columns\\\":[\\\"bus\\\",\\\"element\\\",\\\"et\\\",\\\"type\\\",\\\"closed\\\",\\\"name\\\",\\\"z_ohm\\\"],\\\"index\\\":[],\\\"data\\\":[]}\",\n    \"dtype\": {\n        \"bus\": \"int64\",\n        \"element\": \"int64\",\n        \"et\": \"object\",\n        \"type\": \"object\",\n        \"closed\": \"bool\",\n        \"name\": \"object\",\n        \"z_ohm\": \"float64\"\n    },\n    \"orient\": \"split\"\n},\"trafo\":{\n    \"_module\": \"pandas.core.frame\",\n    \"_class\": \"DataFrame\",\n    \"_object\": \"{\\\"columns\\\":[\\\"name\\\",\\\"std_type\\\",\\\"hv_bus\\\",\\\"lv_bus\\\",\\\"sn_mva\\\",\\\"vn_hv_kv\\\",\\\"vn_lv_kv\\\",\\\"vk_percent\\\",\\\"vkr_percent\\\",\\\"pfe_kw\\\",\\\"i0_percent\\\",\\\"shift_degree\\\",\\\"tap_side\\\",\\\"tap_neutral\\\",\\\"tap_min\\\",\\\"tap_max\\\",\\\"tap_step_percent\\\",\\\"tap_step_degree\\\",\\\"tap_pos\\\",\\\"tap_phase_shifter\\\",\\\"parallel\\\",\\\"df\\\",\\\"in_service\\\"],\\\"index\\\":[0,1,10,11,12,2,3,4,5,6,7,8,9],\\\"data\\\":[[null,null,0,2,132.0,275.0,132.0,19.8215482745,0.924,0.0,-3.9393939394,2.0,null,null,null,null,null,null,null,false,1,1.0,true],[null,null,0,2,132.0,275.0,132.0,19.8215482745,0.924,0.0,-3.9393939394,2.0,null,null,null,null,null,null,null,false,1,1.0,true],[null,null,3,2,648.0,275.0,132.0,26.639027009300001,1.944,0.0,-0.0679012346,0.0,null,null,null,null,null,null,null,false,1,1.0,true],[null,null,3,2,648.0,275.0,132.0,26.639027009300001,1.944,0.0,-0.6790123457,0.0,null,null,null,null,null,null,null,false,1,1.0,true],[null,null,1,2,652.0,275.0,132.0,53.889295279899997,19.586079999999999,0.0,-0.1901840491,0.0,null,null,null,null,null,null,null,false,1,1.0,true],[null,null,6,3,1090.0,400.0,275.0,14.893648478799999,2.2999,0.0,-1.0770642202,0.0,null,null,null,null,null,null,null,false,1,1.0,true],[null,null,5,3,1500.0,400.0,275.0,34.555064751800003,1.95,0.0,-0.9973333333,0.0,null,null,null,null,null,null,null,false,1,1.0,true],[null,null,5,3,1120.0,400.0,275.0,25.801115014699999,1.456,0.0,-1.5696428571,0.0,null,null,null,null,null,null,null,false,1,1.0,true],[null,null,4,3,1000.0,400.0,275.0,24.020824298899999,1.0,0.0,-1.25,0.0,null,null,null,null,null,null,null,false,1,1.0,true],[null,null,4,3,1000.0,400.0,275.0,24.020824298899999,1.0,0.0,-1.25,0.0,null,null,null,null,null,null,null,false,1,1.0,true],[null,null,6,3,1090.0,400.0,275.0,14.8919691781,2.289,0.0,-1.4110091743,0.0,null,null,null,null,null,null,null,false,1,1.0,true],[null,null,11,17,2400.0,400.0,400.0,21.672890347199999,1.776,0.0,-1.2129166667,2.0,null,null,null,null,null,null,null,false,1,1.0,true],[null,null,11,12,3100.0,400.0,400.0,33.550250371600001,2.976,0.0,-1.2419354839,2.0,null,null,null,null,null,null,null,false,1,1.0,true]]}\",\n    \"dtype\": {\n        \"name\": \"object\",\n        \"std_type\": \"object\",\n        \"hv_bus\": \"uint32\",\n        \"lv_bus\": \"uint32\",\n        \"sn_mva\": \"float64\",\n        \"vn_hv_kv\": \"float64\",\n        \"vn_lv_kv\": \"float64\",\n        \"vk_percent\": \"float64\",\n        \"vkr_percent\": \"float64\",\n        \"pfe_kw\": \"float64\",\n        \"i0_percent\": \"float64\",\n        \"shift_degree\": \"float64\",\n        \"tap_side\": \"object\",\n        \"tap_neutral\": \"float64\",\n        \"tap_min\": \"float64\",\n        \"tap_max\": \"float64\",\n        \"tap_step_percent\": \"float64\",\n        \"tap_step_degree\": \"float64\",\n        \"tap_pos\": \"float64\",\n        \"tap_phase_shifter\": \"bool\",\n        \"parallel\": \"uint32\",\n        \"df\": \"float64\",\n        \"in_service\": \"bool\"\n    },\n    \"orient\": \"split\"\n},\"trafo3w\":{\n    \"_module\": \"pandas.core.frame\",\n    \"_class\": \"DataFrame\",\n    \"_object\": \"{\\\"columns\\\":[\\\"name\\\",\\\"std_type\\\",\\\"hv_bus\\\",\\\"mv_bus\\\",\\\"lv_bus\\\",\\\"sn_hv_mva\\\",\\\"sn_mv_mva\\\",\\\"sn_lv_mva\\\",\\\"vn_hv_kv\\\",\\\"vn_mv_kv\\\",\\\"vn_lv_kv\\\",\\\"vk_hv_percent\\\",\\\"vk_mv_percent\\\",\\\"vk_lv_percent\\\",\\\"vkr_hv_percent\\\",\\\"vkr_mv_percent\\\",\\\"vkr_lv_percent\\\",\\\"pfe_kw\\\",\\\"i0_percent\\\",\\\"shift_mv_degree\\\",\\\"shift_lv_degree\\\",\\\"tap_side\\\",\\\"tap_neutral\\\",\\\"tap_min\\\",\\\"tap_max\\\",\\\"tap_step_percent\\\",\\\"tap_step_degree\\\",\\\"tap_pos\\\",\\\"tap_at_star_point\\\",\\\"in_service\\\"],\\\"index\\\":[],\\\"data\\\":[]}\",\n    \"dtype\": {\n        \"name\": \"object\",\n        \"std_type\": \"object\",\n        \"hv_bus\": \"uint32\",\n        \"mv_bus\": \"uint32\",\n        \"lv_bus\": \"uint32\",\n        \"sn_hv_mva\": \"float64\",\n        \"sn_mv_mva\": \"float64\",\n        \"sn_lv_mva\": \"float64\",\n        \"vn_hv_kv\": \"float64\",\n        \"vn_mv_kv\": \"float64\",\n        \"vn_lv_kv\": \"float64\",\n        \"vk_hv_percent\": \"float64\",\n        \"vk_mv_percent\": \"float64\",\n        \"vk_lv_percent\": \"float64\",\n        \"vkr_hv_percent\": \"float64\",\n        \"vkr_mv_percent\": \"float64\",\n        \"vkr_lv_percent\": \"float64\",\n        \"pfe_kw\": \"float64\",\n        \"i0_percent\": \"float64\",\n        \"shift_mv_degree\": \"float64\",\n        \"shift_lv_degree\": \"float64\",\n        \"tap_side\": \"object\",\n        \"tap_neutral\": \"int32\",\n        \"tap_min\": \"int32\",\n        \"tap_max\": \"int32\",\n        \"tap_step_percent\": \"float64\",\n        \"tap_step_degree\": \"float64\",\n        \"tap_pos\": \"int32\",\n        \"tap_at_star_point\": \"bool\",\n        \"in_service\": \"bool\"\n    },\n    \"orient\": \"split\"\n},\"user_pf_options\":{},\"version\":\"2.0.1\",\"ward\":{\n    \"_module\": \"pandas.core.frame\",\n    \"_class\": \"DataFrame\",\n    \"_object\": \"{\\\"columns\\\":[\\\"name\\\",\\\"bus\\\",\\\"ps_mw\\\",\\\"qs_mvar\\\",\\\"qz_mvar\\\",\\\"pz_mw\\\",\\\"in_service\\\"],\\\"index\\\":[],\\\"data\\\":[]}\",\n    \"dtype\": {\n        \"name\": \"object\",\n        \"bus\": \"uint32\",\n        \"ps_mw\": \"float64\",\n        \"qs_mvar\": \"float64\",\n        \"qz_mvar\": \"float64\",\n        \"pz_mw\": \"float64\",\n        \"in_service\": \"bool\"\n    },\n    \"orient\": \"split\"\n},\"xward\":{\n    \"_module\": \"pandas.core.frame\",\n    \"_class\": \"DataFrame\",\n    \"_object\": \"{\\\"columns\\\":[\\\"name\\\",\\\"bus\\\",\\\"ps_mw\\\",\\\"qs_mvar\\\",\\\"qz_mvar\\\",\\\"pz_mw\\\",\\\"r_ohm\\\",\\\"x_ohm\\\",\\\"vm_pu\\\",\\\"in_service\\\"],\\\"index\\\":[],\\\"data\\\":[]}\",\n    \"dtype\": {\n        \"name\": \"object\",\n        \"bus\": \"uint32\",\n        \"ps_mw\": \"float64\",\n        \"qs_mvar\": \"float64\",\n        \"qz_mvar\": \"float64\",\n        \"pz_mw\": \"float64\",\n        \"r_ohm\": \"float64\",\n        \"x_ohm\": \"float64\",\n        \"vm_pu\": \"float64\",\n        \"in_service\": \"bool\"\n    },\n    \"orient\": \"split\"\n}}\n"
+  "_module": "pandapower.auxiliary",
+  "_class": "pandapowerNet",
+  "_object": {
+    "bus": {
+      "_module": "pandas.core.frame",
+      "_class": "DataFrame",
+      "_object": "{\"columns\":[\"in_service\",\"max_vm_pu\",\"min_vm_pu\",\"name\",\"type\",\"vn_kv\",\"zone\"],\"index\":[0,1,10,11,12,13,14,15,16,17,18,19,2,20,21,22,23,24,25,26,27,28,3,4,5,6,7,8,9],\"data\":[[true,1.1,0.9,0,\"b\",275.0,1.0],[true,1.1,0.9,1,\"b\",275.0,1.0],[true,1.1,0.9,10,\"b\",400.0,1.0],[true,1.1,0.9,11,\"b\",400.0,1.0],[true,1.1,0.9,12,\"b\",400.0,1.0],[true,1.1,0.9,13,\"b\",400.0,1.0],[true,1.1,0.9,14,\"b\",400.0,1.0],[true,1.1,0.9,15,\"b\",400.0,1.0],[true,1.1,0.9,16,\"b\",400.0,1.0],[true,1.1,0.9,17,\"b\",400.0,1.0],[true,1.1,0.9,18,\"b\",400.0,1.0],[true,1.1,0.9,19,\"b\",400.0,1.0],[true,1.1,0.9,2,\"b\",132.0,1.0],[true,1.1,0.9,20,\"b\",400.0,1.0],[true,1.1,0.9,21,\"b\",400.0,1.0],[true,1.1,0.9,22,\"b\",400.0,1.0],[true,1.1,0.9,23,\"b\",400.0,1.0],[true,1.1,0.9,24,\"b\",400.0,1.0],[true,1.1,0.9,25,\"b\",400.0,1.0],[true,1.1,0.9,26,\"b\",400.0,1.0],[true,1.1,0.9,27,\"b\",400.0,1.0],[true,1.1,0.9,28,\"b\",400.0,1.0],[true,1.1,0.9,3,\"b\",275.0,1.0],[true,1.1,0.9,4,\"b\",400.0,1.0],[true,1.1,0.9,5,\"b\",400.0,1.0],[true,1.1,0.9,6,\"b\",400.0,1.0],[true,1.1,0.9,7,\"b\",400.0,1.0],[true,1.1,0.9,8,\"b\",400.0,1.0],[true,1.1,0.9,9,\"b\",400.0,1.0]]}",
+      "orient": "split",
+      "dtype": {
+        "in_service": "bool",
+        "max_vm_pu": "float64",
+        "min_vm_pu": "float64",
+        "name": "object",
+        "type": "object",
+        "vn_kv": "float64",
+        "zone": "object"
+      }
+    },
+    "load": {
+      "_module": "pandas.core.frame",
+      "_class": "DataFrame",
+      "_object": "{\"columns\":[\"name\",\"bus\",\"p_mw\",\"q_mvar\",\"const_z_percent\",\"const_i_percent\",\"sn_mva\",\"scaling\",\"in_service\",\"type\"],\"index\":[0,1,10,11,12,13,14,15,16,17,18,19,2,20,21,22,23,24,25,26,27,28,3,4,5,6,7,8,9],\"data\":[[null,0,468.0,102.0,0.0,0.0,null,1.0,true,null],[null,1,513.0,113.0,0.0,0.0,null,1.0,true,null],[null,10,3360.0,760.0,0.0,0.0,null,1.0,true,null],[null,11,1189.0,338.0,0.0,0.0,null,1.0,true,null],[null,12,2524.0,766.0,0.0,0.0,null,1.0,true,null],[null,13,1831.0,566.5,0.0,0.0,null,1.0,true,null],[null,14,2633.0,694.600000000000023,0.0,0.0,null,1.0,true,null],[null,15,1607.0,655.0,0.0,0.0,null,1.0,true,null],[null,16,1081.0,371.0,0.0,0.0,null,1.0,true,null],[null,17,5362.0,1935.0,0.0,0.0,null,1.0,true,null],[null,18,2019.0,648.0,0.0,0.0,null,1.0,true,null],[null,19,1027.3599999999999,305.800000000000011,0.0,0.0,null,1.0,true,null],[null,2,555.0,105.0,0.0,0.0,null,1.0,true,null],[null,20,702.0,202.200000000000017,0.0,0.0,null,1.0,true,null],[null,21,1820.0,665.0,0.0,0.0,null,1.0,true,null],[null,22,4734.0,1337.0,0.0,0.0,null,1.0,true,null],[null,23,1418.0,528.0,0.0,0.0,null,1.0,true,null],[null,24,9734.0,2902.0,0.0,0.0,null,1.0,true,null],[null,25,1424.0,434.0,0.0,0.0,null,1.0,true,null],[null,26,457.0,138.0,0.0,0.0,null,1.0,true,null],[null,27,2751.0,841.0,0.0,0.0,null,1.0,true,null],[null,28,2577.0,356.0,0.0,0.0,null,1.0,true,null],[null,3,1308.0,317.0,0.0,0.0,null,1.0,true,null],[null,4,502.0,128.0,0.0,0.0,null,1.0,true,null],[null,5,1176.0,315.0,0.0,0.0,null,1.0,true,null],[null,6,745.0,171.0,0.0,0.0,null,1.0,true,null],[null,7,117.5,37.399999999999999,0.0,0.0,null,1.0,true,null],[null,8,130.0,53.0,0.0,0.0,null,1.0,true,null],[null,9,2561.0,465.0,0.0,0.0,null,1.0,true,null]]}",
+      "orient": "split",
+      "dtype": {
+        "name": "object",
+        "bus": "uint32",
+        "p_mw": "float64",
+        "q_mvar": "float64",
+        "const_z_percent": "float64",
+        "const_i_percent": "float64",
+        "sn_mva": "float64",
+        "scaling": "float64",
+        "in_service": "bool",
+        "type": "object"
+      }
+    },
+    "sgen": {
+      "_module": "pandas.core.frame",
+      "_class": "DataFrame",
+      "_object": "{\"columns\":[\"bus\",\"controllable\",\"in_service\",\"name\",\"p_mw\",\"q_mvar\",\"scaling\",\"sn_mva\",\"type\",\"current_source\",\"max_p_mw\",\"min_p_mw\",\"max_q_mvar\",\"min_q_mvar\"],\"index\":[0],\"data\":[[26,true,true,null,216.0,35.5,1.0,null,\"\",true,300.0,0.0,0.0,-71.0]]}",
+      "orient": "split",
+      "dtype": {
+        "bus": "int64",
+        "controllable": "bool",
+        "in_service": "bool",
+        "name": "object",
+        "p_mw": "float64",
+        "q_mvar": "float64",
+        "scaling": "float64",
+        "sn_mva": "float64",
+        "type": "object",
+        "current_source": "bool",
+        "max_p_mw": "float64",
+        "min_p_mw": "float64",
+        "max_q_mvar": "float64",
+        "min_q_mvar": "float64"
+      }
+    },
+    "storage": {
+      "_module": "pandas.core.frame",
+      "_class": "DataFrame",
+      "_object": "{\"columns\":[\"name\",\"bus\",\"p_mw\",\"q_mvar\",\"sn_mva\",\"soc_percent\",\"min_e_mwh\",\"max_e_mwh\",\"scaling\",\"in_service\",\"type\"],\"index\":[],\"data\":[]}",
+      "orient": "split",
+      "dtype": {
+        "name": "object",
+        "bus": "int64",
+        "p_mw": "float64",
+        "q_mvar": "float64",
+        "sn_mva": "float64",
+        "soc_percent": "float64",
+        "min_e_mwh": "float64",
+        "max_e_mwh": "float64",
+        "scaling": "float64",
+        "in_service": "bool",
+        "type": "object"
+      }
+    },
+    "gen": {
+      "_module": "pandas.core.frame",
+      "_class": "DataFrame",
+      "_object": "{\"columns\":[\"bus\",\"controllable\",\"in_service\",\"name\",\"p_mw\",\"scaling\",\"sn_mva\",\"type\",\"vm_pu\",\"slack\",\"max_p_mw\",\"min_p_mw\",\"max_q_mvar\",\"min_q_mvar\"],\"index\":[0,1,10,11,12,13,14,15,16,17,18,19,2,20,21,22,23,24,25,26,27,28,29,3,30,31,32,33,34,35,36,37,38,39,4,40,41,42,43,44,45,46,47,48,49,5,50,51,52,53,54,55,56,57,58,59,6,60,61,62,63,7,8,9],\"data\":[[0,true,true,null,493.5,1.0,null,null,1.0,false,668.0,0.0,139.219999999999999,-188.460000000000008],[0,true,true,null,549.580000000000041,1.0,null,null,1.0,false,554.279999999999973,0.0,105.230000000000004,-66.299999999999997],[2,true,true,null,15.119999999999999,1.0,null,null,1.0,false,15.119999999999999,0.0,6.51,-7.29],[3,true,true,null,25.199999999999999,1.0,null,null,1.0,false,35.0,0.0,10.66,-12.34],[3,true,true,null,2284.0,1.0,null,null,1.0,false,2284.0,0.0,641.470000000000027,-679.0],[3,true,true,null,340.0,1.0,null,null,1.0,false,440.0,0.0,150.340000000000003,-137.860000000000014],[3,true,true,null,259.0,1.0,null,null,1.0,false,259.0,0.0,137.27000000000001,-122.950000000000003],[4,true,true,null,1074.0,1.0,null,null,1.0,false,1074.0,0.0,416.470000000000027,-429.769999999999982],[4,true,true,null,23.199999999999999,1.0,null,null,1.0,false,23.199999999999999,0.0,15.390000000000001,-9.94],[5,true,true,null,1001.519999999999982,1.0,null,null,1.0,false,1390.920000000000073,0.0,439.660000000000025,-484.800000000000011],[5,true,true,null,33.0,1.0,null,null,1.0,false,33.0,0.0,24.800000000000001,-25.5],[5,true,true,null,49.399999999999999,1.0,null,null,1.0,false,49.399999999999999,0.0,12.09,-17.489999999999998],[0,true,true,null,0.0,1.0,null,null,1.0,false,300.0,0.0,180.0,-100.0],[6,true,true,null,226.800000000000011,1.0,null,null,1.0,false,314.25,0.0,125.760000000000005,-131.02000000000001],[6,true,true,null,1216.0,1.0,null,null,1.0,false,1215.0,0.0,681.340000000000032,-469.069999999999993],[6,true,true,null,1104.0,1.0,null,null,1.0,false,1102.0,0.0,220.340000000000003,-205.240000000000009],[9,true,true,null,1208.0,1.0,null,null,1.0,false,1207.0,0.0,559.190000000000055,-539.680000000000064],[9,true,true,null,1875.0,1.0,null,null,1.0,false,1875.0,0.0,697.169999999999959,-829.629999999999996],[9,true,true,null,420.0,1.0,null,null,1.0,false,420.0,0.0,167.950000000000017,-138.039999999999992],[10,true,true,null,130.319999999999993,1.0,null,null,1.0,false,180.0,0.0,-57.600000000000001,-57.600000000000001],[10,true,true,null,2406.0,1.0,null,null,1.0,false,2406.0,0.0,1216.100000000000136,-1006.32000000000005],[10,true,true,null,1961.0,1.0,null,null,1.0,false,1987.0,0.0,873.220000000000027,-571.460000000000036],[10,true,true,null,155.0,1.0,null,null,1.0,false,155.0,0.0,94.219999999999999,-75.210000000000008],[0,true,true,null,18.719999999999999,1.0,null,null,1.0,false,18.719999999999999,0.0,7.8,-8.99],[10,true,true,null,1039.0,1.0,null,null,1.0,false,1039.0,0.0,670.32000000000005,-539.07000000000005],[11,true,true,null,980.0,1.0,null,null,1.0,false,980.0,0.0,579.980000000000018,-418.120000000000005],[11,true,true,null,1885.0,1.0,null,null,1.0,false,1885.0,0.0,960.050000000000068,-853.060000000000059],[11,true,true,null,210.0,1.0,null,null,1.0,false,210.0,0.0,116.420000000000002,-94.969999999999999],[11,true,true,null,1096.0,1.0,null,null,1.0,false,2004.0,0.0,344.480000000000018,-575.519999999999982],[14,true,true,null,7800.0,1.0,null,null,1.0,false,7832.0,0.0,3535.0300000000002,-2527.869999999999891],[15,true,true,null,3972.0,1.0,null,null,1.0,false,3987.0,0.0,1587.059999999999945,-1289.620000000000118],[15,true,true,null,7041.0,1.0,null,null,1.0,false,7040.0,0.0,3653.230000000000018,-3354.579999999999927],[15,true,true,null,1218.0,1.0,null,null,1.0,false,1218.0,0.0,767.330000000000041,-562.850000000000023],[16,true,true,null,2000.0,1.0,null,null,1.0,false,2021.0,0.0,814.230000000000018,-405.939999999999998],[1,true,true,null,36.43,1.0,null,null,1.0,false,50.600000000000001,0.0,14.33,-17.670000000000002],[17,true,true,null,1960.0,1.0,null,null,1.0,false,1982.0,0.0,884.970000000000027,-534.169999999999959],[17,true,true,null,228.0,1.0,null,null,1.0,false,228.0,0.0,40.020000000000003,-73.579999999999998],[18,true,true,null,2845.0,1.0,null,null,1.0,false,2845.0,0.0,1336.630000000000109,-1468.980000000000018],[18,true,true,null,406.800000000000011,1.0,null,null,1.0,false,406.800000000000011,0.0,162.700000000000017,-162.700000000000017],[19,true,true,null,1200.0,1.0,null,null,1.0,false,1200.0,0.0,621.139999999999986,-523.379999999999995],[19,true,true,null,360.0,1.0,null,null,1.0,false,360.0,0.0,236.640000000000015,236.640000000000015],[20,true,true,null,665.0,1.0,null,null,1.0,false,665.0,0.0,326.150000000000034,-306.069999999999993],[21,true,true,null,401.100000000000023,1.0,null,null,1.0,false,401.0,0.0,189.719999999999999,-232.680000000000007],[22,true,true,null,3772.0,1.0,null,null,1.0,false,3801.0,0.0,1589.670000000000073,-1388.269999999999982],[22,true,true,null,363.0,1.0,null,null,1.0,false,363.0,0.0,84.810000000000002,-153.990000000000009],[1,true,true,null,1524.0,1.0,null,null,1.0,false,1524.0,0.0,1108.509999999999991,-473.360000000000014],[22,true,true,null,470.0,1.0,null,null,1.0,false,470.400000000000034,0.0,317.759999999999991,-211.430000000000007],[22,true,true,null,3081.010000000000218,1.0,null,null,1.0,false,4431.0,0.0,1200.809999999999945,-1262.240000000000009],[22,true,true,null,0.0,1.0,null,null,1.0,false,100.0,0.0,0.0,0.0],[24,true,true,null,2123.0,1.0,null,null,1.0,false,2123.0,0.0,949.379999999999995,-947.420000000000073],[24,true,true,null,0.0,1.0,null,null,1.0,false,1245.0,0.0,0.0,0.0],[25,true,true,null,1940.0,1.0,null,null,1.0,false,1966.0,0.0,881.440000000000055,-431.350000000000023],[25,true,true,null,1104.0,1.0,null,null,1.0,false,1131.0,0.0,384.110000000000014,-294.620000000000004],[25,true,true,null,2465.0,1.0,null,null,1.0,false,3165.0,0.0,1254.529999999999973,-1114.6400000000001],[25,true,true,null,0.0,1.0,null,null,1.0,false,1355.0,0.0,0.0,0.0],[27,true,true,null,1320.0,1.0,null,null,1.0,false,1320.0,0.0,657.82000000000005,-579.700000000000046],[1,true,true,null,12.0,1.0,null,null,1.0,false,12.0,0.0,0.0,0.0],[27,true,true,null,208.0,1.0,null,null,1.0,false,208.0,0.0,60.789999999999999,-71.210000000000008],[28,true,true,null,1261.0,1.0,null,null,1.0,false,1261.0,0.0,455.319999999999993,-480.430000000000007],[28,true,true,null,905.0,1.0,null,null,1.0,false,905.0,0.0,403.350000000000023,-412.03000000000003],[28,true,true,null,0.0,1.0,null,null,1.0,false,140.0,0.0,0.0,0.0],[2,true,true,null,387.900000000000034,1.0,null,null,1.0,false,550.990000000000009,0.0,128.340000000000003,-158.140000000000015],[2,true,true,null,13.539999999999999,1.0,null,null,1.0,false,19.0,0.0,-3.51,-3.51],[2,true,true,null,553.0,1.0,null,null,1.0,false,553.120000000000005,0.0,144.789999999999992,-66.170000000000002]]}",
+      "orient": "split",
+      "dtype": {
+        "bus": "uint32",
+        "controllable": "bool",
+        "in_service": "bool",
+        "name": "object",
+        "p_mw": "float64",
+        "scaling": "float64",
+        "sn_mva": "float64",
+        "type": "object",
+        "vm_pu": "float64",
+        "slack": "bool",
+        "max_p_mw": "float64",
+        "min_p_mw": "float64",
+        "max_q_mvar": "float64",
+        "min_q_mvar": "float64"
+      }
+    },
+    "switch": {
+      "_module": "pandas.core.frame",
+      "_class": "DataFrame",
+      "_object": "{\"columns\":[\"bus\",\"element\",\"et\",\"type\",\"closed\",\"name\",\"z_ohm\"],\"index\":[],\"data\":[]}",
+      "orient": "split",
+      "dtype": {
+        "bus": "int64",
+        "element": "int64",
+        "et": "object",
+        "type": "object",
+        "closed": "bool",
+        "name": "object",
+        "z_ohm": "float64"
+      }
+    },
+    "shunt": {
+      "_module": "pandas.core.frame",
+      "_class": "DataFrame",
+      "_object": "{\"columns\":[\"bus\",\"name\",\"q_mvar\",\"p_mw\",\"vn_kv\",\"step\",\"max_step\",\"in_service\"],\"index\":[],\"data\":[]}",
+      "orient": "split",
+      "dtype": {
+        "bus": "uint32",
+        "name": "object",
+        "q_mvar": "float64",
+        "p_mw": "float64",
+        "vn_kv": "float64",
+        "step": "uint32",
+        "max_step": "uint32",
+        "in_service": "bool"
+      }
+    },
+    "ext_grid": {
+      "_module": "pandas.core.frame",
+      "_class": "DataFrame",
+      "_object": "{\"columns\":[\"bus\",\"in_service\",\"name\",\"va_degree\",\"vm_pu\",\"max_p_mw\",\"min_p_mw\",\"max_q_mvar\",\"min_q_mvar\"],\"index\":[0],\"data\":[[26,true,null,0.0,1.0,1081.0,0.0,666.029999999999973,-541.789999999999964]]}",
+      "orient": "split",
+      "dtype": {
+        "bus": "uint32",
+        "in_service": "bool",
+        "name": "object",
+        "va_degree": "float64",
+        "vm_pu": "float64",
+        "max_p_mw": "float64",
+        "min_p_mw": "float64",
+        "max_q_mvar": "float64",
+        "min_q_mvar": "float64"
+      }
+    },
+    "line": {
+      "_module": "pandas.core.frame",
+      "_class": "DataFrame",
+      "_object": "{\"columns\":[\"name\",\"std_type\",\"from_bus\",\"to_bus\",\"length_km\",\"r_ohm_per_km\",\"x_ohm_per_km\",\"c_nf_per_km\",\"g_us_per_km\",\"max_i_ka\",\"df\",\"parallel\",\"type\",\"in_service\"],\"index\":[0,1,10,11,12,13,14,15,16,17,18,19,2,20,21,22,23,24,25,26,27,28,29,3,30,31,32,33,34,35,36,37,38,39,4,40,41,42,43,44,45,46,47,48,49,5,50,51,52,53,54,55,56,57,58,59,6,60,61,62,63,64,65,66,67,68,69,7,70,71,72,73,74,75,76,77,78,79,8,80,81,82,83,84,85,9],\"data\":[[null,null,0,1,1.0,9.22625,15.125,360.295223237500011,0.0,1.1022141503,1.0,1,\"ol\",true],[null,null,0,1,1.0,9.22625,15.125,1197.055624868399946,0.0,1.1022141503,1.0,1,\"ol\",true],[null,null,6,5,1.0,4.8,320.0,584.695472183900051,0.0,1.3712068893,1.0,1,\"ol\",true],[null,null,6,5,1.0,4.8,320.0,584.695472183900051,0.0,1.3712068893,1.0,1,\"ol\",true],[null,null,7,9,1.0,1.328,28.0,1317.802928800899963,0.0,4.431163316,1.0,1,\"ol\",true],[null,null,7,9,1.0,1.328,28.0,1317.802928800899963,0.0,4.431163316,1.0,1,\"ol\",true],[null,null,8,10,1.0,2.624,26.079999999999998,968.457828714199991,0.0,2.0062921854,1.0,1,\"ol\",true],[null,null,8,10,1.0,2.624,26.079999999999998,968.457828714199991,0.0,2.0062921854,1.0,1,\"ol\",true],[null,null,8,9,1.0,5.632,39.247999999999998,377.595102485499979,0.0,1.2340862004,1.0,1,\"ol\",true],[null,null,8,9,1.0,7.872,54.880000000000002,497.75708451989999,0.0,1.1186161466,1.0,1,\"ol\",true],[null,null,9,14,1.0,0.848,13.359999999999999,10689.243865409400314,0.0,6.9859382572,1.0,1,\"ol\",true],[null,null,9,14,1.0,0.832,10.08,2115.964968406699882,0.0,5.8023702054,1.0,1,\"ol\",true],[null,null,1,3,1.0,0.3025,49.15625,1874.713696611700016,0.0,1.5955861985,1.0,1,\"ol\",true],[null,null,10,14,1.0,1.12,67.200000000000003,777.272953325000003,0.0,3.6373066959,1.0,1,\"ol\",true],[null,null,10,14,1.0,1.584,67.200000000000003,1141.53882932660008,0.0,3.6373066959,1.0,1,\"ol\",true],[null,null,10,12,1.0,0.64,8.32,496.961309804400003,0.0,3.1321252104,1.0,1,\"ol\",true],[null,null,10,12,1.0,0.64,8.32,529.985960495999962,0.0,3.1898602373,1.0,1,\"ol\",true],[null,null,10,11,1.0,0.16,13.6,158.757055734200009,0.0,4.7920072343,1.0,1,\"ol\",true],[null,null,10,11,1.0,0.16,13.6,158.757055734200009,0.0,4.7920072343,1.0,1,\"ol\",true],[null,null,11,12,1.0,1.536,17.248000000000001,765.933163629699948,0.0,4.4744645862,1.0,1,\"ol\",true],[null,null,11,17,1.0,1.552,14.4,762.949008446800008,0.0,3.4641016151,1.0,1,\"ol\",true],[null,null,12,17,1.0,0.784,11.199999999999999,386.547568034400001,0.0,3.4641016151,1.0,1,\"ol\",true],[null,null,12,17,1.0,1.344,11.199999999999999,1543.60400431249991,0.0,3.4641016151,1.0,1,\"ol\",true],[null,null,1,3,1.0,0.3025,49.15625,2333.921743985600188,0.0,1.5955861985,1.0,1,\"ol\",true],[null,null,12,14,1.0,2.192,36.799999999999997,1321.582858699300004,0.0,1.7897858345,1.0,1,\"ol\",true],[null,null,12,14,1.0,2.624,36.799999999999997,219.633821466799986,0.0,1.3784237677,1.0,1,\"ol\",true],[null,null,12,13,1.0,1.712,18.608,2336.593508267899779,0.0,1.5011106999,1.0,1,\"ol\",true],[null,null,12,13,1.0,1.312,19.216000000000001,2412.192106236499967,0.0,1.5011106999,1.0,1,\"ol\",true],[null,null,13,15,1.0,0.8,25.600000000000001,556.047582427299972,0.0,3.7239092363,1.0,1,\"ol\",true],[null,null,13,15,1.0,8.0,28.800000000000001,291.651433215899999,0.0,0.9021097956,1.0,1,\"ol\",true],[null,null,14,15,1.0,0.528,8.32,703.066961108400051,0.0,3.9981506141,1.0,1,\"ol\",true],[null,null,14,15,1.0,0.256,2.752,794.183166028599999,0.0,7.9963012283,1.0,1,\"ol\",true],[null,null,14,13,1.0,0.304,3.552,1510.380409942099959,0.0,7.2168783649,1.0,1,\"ol\",true],[null,null,14,13,1.0,0.288,3.552,1108.71312231389993,0.0,7.2168783649,1.0,1,\"ol\",true],[null,null,4,5,1.0,1.36,16.815999999999999,761.039149129700036,0.0,2.0062921854,1.0,1,\"ol\",true],[null,null,15,18,1.0,0.896,22.559999999999999,894.450780176499961,0.0,4.0125843709,1.0,1,\"ol\",true],[null,null,15,18,1.0,0.896,22.559999999999999,894.450780176499961,0.0,5.5136950708,1.0,1,\"ol\",true],[null,null,16,15,1.0,1.6,17.152000000000001,527.39969267080005,0.0,3.1032576969,1.0,1,\"ol\",true],[null,null,16,15,1.0,1.6,17.152000000000001,909.76944344900005,0.0,2.7279800219,1.0,1,\"ol\",true],[null,null,16,21,1.0,1.088,15.52,908.376837697000042,0.0,3.0310889132,1.0,1,\"ol\",true],[null,null,16,21,1.0,1.104,15.52,909.968387127899973,0.0,3.0310889132,1.0,1,\"ol\",true],[null,null,17,16,1.0,0.672,2.88,467.318701653599987,0.0,4.4744645862,1.0,1,\"ol\",true],[null,null,17,16,1.0,0.672,2.88,467.318701653599987,0.0,4.9940798285,1.0,1,\"ol\",true],[null,null,17,22,1.0,2.208,15.359999999999999,960.699025238499985,0.0,2.8434500758,1.0,1,\"ol\",true],[null,null,17,22,1.0,1.872,15.359999999999999,820.045844280999972,0.0,2.8434500758,1.0,1,\"ol\",true],[null,null,4,5,1.0,2.416,25.808,1179.656438197099988,0.0,2.0062921854,1.0,1,\"ol\",true],[null,null,19,25,1.0,0.56,3.68,447.424333767099995,0.0,4.0125843709,1.0,1,\"ol\",true],[null,null,19,25,1.0,0.56,3.68,447.424333767099995,0.0,4.0125843709,1.0,1,\"ol\",true],[null,null,19,18,1.0,2.848,34.079999999999998,1329.341662175100055,0.0,2.29496732,1.0,1,\"ol\",true],[null,null,19,18,1.0,2.112,22.879999999999999,727.338089930000024,0.0,2.29496732,1.0,1,\"ol\",true],[null,null,20,15,1.0,2.32,29.184000000000001,1824.114591512000061,0.0,4.0125843709,1.0,1,\"ol\",true],[null,null,20,15,1.0,2.32,29.184000000000001,1824.114591512000061,0.0,4.0125843709,1.0,1,\"ol\",true],[null,null,20,24,1.0,0.4,16.0,315.524674679700013,0.0,4.0125843709,1.0,1,\"ol\",true],[null,null,20,24,1.0,0.4,16.0,315.524674679700013,0.0,4.0125843709,1.0,1,\"ol\",true],[null,null,20,19,1.0,1.92,7.68,884.503596233200028,0.0,4.0125843709,1.0,1,\"ol\",true],[null,null,20,19,1.0,1.92,7.68,1392.605752054100094,0.0,4.0125843709,1.0,1,\"ol\",true],[null,null,5,8,1.0,1.248,13.632,146.621491323399994,0.0,3.0310889132,1.0,1,\"ol\",true],[null,null,20,18,1.0,0.592,9.44,584.894415862700043,0.0,4.3734282891,1.0,1,\"ol\",true],[null,null,20,18,1.0,0.592,9.44,587.878571045700028,0.0,4.0125843709,1.0,1,\"ol\",true],[null,null,21,15,1.0,2.848,27.52,1671.723733501499964,0.0,2.9011851027,1.0,1,\"ol\",true],[null,null,21,15,1.0,2.848,27.52,1247.376866482700052,0.0,2.9011851027,1.0,1,\"ol\",true],[null,null,21,24,1.0,0.592,6.56,815.27119598820002,0.0,4.727055329,1.0,1,\"ol\",true],[null,null,21,24,1.0,0.544,6.56,853.46838233029996,0.0,4.727055329,1.0,1,\"ol\",true],[null,null,21,20,1.0,0.304,1.776,245.098612361499988,0.0,4.0125843709,1.0,1,\"ol\",true],[null,null,21,20,1.0,0.768,9.76,604.987727428100016,0.0,4.0125843709,1.0,1,\"ol\",true],[null,null,22,28,1.0,2.416,29.120000000000001,1054.401497983800027,0.0,2.9011851027,1.0,1,\"ol\",true],[null,null,22,23,1.0,1.376,1.28,1914.236078037800098,0.0,4.0125843709,1.0,1,\"ol\",true],[null,null,5,8,1.0,1.248,13.632,922.103951538700016,0.0,3.0310889132,1.0,1,\"ol\",true],[null,null,22,23,1.0,0.368,1.12,5659.350832668899784,0.0,6.3508529611,1.0,1,\"ol\",true],[null,null,22,21,1.0,0.88,4.8,689.936678303399958,0.0,4.0125843709,1.0,1,\"ol\",true],[null,null,22,21,1.0,0.624,4.8,490.595112080799993,0.0,3.9981506141,1.0,1,\"ol\",true],[null,null,22,28,1.0,2.416,29.120000000000001,1054.401497983800027,0.0,2.9011851027,1.0,1,\"ol\",true],[null,null,23,27,1.0,1.088,11.199999999999999,475.077505129299993,0.0,3.1898602373,1.0,1,\"ol\",true],[null,null,23,24,1.0,1.664,14.56,580.51765492770005,0.0,2.0062921854,1.0,1,\"ol\",true],[null,null,23,24,1.0,1.664,14.56,580.51765492770005,0.0,2.0062921854,1.0,1,\"ol\",true],[null,null,23,27,1.0,1.088,11.199999999999999,475.077505129299993,0.0,3.1898602373,1.0,1,\"ol\",true],[null,null,24,25,1.0,0.32,9.119999999999999,1058.380371561099992,0.0,10.0458946839,1.0,1,\"ol\",true],[null,null,24,25,1.0,0.32,9.119999999999999,1058.380371561099992,0.0,7.9963012283,1.0,1,\"ol\",true],[null,null,6,7,1.0,0.64,0.16,1448.309982136200006,0.0,3.1465589671,1.0,1,\"ol\",true],[null,null,26,25,1.0,0.32,8.048,357.501790920199994,0.0,4.4744645862,1.0,1,\"ol\",true],[null,null,26,25,1.0,0.32,8.048,357.501790920199994,0.0,4.4744645862,1.0,1,\"ol\",true],[null,null,27,26,1.0,0.608,11.375999999999999,596.433149236900022,0.0,4.431163316,1.0,1,\"ol\",true],[null,null,27,26,1.0,0.608,11.375999999999999,596.433149236900022,0.0,4.431163316,1.0,1,\"ol\",true],[null,null,28,27,1.0,0.816,12.736000000000001,676.40850814060002,0.0,4.0125843709,1.0,1,\"ol\",true],[null,null,28,27,1.0,0.816,12.736000000000001,676.40850814060002,0.0,4.0125843709,1.0,1,\"ol\",true],[null,null,6,7,1.0,0.64,0.16,2560.803034348599795,0.0,3.6084391824,1.0,1,\"ol\",true]]}",
+      "orient": "split",
+      "dtype": {
+        "name": "object",
+        "std_type": "object",
+        "from_bus": "uint32",
+        "to_bus": "uint32",
+        "length_km": "float64",
+        "r_ohm_per_km": "float64",
+        "x_ohm_per_km": "float64",
+        "c_nf_per_km": "float64",
+        "g_us_per_km": "float64",
+        "max_i_ka": "float64",
+        "df": "float64",
+        "parallel": "uint32",
+        "type": "object",
+        "in_service": "bool"
+      }
+    },
+    "trafo": {
+      "_module": "pandas.core.frame",
+      "_class": "DataFrame",
+      "_object": "{\"columns\":[\"name\",\"std_type\",\"hv_bus\",\"lv_bus\",\"sn_mva\",\"vn_hv_kv\",\"vn_lv_kv\",\"vk_percent\",\"vkr_percent\",\"pfe_kw\",\"i0_percent\",\"shift_degree\",\"tap_side\",\"tap_neutral\",\"tap_min\",\"tap_max\",\"tap_step_percent\",\"tap_step_degree\",\"tap_pos\",\"tap_phase_shifter\",\"parallel\",\"df\",\"in_service\"],\"index\":[0,1,10,11,12,2,3,4,5,6,7,8,9],\"data\":[[null,null,0,2,132.0,275.0,132.0,19.8215482745,0.924,0.0,-3.9393939394,2.0,null,null,null,null,null,null,null,false,1,1.0,true],[null,null,0,2,132.0,275.0,132.0,19.8215482745,0.924,0.0,-3.9393939394,2.0,null,null,null,null,null,null,null,false,1,1.0,true],[null,null,3,2,648.0,275.0,132.0,26.639027009300001,1.944,0.0,-0.0679012346,0.0,null,null,null,null,null,null,null,false,1,1.0,true],[null,null,3,2,648.0,275.0,132.0,26.639027009300001,1.944,0.0,-0.6790123457,0.0,null,null,null,null,null,null,null,false,1,1.0,true],[null,null,1,2,652.0,275.0,132.0,53.889295279899997,19.586079999999999,0.0,-0.1901840491,0.0,null,null,null,null,null,null,null,false,1,1.0,true],[null,null,6,3,1090.0,400.0,275.0,14.893648478799999,2.2999,0.0,-1.0770642202,0.0,null,null,null,null,null,null,null,false,1,1.0,true],[null,null,5,3,1500.0,400.0,275.0,34.555064751800003,1.95,0.0,-0.9973333333,0.0,null,null,null,null,null,null,null,false,1,1.0,true],[null,null,5,3,1120.0,400.0,275.0,25.801115014699999,1.456,0.0,-1.5696428571,0.0,null,null,null,null,null,null,null,false,1,1.0,true],[null,null,4,3,1000.0,400.0,275.0,24.020824298899999,1.0,0.0,-1.25,0.0,null,null,null,null,null,null,null,false,1,1.0,true],[null,null,4,3,1000.0,400.0,275.0,24.020824298899999,1.0,0.0,-1.25,0.0,null,null,null,null,null,null,null,false,1,1.0,true],[null,null,6,3,1090.0,400.0,275.0,14.8919691781,2.289,0.0,-1.4110091743,0.0,null,null,null,null,null,null,null,false,1,1.0,true],[null,null,11,17,2400.0,400.0,400.0,21.672890347199999,1.776,0.0,-1.2129166667,2.0,null,null,null,null,null,null,null,false,1,1.0,true],[null,null,11,12,3100.0,400.0,400.0,33.550250371600001,2.976,0.0,-1.2419354839,2.0,null,null,null,null,null,null,null,false,1,1.0,true]]}",
+      "orient": "split",
+      "dtype": {
+        "name": "object",
+        "std_type": "object",
+        "hv_bus": "uint32",
+        "lv_bus": "uint32",
+        "sn_mva": "float64",
+        "vn_hv_kv": "float64",
+        "vn_lv_kv": "float64",
+        "vk_percent": "float64",
+        "vkr_percent": "float64",
+        "pfe_kw": "float64",
+        "i0_percent": "float64",
+        "shift_degree": "float64",
+        "tap_side": "object",
+        "tap_neutral": "float64",
+        "tap_min": "float64",
+        "tap_max": "float64",
+        "tap_step_percent": "float64",
+        "tap_step_degree": "float64",
+        "tap_pos": "float64",
+        "tap_phase_shifter": "bool",
+        "parallel": "uint32",
+        "df": "float64",
+        "in_service": "bool"
+      }
+    },
+    "trafo3w": {
+      "_module": "pandas.core.frame",
+      "_class": "DataFrame",
+      "_object": "{\"columns\":[\"name\",\"std_type\",\"hv_bus\",\"mv_bus\",\"lv_bus\",\"sn_hv_mva\",\"sn_mv_mva\",\"sn_lv_mva\",\"vn_hv_kv\",\"vn_mv_kv\",\"vn_lv_kv\",\"vk_hv_percent\",\"vk_mv_percent\",\"vk_lv_percent\",\"vkr_hv_percent\",\"vkr_mv_percent\",\"vkr_lv_percent\",\"pfe_kw\",\"i0_percent\",\"shift_mv_degree\",\"shift_lv_degree\",\"tap_side\",\"tap_neutral\",\"tap_min\",\"tap_max\",\"tap_step_percent\",\"tap_step_degree\",\"tap_pos\",\"tap_at_star_point\",\"in_service\"],\"index\":[],\"data\":[]}",
+      "orient": "split",
+      "dtype": {
+        "name": "object",
+        "std_type": "object",
+        "hv_bus": "uint32",
+        "mv_bus": "uint32",
+        "lv_bus": "uint32",
+        "sn_hv_mva": "float64",
+        "sn_mv_mva": "float64",
+        "sn_lv_mva": "float64",
+        "vn_hv_kv": "float64",
+        "vn_mv_kv": "float64",
+        "vn_lv_kv": "float64",
+        "vk_hv_percent": "float64",
+        "vk_mv_percent": "float64",
+        "vk_lv_percent": "float64",
+        "vkr_hv_percent": "float64",
+        "vkr_mv_percent": "float64",
+        "vkr_lv_percent": "float64",
+        "pfe_kw": "float64",
+        "i0_percent": "float64",
+        "shift_mv_degree": "float64",
+        "shift_lv_degree": "float64",
+        "tap_side": "object",
+        "tap_neutral": "int32",
+        "tap_min": "int32",
+        "tap_max": "int32",
+        "tap_step_percent": "float64",
+        "tap_step_degree": "float64",
+        "tap_pos": "int32",
+        "tap_at_star_point": "bool",
+        "in_service": "bool"
+      }
+    },
+    "impedance": {
+      "_module": "pandas.core.frame",
+      "_class": "DataFrame",
+      "_object": "{\"columns\":[\"name\",\"from_bus\",\"to_bus\",\"rft_pu\",\"xft_pu\",\"rtf_pu\",\"xtf_pu\",\"sn_mva\",\"in_service\"],\"index\":[],\"data\":[]}",
+      "orient": "split",
+      "dtype": {
+        "name": "object",
+        "from_bus": "uint32",
+        "to_bus": "uint32",
+        "rft_pu": "float64",
+        "xft_pu": "float64",
+        "rtf_pu": "float64",
+        "xtf_pu": "float64",
+        "sn_mva": "float64",
+        "in_service": "bool"
+      }
+    },
+    "dcline": {
+      "_module": "pandas.core.frame",
+      "_class": "DataFrame",
+      "_object": "{\"columns\":[\"cost_per_mw\",\"from_bus\",\"in_service\",\"loss_mw\",\"loss_percent\",\"max_p_mw\",\"max_q_from_mvar\",\"max_q_to_mvar\",\"min_q_from_mvar\",\"min_q_to_mvar\",\"name\",\"p_mw\",\"to_bus\",\"vm_from_pu\",\"vm_to_pu\"],\"index\":[],\"data\":[]}",
+      "orient": "split",
+      "dtype": {
+        "cost_per_mw": "float64",
+        "from_bus": "uint32",
+        "in_service": "bool",
+        "loss_mw": "float64",
+        "loss_percent": "float64",
+        "max_p_mw": "float64",
+        "max_q_from_mvar": "float64",
+        "max_q_to_mvar": "float64",
+        "min_q_from_mvar": "float64",
+        "min_q_to_mvar": "float64",
+        "name": "object",
+        "p_mw": "float64",
+        "to_bus": "uint32",
+        "vm_from_pu": "float64",
+        "vm_to_pu": "float64"
+      }
+    },
+    "ward": {
+      "_module": "pandas.core.frame",
+      "_class": "DataFrame",
+      "_object": "{\"columns\":[\"name\",\"bus\",\"ps_mw\",\"qs_mvar\",\"qz_mvar\",\"pz_mw\",\"in_service\"],\"index\":[],\"data\":[]}",
+      "orient": "split",
+      "dtype": {
+        "name": "object",
+        "bus": "uint32",
+        "ps_mw": "float64",
+        "qs_mvar": "float64",
+        "qz_mvar": "float64",
+        "pz_mw": "float64",
+        "in_service": "bool"
+      }
+    },
+    "xward": {
+      "_module": "pandas.core.frame",
+      "_class": "DataFrame",
+      "_object": "{\"columns\":[\"name\",\"bus\",\"ps_mw\",\"qs_mvar\",\"qz_mvar\",\"pz_mw\",\"r_ohm\",\"x_ohm\",\"vm_pu\",\"in_service\"],\"index\":[],\"data\":[]}",
+      "orient": "split",
+      "dtype": {
+        "name": "object",
+        "bus": "uint32",
+        "ps_mw": "float64",
+        "qs_mvar": "float64",
+        "qz_mvar": "float64",
+        "pz_mw": "float64",
+        "r_ohm": "float64",
+        "x_ohm": "float64",
+        "vm_pu": "float64",
+        "in_service": "bool"
+      }
+    },
+    "measurement": {
+      "_module": "pandas.core.frame",
+      "_class": "DataFrame",
+      "_object": "{\"columns\":[\"name\",\"measurement_type\",\"element_type\",\"element\",\"value\",\"std_dev\",\"side\"],\"index\":[],\"data\":[]}",
+      "orient": "split",
+      "dtype": {
+        "name": "object",
+        "measurement_type": "object",
+        "element_type": "object",
+        "element": "uint32",
+        "value": "float64",
+        "std_dev": "float64",
+        "side": "object"
+      }
+    },
+    "pwl_cost": {
+      "_module": "pandas.core.frame",
+      "_class": "DataFrame",
+      "_object": "{\"columns\":[\"power_type\",\"element\",\"et\",\"points\"],\"index\":[],\"data\":[]}",
+      "orient": "split",
+      "dtype": {
+        "power_type": "object",
+        "element": "object",
+        "et": "object",
+        "points": "object"
+      }
+    },
+    "poly_cost": {
+      "_module": "pandas.core.frame",
+      "_class": "DataFrame",
+      "_object": "{\"columns\":[\"element\",\"et\",\"cp0_eur\",\"cp1_eur_per_mw\",\"cp2_eur_per_mw2\",\"cq0_eur\",\"cq1_eur_per_mvar\",\"cq2_eur_per_mvar2\"],\"index\":[0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32,33,34,35,36,37,38,39,40,41,42,43,44,45,46,47,48,49,50,51,52,53,54,55,56,57,58,59,60,61,62,63,64,65],\"data\":[[0.0,\"gen\",0.01,0.01,0.0,0.0,0.0,0.0],[1.0,\"gen\",395.370000000000005,4.42,0.0,0.0,0.0,0.0],[10.0,\"gen\",0.01,0.01,0.0,0.0,0.0,0.0],[11.0,\"gen\",0.01,0.01,0.0,0.0,0.0,0.0],[12.0,\"gen\",382.240000000000009,12.380000000000001,0.33,0.0,0.0,0.0],[13.0,\"gen\",86.379999999999995,56.560000000000009,0.33,0.0,0.0,0.0],[14.0,\"gen\",400.680000000000007,130.0,0.0,0.0,0.0,0.0],[15.0,\"gen\",86.379999999999995,118.000000000000014,0.0,0.0,0.0,0.0],[16.0,\"gen\",400.680000000000007,130.0,0.0,0.0,0.0,0.0],[17.0,\"gen\",0.01,0.01,0.0,0.0,0.0,0.0],[18.0,\"gen\",395.370000000000005,4.42,0.0,0.0,0.0,0.0],[19.0,\"gen\",0.01,0.01,0.0,0.0,0.0,0.0],[2.0,\"gen\",86.379999999999995,56.560000000000009,0.33,0.0,0.0,0.0],[20.0,\"gen\",0.01,0.01,0.0,0.0,0.0,0.0],[21.0,\"gen\",86.379999999999995,118.000000000000014,0.0,0.0,0.0,0.0],[22.0,\"gen\",400.680000000000007,16.379999999999999,0.39,0.0,0.0,0.0],[23.0,\"gen\",86.379999999999995,118.000000000000014,0.0,0.0,0.0,0.0],[24.0,\"gen\",400.680000000000007,130.0,0.0,0.0,0.0,0.0],[25.0,\"gen\",639.980000000000018,19.379999999999999,0.1,0.0,0.0,0.0],[26.0,\"gen\",0.01,0.01,0.0,0.0,0.0,0.0],[27.0,\"gen\",86.379999999999995,118.000000000000014,0.0,0.0,0.0,0.0],[28.0,\"gen\",382.240000000000009,12.380000000000001,0.33,0.0,0.0,0.0],[29.0,\"gen\",400.680000000000007,130.0,0.0,0.0,0.0,0.0],[3.0,\"gen\",0.01,0.01,0.0,0.0,0.0,0.0],[30.0,\"gen\",400.680000000000007,130.0,0.0,0.0,0.0,0.0],[31.0,\"gen\",382.149999999999977,10.300000000000001,0.01,0.0,0.0,0.0],[32.0,\"gen\",400.680000000000007,130.0,0.0,0.0,0.0,0.0],[33.0,\"gen\",400.680000000000007,130.0,0.0,0.0,0.0,0.0],[34.0,\"gen\",86.379999999999995,56.560000000000009,0.33,0.0,0.0,0.0],[35.0,\"gen\",382.240000000000009,12.380000000000001,0.33,0.0,0.0,0.0],[36.0,\"gen\",382.240000000000009,12.380000000000001,0.33,0.0,0.0,0.0],[37.0,\"gen\",400.680000000000007,130.0,0.0,0.0,0.0,0.0],[38.0,\"gen\",400.680000000000007,130.0,0.0,0.0,0.0,0.0],[39.0,\"gen\",382.240000000000009,12.380000000000001,0.33,0.0,0.0,0.0],[4.0,\"gen\",0.01,0.01,0.0,0.0,0.0,0.0],[40.0,\"gen\",382.240000000000009,12.380000000000001,0.33,0.0,0.0,0.0],[41.0,\"gen\",400.680000000000007,130.0,0.0,0.0,0.0,0.0],[42.0,\"gen\",400.680000000000007,130.0,0.0,0.0,0.0,0.0],[43.0,\"gen\",0.01,0.01,0.0,0.0,0.0,0.0],[44.0,\"gen\",392.149999999999977,10.300000000000001,0.01,0.0,0.0,0.0],[45.0,\"gen\",0.01,0.01,0.0,0.0,0.0,0.0],[46.0,\"gen\",400.680000000000007,130.0,0.0,0.0,0.0,0.0],[47.0,\"gen\",400.680000000000007,130.0,0.0,0.0,0.0,0.0],[48.0,\"gen\",382.240000000000009,12.380000000000001,0.33,0.0,0.0,0.0],[49.0,\"gen\",639.980000000000018,19.379999999999999,0.1,0.0,0.0,0.0],[5.0,\"gen\",400.680000000000007,130.0,0.0,0.0,0.0,0.0],[50.0,\"gen\",382.149999999999977,10.300000000000001,0.01,0.0,0.0,0.0],[51.0,\"gen\",400.680000000000007,130.0,0.0,0.0,0.0,0.0],[52.0,\"gen\",650.0,130.0,0.0,0.0,0.0,0.0],[53.0,\"gen\",400.680000000000007,130.0,0.0,0.0,0.0,0.0],[54.0,\"gen\",665.110000000000014,11.84,0.33,0.0,0.0,0.0],[55.0,\"gen\",382.240000000000009,12.380000000000001,0.33,0.0,0.0,0.0],[56.0,\"gen\",400.680000000000007,16.379999999999999,0.39,0.0,0.0,0.0],[57.0,\"gen\",400.680000000000007,130.0,0.0,0.0,0.0,0.0],[58.0,\"gen\",665.110000000000014,11.84,0.33,0.0,0.0,0.0],[0.0,\"ext_grid\",86.379999999999995,118.000000000000014,0.0,0.0,0.0,0.0],[6.0,\"gen\",400.680000000000007,130.0,0.0,0.0,0.0,0.0],[0.0,\"sgen\",0.01,0.01,0.0,0.0,0.0,0.0],[59.0,\"gen\",400.680000000000007,130.0,0.0,0.0,0.0,0.0],[60.0,\"gen\",400.680000000000007,130.0,0.0,0.0,0.0,0.0],[61.0,\"gen\",86.379999999999995,118.000000000000014,0.0,0.0,0.0,0.0],[62.0,\"gen\",400.680000000000007,130.0,0.0,0.0,0.0,0.0],[63.0,\"gen\",650.0,130.0,0.0,0.0,0.0,0.0],[7.0,\"gen\",0.01,0.01,0.0,0.0,0.0,0.0],[8.0,\"gen\",0.01,0.01,0.0,0.0,0.0,0.0],[9.0,\"gen\",395.370000000000005,4.42,0.0,0.0,0.0,0.0]]}",
+      "orient": "split",
+      "dtype": {
+        "element": "object",
+        "et": "object",
+        "cp0_eur": "float64",
+        "cp1_eur_per_mw": "float64",
+        "cp2_eur_per_mw2": "float64",
+        "cq0_eur": "float64",
+        "cq1_eur_per_mvar": "float64",
+        "cq2_eur_per_mvar2": "float64"
+      }
+    },
+    "controller": {
+      "_module": "pandas.core.frame",
+      "_class": "DataFrame",
+      "_object": "{\"columns\":[\"object\",\"in_service\",\"order\",\"level\",\"recycle\"],\"index\":[],\"data\":[]}",
+      "orient": "split",
+      "dtype": {
+        "object": "object",
+        "in_service": "bool",
+        "order": "float64",
+        "level": "object",
+        "recycle": "bool"
+      }
+    },
+    "line_geodata": {
+      "_module": "pandas.core.frame",
+      "_class": "DataFrame",
+      "_object": "{\"columns\":[\"coords\"],\"index\":[],\"data\":[]}",
+      "orient": "split",
+      "dtype": {
+        "coords": "object"
+      }
+    },
+    "bus_geodata": {
+      "_module": "pandas.core.frame",
+      "_class": "DataFrame",
+      "_object": "{\"columns\":[\"x\",\"y\",\"coords\"],\"index\":[0,1,10,11,12,13,14,15,16,17,18,19,2,20,21,22,23,24,25,26,27,28,3,4,5,6,7,8,9],\"data\":[[0.4547712237,-3.3551312574,null],[0.3720237935,-2.3015211945,null],[-1.0714054232,1.5554725152,null],[-0.4581256809,2.5810382487,null],[-1.3772171442,2.4080399234,null],[-2.719830972,2.1203004533,null],[-2.1402662804,1.8527242569,null],[-2.9311102326,2.8854357274,null],[-2.0466159916,3.4826032141,null],[-1.0510703204,3.5219672558,null],[-4.118877048,3.0637623107,null],[-4.594422093,4.1421486215,null],[-0.3934443266,-2.7315808859,null],[-3.5982690886,3.725573529,null],[-2.6949758916,4.0064689065,null],[-1.6137002971,4.5864123255,null],[-2.4137671185,5.3982240978,null],[-3.3834217046,4.8000126369,null],[-4.2962382978,5.3445908289,null],[-3.7078336534,6.421328652,null],[-2.4652328471,6.4185808963,null],[-1.399879733,5.7291653716,null],[-0.5631254584,-1.6778037508,null],[-1.6480702257,-1.7718489874,null],[-1.1939932169,-0.8332070171,null],[-0.2095321958,-0.7092506319,null],[-0.6068404444,0.282741895,null],[-1.3297797538,0.3174900356,null],[-1.9969767921,0.7386230554,null]]}",
+      "orient": "split",
+      "dtype": {
+        "x": "float64",
+        "y": "float64",
+        "coords": "object"
+      }
+    },
+    "version": "2.2.1",
+    "converged": true,
+    "name": "",
+    "f_hz": 50.0,
+    "sn_mva": 1.0,
+    "std_types": {
+      "line": {
+        "N2XS(FL)2Y 1x300 RM/35 64/110 kV": {
+          "type": "cs",
+          "r_ohm_per_km": 0.06,
+          "q_mm2": 300,
+          "x_ohm_per_km": 0.144,
+          "c_nf_per_km": 144.0,
+          "max_i_ka": 0.588
+        },
+        "149-AL1/24-ST1A 10.0": {
+          "type": "ol",
+          "r_ohm_per_km": 0.194,
+          "q_mm2": 149,
+          "x_ohm_per_km": 0.315,
+          "c_nf_per_km": 11.25,
+          "max_i_ka": 0.47
+        },
+        "15-AL1/3-ST1A 0.4": {
+          "type": "ol",
+          "r_ohm_per_km": 1.8769,
+          "q_mm2": 16,
+          "x_ohm_per_km": 0.35,
+          "c_nf_per_km": 11.0,
+          "max_i_ka": 0.105
+        },
+        "NAYY 4x120 SE": {
+          "type": "cs",
+          "r_ohm_per_km": 0.225,
+          "q_mm2": 120,
+          "x_ohm_per_km": 0.08,
+          "c_nf_per_km": 264.0,
+          "max_i_ka": 0.242
+        },
+        "48-AL1/8-ST1A 10.0": {
+          "type": "ol",
+          "r_ohm_per_km": 0.5939,
+          "q_mm2": 48,
+          "x_ohm_per_km": 0.35,
+          "c_nf_per_km": 10.1,
+          "max_i_ka": 0.21
+        },
+        "NAYY 4x150 SE": {
+          "type": "cs",
+          "r_ohm_per_km": 0.208,
+          "q_mm2": 150,
+          "x_ohm_per_km": 0.08,
+          "c_nf_per_km": 261.0,
+          "max_i_ka": 0.27
+        },
+        "243-AL1/39-ST1A 20.0": {
+          "type": "ol",
+          "r_ohm_per_km": 0.1188,
+          "q_mm2": 243,
+          "x_ohm_per_km": 0.32,
+          "c_nf_per_km": 11.0,
+          "max_i_ka": 0.645
+        },
+        "184-AL1/30-ST1A 110.0": {
+          "type": "ol",
+          "r_ohm_per_km": 0.1571,
+          "q_mm2": 184,
+          "x_ohm_per_km": 0.4,
+          "c_nf_per_km": 8.8,
+          "max_i_ka": 0.535
+        },
+        "149-AL1/24-ST1A 110.0": {
+          "type": "ol",
+          "r_ohm_per_km": 0.194,
+          "q_mm2": 149,
+          "x_ohm_per_km": 0.41,
+          "c_nf_per_km": 8.75,
+          "max_i_ka": 0.47
+        },
+        "NA2XS2Y 1x240 RM/25 12/20 kV": {
+          "type": "cs",
+          "r_ohm_per_km": 0.122,
+          "q_mm2": 240,
+          "x_ohm_per_km": 0.112,
+          "c_nf_per_km": 304.0,
+          "max_i_ka": 0.421
+        },
+        "48-AL1/8-ST1A 20.0": {
+          "type": "ol",
+          "r_ohm_per_km": 0.5939,
+          "q_mm2": 48,
+          "x_ohm_per_km": 0.372,
+          "c_nf_per_km": 9.5,
+          "max_i_ka": 0.21
+        },
+        "24-AL1/4-ST1A 0.4": {
+          "type": "ol",
+          "r_ohm_per_km": 1.2012,
+          "q_mm2": 24,
+          "x_ohm_per_km": 0.335,
+          "c_nf_per_km": 11.25,
+          "max_i_ka": 0.14
+        },
+        "N2XS(FL)2Y 1x240 RM/35 64/110 kV": {
+          "type": "cs",
+          "r_ohm_per_km": 0.075,
+          "q_mm2": 240,
+          "x_ohm_per_km": 0.149,
+          "c_nf_per_km": 135.0,
+          "max_i_ka": 0.526
+        },
+        "94-AL1/15-ST1A 20.0": {
+          "type": "ol",
+          "r_ohm_per_km": 0.306,
+          "q_mm2": 94,
+          "x_ohm_per_km": 0.35,
+          "c_nf_per_km": 10.0,
+          "max_i_ka": 0.35
+        },
+        "NAYY 4x50 SE": {
+          "type": "cs",
+          "r_ohm_per_km": 0.642,
+          "q_mm2": 50,
+          "x_ohm_per_km": 0.083,
+          "c_nf_per_km": 210.0,
+          "max_i_ka": 0.142
+        },
+        "490-AL1/64-ST1A 380.0": {
+          "type": "ol",
+          "r_ohm_per_km": 0.059,
+          "q_mm2": 490,
+          "x_ohm_per_km": 0.253,
+          "c_nf_per_km": 11.0,
+          "max_i_ka": 0.96
+        },
+        "48-AL1/8-ST1A 0.4": {
+          "type": "ol",
+          "r_ohm_per_km": 0.5939,
+          "q_mm2": 48,
+          "x_ohm_per_km": 0.3,
+          "c_nf_per_km": 12.2,
+          "max_i_ka": 0.21
+        },
+        "94-AL1/15-ST1A 10.0": {
+          "type": "ol",
+          "r_ohm_per_km": 0.306,
+          "q_mm2": 94,
+          "x_ohm_per_km": 0.33,
+          "c_nf_per_km": 10.75,
+          "max_i_ka": 0.35
+        },
+        "94-AL1/15-ST1A 0.4": {
+          "type": "ol",
+          "r_ohm_per_km": 0.306,
+          "q_mm2": 94,
+          "x_ohm_per_km": 0.29,
+          "c_nf_per_km": 13.2,
+          "max_i_ka": 0.35
+        },
+        "NA2XS2Y 1x185 RM/25 12/20 kV": {
+          "type": "cs",
+          "r_ohm_per_km": 0.161,
+          "q_mm2": 185,
+          "x_ohm_per_km": 0.117,
+          "c_nf_per_km": 273.0,
+          "max_i_ka": 0.362
+        },
+        "243-AL1/39-ST1A 110.0": {
+          "type": "ol",
+          "r_ohm_per_km": 0.1188,
+          "q_mm2": 243,
+          "x_ohm_per_km": 0.39,
+          "c_nf_per_km": 9.0,
+          "max_i_ka": 0.645
+        },
+        "490-AL1/64-ST1A 220.0": {
+          "type": "ol",
+          "r_ohm_per_km": 0.059,
+          "q_mm2": 490,
+          "x_ohm_per_km": 0.285,
+          "c_nf_per_km": 10.0,
+          "max_i_ka": 0.96
+        },
+        "N2XS(FL)2Y 1x185 RM/35 64/110 kV": {
+          "type": "cs",
+          "r_ohm_per_km": 0.099,
+          "q_mm2": 185,
+          "x_ohm_per_km": 0.156,
+          "c_nf_per_km": 125.0,
+          "max_i_ka": 0.457
+        },
+        "N2XS(FL)2Y 1x120 RM/35 64/110 kV": {
+          "type": "cs",
+          "r_ohm_per_km": 0.153,
+          "q_mm2": 120,
+          "x_ohm_per_km": 0.166,
+          "c_nf_per_km": 112.0,
+          "max_i_ka": 0.366
+        },
+        "NA2XS2Y 1x95 RM/25 12/20 kV": {
+          "type": "cs",
+          "r_ohm_per_km": 0.313,
+          "q_mm2": 95,
+          "x_ohm_per_km": 0.132,
+          "c_nf_per_km": 216.0,
+          "max_i_ka": 0.252
+        },
+        "184-AL1/30-ST1A 20.0": {
+          "type": "ol",
+          "r_ohm_per_km": 0.1571,
+          "q_mm2": 184,
+          "x_ohm_per_km": 0.33,
+          "c_nf_per_km": 10.75,
+          "max_i_ka": 0.535
+        },
+        "149-AL1/24-ST1A 20.0": {
+          "type": "ol",
+          "r_ohm_per_km": 0.194,
+          "q_mm2": 149,
+          "x_ohm_per_km": 0.337,
+          "c_nf_per_km": 10.5,
+          "max_i_ka": 0.47
+        },
+        "305-AL1/39-ST1A 110.0": {
+          "type": "ol",
+          "r_ohm_per_km": 0.0949,
+          "q_mm2": 305,
+          "x_ohm_per_km": 0.38,
+          "c_nf_per_km": 9.2,
+          "max_i_ka": 0.74
+        }
+      },
+      "trafo": {
+        "0.4 MVA 20/0.4 kV": {
+          "shift_degree": 150,
+          "vector_group": "Dyn5",
+          "pfe_kw": 1.35,
+          "vn_hv_kv": 20.0,
+          "i0_percent": 0.3375,
+          "vn_lv_kv": 0.4,
+          "sn_mva": 0.4,
+          "tap_neutral": 0,
+          "tap_min": -2,
+          "vkr_percent": 1.425,
+          "tap_step_percent": 2.5,
+          "tap_side": "hv",
+          "vk_percent": 6.0,
+          "tap_max": 2
+        },
+        "0.25 MVA 20/0.4 kV": {
+          "shift_degree": 150,
+          "vector_group": "Yzn5",
+          "pfe_kw": 0.8,
+          "vn_hv_kv": 20.0,
+          "i0_percent": 0.32,
+          "vn_lv_kv": 0.4,
+          "sn_mva": 0.25,
+          "tap_neutral": 0,
+          "tap_min": -2,
+          "vkr_percent": 1.44,
+          "tap_step_percent": 2.5,
+          "tap_side": "hv",
+          "vk_percent": 6.0,
+          "tap_max": 2
+        },
+        "0.25 MVA 10/0.4 kV": {
+          "shift_degree": 150,
+          "vector_group": "Dyn5",
+          "pfe_kw": 0.6,
+          "vn_hv_kv": 10.0,
+          "i0_percent": 0.24,
+          "vn_lv_kv": 0.4,
+          "sn_mva": 0.25,
+          "tap_neutral": 0,
+          "tap_min": -2,
+          "vkr_percent": 1.2,
+          "tap_step_percent": 2.5,
+          "tap_side": "hv",
+          "vk_percent": 4.0,
+          "tap_max": 2
+        },
+        "160 MVA 380/110 kV": {
+          "shift_degree": 0,
+          "vector_group": "Yy0",
+          "pfe_kw": 60.0,
+          "vn_hv_kv": 380.0,
+          "i0_percent": 0.06,
+          "vn_lv_kv": 110.0,
+          "sn_mva": 160.0,
+          "tap_neutral": 0,
+          "tap_min": -9,
+          "vkr_percent": 0.25,
+          "tap_step_percent": 1.5,
+          "tap_side": "hv",
+          "vk_percent": 12.2,
+          "tap_max": 9
+        },
+        "63 MVA 110/10 kV": {
+          "shift_degree": 150,
+          "vector_group": "YNd5",
+          "pfe_kw": 31.51,
+          "vn_hv_kv": 110.0,
+          "i0_percent": 0.078,
+          "vn_lv_kv": 10.0,
+          "sn_mva": 63.0,
+          "tap_neutral": 0,
+          "tap_min": -9,
+          "vkr_percent": 0.31,
+          "tap_step_percent": 1.5,
+          "tap_side": "hv",
+          "vk_percent": 10.04,
+          "tap_max": 9
+        },
+        "0.63 MVA 20/0.4 kV": {
+          "shift_degree": 150,
+          "vector_group": "Dyn5",
+          "pfe_kw": 1.65,
+          "vn_hv_kv": 20.0,
+          "i0_percent": 0.2619,
+          "vn_lv_kv": 0.4,
+          "sn_mva": 0.63,
+          "tap_neutral": 0,
+          "tap_min": -2,
+          "vkr_percent": 1.206,
+          "tap_step_percent": 2.5,
+          "tap_side": "hv",
+          "vk_percent": 6.0,
+          "tap_max": 2
+        },
+        "0.4 MVA 10/0.4 kV": {
+          "shift_degree": 150,
+          "vector_group": "Dyn5",
+          "pfe_kw": 0.95,
+          "vn_hv_kv": 10.0,
+          "i0_percent": 0.2375,
+          "vn_lv_kv": 0.4,
+          "sn_mva": 0.4,
+          "tap_neutral": 0,
+          "tap_min": -2,
+          "vkr_percent": 1.325,
+          "tap_step_percent": 2.5,
+          "tap_side": "hv",
+          "vk_percent": 4.0,
+          "tap_max": 2
+        },
+        "0.63 MVA 10/0.4 kV": {
+          "shift_degree": 150,
+          "vector_group": "Dyn5",
+          "pfe_kw": 1.18,
+          "vn_hv_kv": 10.0,
+          "i0_percent": 0.1873,
+          "vn_lv_kv": 0.4,
+          "sn_mva": 0.63,
+          "tap_neutral": 0,
+          "tap_min": -2,
+          "vkr_percent": 1.0794,
+          "tap_step_percent": 2.5,
+          "tap_side": "hv",
+          "vk_percent": 4.0,
+          "tap_max": 2
+        },
+        "63 MVA 110/20 kV": {
+          "shift_degree": 150,
+          "vector_group": "YNd5",
+          "pfe_kw": 33.0,
+          "vn_hv_kv": 110.0,
+          "i0_percent": 0.086,
+          "vn_lv_kv": 20.0,
+          "sn_mva": 63.0,
+          "tap_neutral": 0,
+          "tap_min": -9,
+          "vkr_percent": 0.322,
+          "tap_step_percent": 1.5,
+          "tap_side": "hv",
+          "vk_percent": 11.2,
+          "tap_max": 9
+        },
+        "100 MVA 220/110 kV": {
+          "shift_degree": 0,
+          "vector_group": "Yy0",
+          "pfe_kw": 55.0,
+          "vn_hv_kv": 220.0,
+          "i0_percent": 0.06,
+          "vn_lv_kv": 110.0,
+          "sn_mva": 100.0,
+          "tap_neutral": 0,
+          "tap_min": -9,
+          "vkr_percent": 0.26,
+          "tap_step_percent": 1.5,
+          "tap_side": "hv",
+          "vk_percent": 12.0,
+          "tap_max": 9
+        },
+        "25 MVA 110/10 kV": {
+          "shift_degree": 150,
+          "vector_group": "YNd5",
+          "pfe_kw": 28.51,
+          "vn_hv_kv": 110.0,
+          "i0_percent": 0.073,
+          "vn_lv_kv": 10.0,
+          "sn_mva": 25.0,
+          "tap_neutral": 0,
+          "tap_min": -9,
+          "vkr_percent": 0.276,
+          "tap_step_percent": 1.5,
+          "tap_side": "hv",
+          "vk_percent": 10.04,
+          "tap_max": 9
+        },
+        "40 MVA 110/20 kV": {
+          "shift_degree": 150,
+          "vector_group": "YNd5",
+          "pfe_kw": 31.0,
+          "vn_hv_kv": 110.0,
+          "i0_percent": 0.08,
+          "vn_lv_kv": 20.0,
+          "sn_mva": 40.0,
+          "tap_neutral": 0,
+          "tap_min": -9,
+          "vkr_percent": 0.302,
+          "tap_step_percent": 1.5,
+          "tap_side": "hv",
+          "vk_percent": 11.2,
+          "tap_max": 9
+        },
+        "25 MVA 110/20 kV": {
+          "shift_degree": 150,
+          "vector_group": "YNd5",
+          "pfe_kw": 29.0,
+          "vn_hv_kv": 110.0,
+          "i0_percent": 0.071,
+          "vn_lv_kv": 20.0,
+          "sn_mva": 25.0,
+          "tap_neutral": 0,
+          "tap_min": -9,
+          "vkr_percent": 0.282,
+          "tap_step_percent": 1.5,
+          "tap_side": "hv",
+          "vk_percent": 11.2,
+          "tap_max": 9
+        },
+        "40 MVA 110/10 kV": {
+          "shift_degree": 150,
+          "vector_group": "YNd5",
+          "pfe_kw": 30.45,
+          "vn_hv_kv": 110.0,
+          "i0_percent": 0.076,
+          "vn_lv_kv": 10.0,
+          "sn_mva": 40.0,
+          "tap_neutral": 0,
+          "tap_min": -9,
+          "vkr_percent": 0.295,
+          "tap_step_percent": 1.5,
+          "tap_side": "hv",
+          "vk_percent": 10.04,
+          "tap_max": 9
+        }
+      },
+      "trafo3w": {
+        "63/25/38 MVA 110/10/10 kV": {
+          "vector_group": "YN0yn0yn0",
+          "vn_mv_kv": 10,
+          "vn_lv_kv": 10,
+          "shift_lv_degree": 0,
+          "shift_mv_degree": 0,
+          "pfe_kw": 35,
+          "vn_hv_kv": 110,
+          "i0_percent": 0.89,
+          "sn_lv_mva": 38.0,
+          "sn_hv_mva": 63.0,
+          "sn_mv_mva": 25.0,
+          "vkr_lv_percent": 0.35,
+          "tap_neutral": 0,
+          "tap_min": -10,
+          "vk_mv_percent": 10.4,
+          "vkr_hv_percent": 0.28,
+          "vk_lv_percent": 10.4,
+          "tap_max": 10,
+          "vkr_mv_percent": 0.32,
+          "tap_step_percent": 1.2,
+          "tap_side": "hv",
+          "vk_hv_percent": 10.4
+        },
+        "63/25/38 MVA 110/20/10 kV": {
+          "vector_group": "YN0yn0yn0",
+          "vn_mv_kv": 20,
+          "vn_lv_kv": 10,
+          "shift_lv_degree": 0,
+          "shift_mv_degree": 0,
+          "pfe_kw": 35,
+          "vn_hv_kv": 110,
+          "i0_percent": 0.89,
+          "sn_lv_mva": 38.0,
+          "sn_hv_mva": 63.0,
+          "sn_mv_mva": 25.0,
+          "vkr_lv_percent": 0.35,
+          "tap_neutral": 0,
+          "tap_min": -10,
+          "vk_mv_percent": 10.4,
+          "vkr_hv_percent": 0.28,
+          "vk_lv_percent": 10.4,
+          "tap_max": 10,
+          "vkr_mv_percent": 0.32,
+          "tap_step_percent": 1.2,
+          "tap_side": "hv",
+          "vk_hv_percent": 10.4
+        }
+      }
+    },
+    "res_bus": {
+      "_module": "pandas.core.frame",
+      "_class": "DataFrame",
+      "_object": "{\"columns\":[\"vm_pu\",\"va_degree\",\"p_mw\",\"q_mvar\"],\"index\":[],\"data\":[]}",
+      "orient": "split",
+      "dtype": {
+        "vm_pu": "float64",
+        "va_degree": "float64",
+        "p_mw": "float64",
+        "q_mvar": "float64"
+      }
+    },
+    "res_line": {
+      "_module": "pandas.core.frame",
+      "_class": "DataFrame",
+      "_object": "{\"columns\":[\"p_from_mw\",\"q_from_mvar\",\"p_to_mw\",\"q_to_mvar\",\"pl_mw\",\"ql_mvar\",\"i_from_ka\",\"i_to_ka\",\"i_ka\",\"vm_from_pu\",\"va_from_degree\",\"vm_to_pu\",\"va_to_degree\",\"loading_percent\"],\"index\":[],\"data\":[]}",
+      "orient": "split",
+      "dtype": {
+        "p_from_mw": "float64",
+        "q_from_mvar": "float64",
+        "p_to_mw": "float64",
+        "q_to_mvar": "float64",
+        "pl_mw": "float64",
+        "ql_mvar": "float64",
+        "i_from_ka": "float64",
+        "i_to_ka": "float64",
+        "i_ka": "float64",
+        "vm_from_pu": "float64",
+        "va_from_degree": "float64",
+        "vm_to_pu": "float64",
+        "va_to_degree": "float64",
+        "loading_percent": "float64"
+      }
+    },
+    "res_trafo": {
+      "_module": "pandas.core.frame",
+      "_class": "DataFrame",
+      "_object": "{\"columns\":[\"p_hv_mw\",\"q_hv_mvar\",\"p_lv_mw\",\"q_lv_mvar\",\"pl_mw\",\"ql_mvar\",\"i_hv_ka\",\"i_lv_ka\",\"vm_hv_pu\",\"va_hv_degree\",\"vm_lv_pu\",\"va_lv_degree\",\"loading_percent\"],\"index\":[],\"data\":[]}",
+      "orient": "split",
+      "dtype": {
+        "p_hv_mw": "float64",
+        "q_hv_mvar": "float64",
+        "p_lv_mw": "float64",
+        "q_lv_mvar": "float64",
+        "pl_mw": "float64",
+        "ql_mvar": "float64",
+        "i_hv_ka": "float64",
+        "i_lv_ka": "float64",
+        "vm_hv_pu": "float64",
+        "va_hv_degree": "float64",
+        "vm_lv_pu": "float64",
+        "va_lv_degree": "float64",
+        "loading_percent": "float64"
+      }
+    },
+    "res_trafo3w": {
+      "_module": "pandas.core.frame",
+      "_class": "DataFrame",
+      "_object": "{\"columns\":[\"p_hv_mw\",\"q_hv_mvar\",\"p_mv_mw\",\"q_mv_mvar\",\"p_lv_mw\",\"q_lv_mvar\",\"pl_mw\",\"ql_mvar\",\"i_hv_ka\",\"i_mv_ka\",\"i_lv_ka\",\"vm_hv_pu\",\"va_hv_degree\",\"vm_mv_pu\",\"va_mv_degree\",\"vm_lv_pu\",\"va_lv_degree\",\"va_internal_degree\",\"vm_internal_pu\",\"loading_percent\"],\"index\":[],\"data\":[]}",
+      "orient": "split",
+      "dtype": {
+        "p_hv_mw": "float64",
+        "q_hv_mvar": "float64",
+        "p_mv_mw": "float64",
+        "q_mv_mvar": "float64",
+        "p_lv_mw": "float64",
+        "q_lv_mvar": "float64",
+        "pl_mw": "float64",
+        "ql_mvar": "float64",
+        "i_hv_ka": "float64",
+        "i_mv_ka": "float64",
+        "i_lv_ka": "float64",
+        "vm_hv_pu": "float64",
+        "va_hv_degree": "float64",
+        "vm_mv_pu": "float64",
+        "va_mv_degree": "float64",
+        "vm_lv_pu": "float64",
+        "va_lv_degree": "float64",
+        "va_internal_degree": "float64",
+        "vm_internal_pu": "float64",
+        "loading_percent": "float64"
+      }
+    },
+    "res_impedance": {
+      "_module": "pandas.core.frame",
+      "_class": "DataFrame",
+      "_object": "{\"columns\":[\"p_from_mw\",\"q_from_mvar\",\"p_to_mw\",\"q_to_mvar\",\"pl_mw\",\"ql_mvar\",\"i_from_ka\",\"i_to_ka\"],\"index\":[],\"data\":[]}",
+      "orient": "split",
+      "dtype": {
+        "p_from_mw": "float64",
+        "q_from_mvar": "float64",
+        "p_to_mw": "float64",
+        "q_to_mvar": "float64",
+        "pl_mw": "float64",
+        "ql_mvar": "float64",
+        "i_from_ka": "float64",
+        "i_to_ka": "float64"
+      }
+    },
+    "res_ext_grid": {
+      "_module": "pandas.core.frame",
+      "_class": "DataFrame",
+      "_object": "{\"columns\":[\"p_mw\",\"q_mvar\"],\"index\":[],\"data\":[]}",
+      "orient": "split",
+      "dtype": {
+        "p_mw": "float64",
+        "q_mvar": "float64"
+      }
+    },
+    "res_load": {
+      "_module": "pandas.core.frame",
+      "_class": "DataFrame",
+      "_object": "{\"columns\":[\"p_mw\",\"q_mvar\"],\"index\":[],\"data\":[]}",
+      "orient": "split",
+      "dtype": {
+        "p_mw": "float64",
+        "q_mvar": "float64"
+      }
+    },
+    "res_sgen": {
+      "_module": "pandas.core.frame",
+      "_class": "DataFrame",
+      "_object": "{\"columns\":[\"p_mw\",\"q_mvar\"],\"index\":[],\"data\":[]}",
+      "orient": "split",
+      "dtype": {
+        "p_mw": "float64",
+        "q_mvar": "float64"
+      }
+    },
+    "res_storage": {
+      "_module": "pandas.core.frame",
+      "_class": "DataFrame",
+      "_object": "{\"columns\":[\"p_mw\",\"q_mvar\"],\"index\":[],\"data\":[]}",
+      "orient": "split",
+      "dtype": {
+        "p_mw": "float64",
+        "q_mvar": "float64"
+      }
+    },
+    "res_shunt": {
+      "_module": "pandas.core.frame",
+      "_class": "DataFrame",
+      "_object": "{\"columns\":[\"p_mw\",\"q_mvar\",\"vm_pu\"],\"index\":[],\"data\":[]}",
+      "orient": "split",
+      "dtype": {
+        "p_mw": "float64",
+        "q_mvar": "float64",
+        "vm_pu": "float64"
+      }
+    },
+    "res_gen": {
+      "_module": "pandas.core.frame",
+      "_class": "DataFrame",
+      "_object": "{\"columns\":[\"p_mw\",\"q_mvar\",\"va_degree\",\"vm_pu\"],\"index\":[],\"data\":[]}",
+      "orient": "split",
+      "dtype": {
+        "p_mw": "float64",
+        "q_mvar": "float64",
+        "va_degree": "float64",
+        "vm_pu": "float64"
+      }
+    },
+    "res_ward": {
+      "_module": "pandas.core.frame",
+      "_class": "DataFrame",
+      "_object": "{\"columns\":[\"p_mw\",\"q_mvar\",\"vm_pu\"],\"index\":[],\"data\":[]}",
+      "orient": "split",
+      "dtype": {
+        "p_mw": "float64",
+        "q_mvar": "float64",
+        "vm_pu": "float64"
+      }
+    },
+    "res_xward": {
+      "_module": "pandas.core.frame",
+      "_class": "DataFrame",
+      "_object": "{\"columns\":[\"p_mw\",\"q_mvar\",\"vm_pu\",\"va_internal_degree\",\"vm_internal_pu\"],\"index\":[],\"data\":[]}",
+      "orient": "split",
+      "dtype": {
+        "p_mw": "float64",
+        "q_mvar": "float64",
+        "vm_pu": "float64",
+        "va_internal_degree": "float64",
+        "vm_internal_pu": "float64"
+      }
+    },
+    "res_dcline": {
+      "_module": "pandas.core.frame",
+      "_class": "DataFrame",
+      "_object": "{\"columns\":[\"p_from_mw\",\"q_from_mvar\",\"p_to_mw\",\"q_to_mvar\",\"pl_mw\",\"vm_from_pu\",\"va_from_degree\",\"vm_to_pu\",\"va_to_degree\"],\"index\":[],\"data\":[]}",
+      "orient": "split",
+      "dtype": {
+        "p_from_mw": "float64",
+        "q_from_mvar": "float64",
+        "p_to_mw": "float64",
+        "q_to_mvar": "float64",
+        "pl_mw": "float64",
+        "vm_from_pu": "float64",
+        "va_from_degree": "float64",
+        "vm_to_pu": "float64",
+        "va_to_degree": "float64"
+      }
+    },
+    "user_pf_options": {},
+    "OPF_converged": false
+  }
 }

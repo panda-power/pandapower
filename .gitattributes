@@ -1,1 +1,2 @@
 tutorials/* linguist-vendored
+*.rst text eol=lf

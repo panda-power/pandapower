@@ -1,0 +1,20 @@
+**Parameter**;**Datatype**;**Value Range**;**Explanation**
+name;string;;name of the load
+bus *;integer;;index of connected bus
+p_a_mw*;float;:math:`\geq 0`;Phase A active power of the load [MW]
+p_b_mw*;float;:math:`\geq 0`;Phase B active power of the load [MW]
+p_c_mw*;float;:math:`\geq 0`;Phase C active power of the load [MW]
+q_a_mvar*;float;;Phase A reactive power of the load [MVar]
+q_b_mvar*;float;;Phase B reactive power of the load [MVar]
+q_c_mvar*;float;;Phase C reactive power of the load [MVar]
+const_z_percent*;float;:math:`[0,100]`;percentage of p_mw and q_mvar that is associated to constant impedance load at rated voltage [:math:`\%`]
+const_i_percent*;float;:math:`[0,100]`;percentage of p_mw and q_mvar that is associated to constant current load at rated voltage [:math:`\%`]
+sn_mva;float;:math:`>0`;rated power of the load [kVA]
+scaling *;float;:math:`\geq 0`;scaling factor for active and reactive power
+in_service*;boolean;True / False;specifies if the load is in service.
+type*;String;wye/delta;Connection Type of 3 Phase Load(Valid for three phase load flow only)
+controllable**;bool;;States if load is controllable or not, load will not be used as a flexibilty if it is not controllable
+max_p_mw**;float;;Maximum active power
+min_p_mw**;float;;Minimum active power
+max_q_mvar**;float;;Maximum reactive power
+min_q_mvar**;float;;Minimum reactive power

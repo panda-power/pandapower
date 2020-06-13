@@ -12,7 +12,7 @@ import pandas as pd
 import pytest
 
 import pandapower as pp
-from pandapower.auxiliary import _check_connectivity, _add_ppc_options
+from pandapower.auxiliary import _check_connectivity, _add_ppc_options, lightsim2grid_available
 from pandapower.networks import create_cigre_network_mv, four_loads_with_branches_out, \
     example_simple, simple_four_bus_system, example_multivoltage
 from pandapower.pd2ppc import _pd2ppc
@@ -26,20 +26,20 @@ from pandapower.test.toolbox import add_grid_connection, create_test_line, asser
 from pandapower.toolbox import nets_equal
 
 
-def test_minimal_net():
+def test_minimal_net(**kwargs):
     # tests corner-case when the grid only has 1 bus and an ext-grid
     net = pp.create_empty_network()
     b = pp.create_bus(net, 110)
     pp.create_ext_grid(net, b)
-    runpp_with_consistency_checks(net)
+    runpp_with_consistency_checks(net, **kwargs)
 
     pp.create_load(net, b, p_mw=0.1)
-    runpp_with_consistency_checks(net)
+    runpp_with_consistency_checks(net, **kwargs)
 
     b2 = pp.create_bus(net, 110)
     pp.create_switch(net, b, b2, 'b')
     pp.create_sgen(net, b2, p_mw=0.2)
-    runpp_with_consistency_checks(net)
+    runpp_with_consistency_checks(net, **kwargs)
 
 
 def test_set_user_pf_options():
@@ -688,11 +688,11 @@ def test_zip_loads_gridcal():
     assert np.allclose(net.res_bus.va_degree, va_degree_gridcal)
 
 
-def test_zip_loads_consistency():
+def test_zip_loads_consistency(**kwargs):
     net = four_loads_with_branches_out()
     net.load['const_i_percent'] = 40
     net.load['const_z_percent'] = 40
-    assert runpp_with_consistency_checks(net)
+    assert runpp_with_consistency_checks(net, **kwargs)
 
 
 def test_zip_loads_pf_algorithms():
@@ -919,7 +919,7 @@ def test_equal_indices_res():
         assert False
 
 
-def test_ext_grid_and_gen_at_one_bus():
+def test_ext_grid_and_gen_at_one_bus(**kwargs):
     net = pp.create_empty_network()
     b1 = pp.create_bus(net, vn_kv=110)
     b2 = pp.create_bus(net, vn_kv=110)
@@ -927,13 +927,13 @@ def test_ext_grid_and_gen_at_one_bus():
     pp.create_line(net, b1, b2, 1., std_type="305-AL1/39-ST1A 110.0")
     pp.create_load(net, bus=b2, p_mw=3.5, q_mvar=1)
 
-    runpp_with_consistency_checks(net)
+    runpp_with_consistency_checks(net, **kwargs)
     q = net.res_ext_grid.q_mvar.sum()
 
     ##create two gens at the slack bus
     g1 = pp.create_gen(net, b1, vm_pu=1.01, p_mw=1)
     g2 = pp.create_gen(net, b1, vm_pu=1.01, p_mw=1)
-    runpp_with_consistency_checks(net)
+    runpp_with_consistency_checks(net, **kwargs)
 
     # all the reactive power previously provided by the ext_grid is now provided by the generators
     assert np.isclose(net.res_ext_grid.q_mvar.values, 0)
@@ -944,7 +944,7 @@ def test_ext_grid_and_gen_at_one_bus():
     # set reactive power limits at the generators
     net.gen["max_q_mvar"] = [0.1, 0.01]
     net.gen["min_q_mvar"] = [-0.1, -0.01]
-    runpp_with_consistency_checks(net)
+    runpp_with_consistency_checks(net, **kwargs)
     # g1 now has 10 times the reactive power of g2 in accordance with the different Q ranges
     assert np.isclose(net.res_gen.q_mvar.at[g1], net.res_gen.q_mvar.at[g2] * 10)
     # all the reactive power is still provided by the generators, because Q-lims are not enforced
@@ -952,7 +952,7 @@ def test_ext_grid_and_gen_at_one_bus():
     assert np.isclose(net.res_gen.q_mvar.sum(), q)
 
     # now enforce Q-lims
-    runpp_with_consistency_checks(net, enforce_q_lims=True)
+    runpp_with_consistency_checks(net, enforce_q_lims=True, **kwargs)
     # both generators are at there lower limit with regard to the reactive power
     assert np.allclose(net.res_gen.q_mvar.values, net.gen.max_q_mvar.values)
     # the total reactive power remains unchanged, but the rest of the power is now provided by the ext_grid
@@ -960,7 +960,7 @@ def test_ext_grid_and_gen_at_one_bus():
 
     # second ext_grid at the slack bus
     pp.create_ext_grid(net, b1, vm_pu=1.01)
-    runpp_with_consistency_checks(net, enforce_q_lims=False)
+    runpp_with_consistency_checks(net, enforce_q_lims=False, **kwargs)
     # gens still have the correct active power
     assert np.allclose(net.gen.p_mw.values, net.res_gen.p_mw.values)
     # slack active power is evenly distributed to both ext_grids
@@ -969,7 +969,7 @@ def test_ext_grid_and_gen_at_one_bus():
     # q limits at the ext_grids are not enforced
     net.ext_grid["max_q_mvar"] = [0.1, 0.01]
     net.ext_grid["min_q_mvar"] = [-0.1, -0.01]
-    runpp_with_consistency_checks(net, enforce_q_lims=True)
+    runpp_with_consistency_checks(net, enforce_q_lims=True, **kwargs)
     assert net.res_ext_grid.q_mvar.values[0] > net.ext_grid.max_q_mvar.values[0]
     assert np.allclose(net.res_gen.q_mvar.values, net.gen.max_q_mvar.values)
 
@@ -1190,5 +1190,45 @@ def test_results_for_line_temperature():
     assert np.allclose(net.res_bus.va_degree, va_res_80, rtol=0, atol=1e-6)
 
 
+@pytest.mark.skipif(not lightsim2grid_available, reason="lightsim2grid is not installed")
+def test_lightsim2grid():
+    # test several nets
+    for net in result_test_network_generator():
+        try:
+            runpp_with_consistency_checks(net, lightsim2grid=True)
+        except (AssertionError):
+            raise UserWarning("Consistency Error after adding %s" % net.last_added_case)
+        except(LoadflowNotConverged):
+            raise UserWarning("Power flow did not converge after adding %s" % net.last_added_case)
+
+
+@pytest.mark.skipif(not lightsim2grid_available, reason="lightsim2grid is not installed")
+def test_lightsim2grid_zip():
+    test_zip_loads_consistency(lightsim2grid=True)
+
+
+@pytest.mark.skipif(not lightsim2grid_available, reason="lightsim2grid is not installed")
+def test_lightsim2grid_qlims():
+    test_minimal_net(lightsim2grid=True, enforce_q_lims=True)
+
+
+@pytest.mark.skipif(not lightsim2grid_available, reason="lightsim2grid is not installed")
+def test_lightsim2grid_extgrid():
+    test_ext_grid_and_gen_at_one_bus(lightsim2grid=True)
+
+
 if __name__ == "__main__":
-    pytest.main([__file__, "-xs"])
+    pytest.main([__file__])
+#    test_minimal_net()
+#    net = pp.create_empty_network()
+#    b = pp.create_bus(net, 110)
+#    pp.create_ext_grid(net, b)
+#    runpp_with_consistency_checks(net)
+#
+#    pp.create_load(net, b, p_mw=0.1)
+#    runpp_with_consistency_checks(net)
+#
+#    b2 = pp.create_bus(net, 110)
+#    pp.create_switch(net, b, b2, 'b')
+#    pp.create_sgen(net, b2, p_mw=0.2)
+#    runpp_with_consistency_checks(net)

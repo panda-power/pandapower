@@ -105,7 +105,7 @@ def test_const_control(simple_test_net):
 
     ConstControl(net, 'ext_grid', 'vm_pu', element_index=0, data_source=ds, profile_name='slack_v')
 
-    run_timeseries(net, time_steps, output_writer=ow)
+    run_timeseries(net, time_steps, output_writer=ow, verbose=False)
 
     assert np.alltrue(profiles['load1'].values * 0.85 == ow.output['load.p_mw'][0].values)
     assert np.alltrue(profiles['slack_v'].values == ow.output['res_bus.vm_pu'][0].values)
@@ -157,7 +157,7 @@ def test_timeseries_results(simple_test_net):
 
     ow.log_variable('res_line', 'loading_percent')
     ow.log_variable('res_line', 'i_ka')
-    run_timeseries(net, time_steps, output_writer=ow)
+    run_timeseries(net, time_steps, output_writer=ow, verbose=False)
     assert np.allclose(ow.output['res_load.p_mw'].sum().values * 2,
                        profiles[["load1", "load2_mv_p", "load3_hv_p"]].sum().values)
 
@@ -167,7 +167,7 @@ def test_timeseries_results(simple_test_net):
     net.controller.in_service = False  # set the first controller out of service
     ConstControl(net, 'load', 'p_mw', element_index=0, data_source=ds, profile_name='load1')
 
-    run_timeseries(net, time_steps, output_writer=ow)
+    run_timeseries(net, time_steps, output_writer=ow, verbose=False)
     assert np.allclose(ow.output['res_load.p_mw'][0].sum(), profiles["load1"].sum())
 
 
@@ -191,7 +191,7 @@ def test_timeseries_var_func(simple_test_net):
     ow.log_variable('res_bus', 'vm_pu', eval_function=np.min)
     ow.log_variable('res_bus', 'q_mvar', eval_function=np.sum)
 
-    run_timeseries(net, time_steps, output_writer=ow)
+    run_timeseries(net, time_steps, output_writer=ow, verbose=False)
     # asserts if last value of output_writers output is the minimum value
     assert net["res_load"]["p_mw"].max() == ow.output["res_load.p_mw"].iloc[-1].values
     assert net["res_bus"]["vm_pu"].min() == ow.output["res_bus.vm_pu"].iloc[-1, -1]
@@ -206,7 +206,7 @@ def test_timeseries_var_func(simple_test_net):
                     eval_name="hv_bus_min")
     ow.log_variable('res_bus', 'vm_pu', index=mv_busses_index, eval_function=np.min,
                     eval_name="mv_bus_min")
-    run_timeseries(net, time_steps, output_writer=ow)
+    run_timeseries(net, time_steps, output_writer=ow, verbose=False)
     assert net["res_bus"].loc[hv_busses_index, "vm_pu"].min() == ow.output["res_bus.vm_pu"].loc[
         time_steps[-1], "hv_bus_min"]
     assert net["res_bus"].loc[mv_busses_index, "vm_pu"].min() == ow.output["res_bus.vm_pu"].loc[
@@ -222,13 +222,13 @@ def test_time_steps(simple_test_net):
                  data_source=ds, profile_name=["load1", "load2_mv_p", "load3_hv_p"])
 
     # correct
-    run_timeseries(net, time_steps=range(0, n_timesteps))
+    run_timeseries(net, time_steps=range(0, n_timesteps), verbose=False)
     # also correct
-    run_timeseries(net, time_steps=[0, 2, 4, 8, 9])
+    run_timeseries(net, time_steps=[0, 2, 4, 8, 9], verbose=False)
     # ok. missing time_step list -> should check the datasource
-    run_timeseries(net)
+    run_timeseries(net, verbose=False)
     # depricated
-    run_timeseries(net, time_steps=(0, 10))
+    run_timeseries(net, time_steps=(0, 10), verbose=False)
 
 
 def test_output_dump_after_time(simple_test_net):
@@ -250,7 +250,7 @@ def test_output_dump_after_time(simple_test_net):
 
     ow.log_variable('res_line', 'loading_percent')
     ow.log_variable('res_line', 'i_ka')
-    run_timeseries(net, time_steps, output_writer=ow)
+    run_timeseries(net, time_steps, output_writer=ow, verbose=False)
     # ToDo: read partially dumped results and compare with all stored results
 
 

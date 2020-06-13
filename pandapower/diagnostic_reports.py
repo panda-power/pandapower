@@ -11,7 +11,6 @@ except ImportError:
     import logging
 
 logger = logging.getLogger(__name__)
-from pandapower.toolbox import get_connected_buses_at_element
 
 # separator between log messages
 log_message_sep = ("\n --------\n")
@@ -92,6 +91,7 @@ class DiagnosticReports:
             logger.info("PASSED: No problematic switches found")
 
     def report_different_voltage_levels_connected(self):
+        from pandapower.toolbox import get_connected_buses_at_element
 
         if "different_voltage_levels_connected" in self.diag_results:
 
@@ -440,12 +440,12 @@ class DiagnosticReports:
 
                 else:
                     for bus in diag_result[feeder_type]:
-                        if feeder_type is "buses_with_mult_ext_grids":
+                        if feeder_type == "buses_with_mult_ext_grids":
                             logger.warning("External grids %s are connected to bus %s. Only one "
                                            "external grid per bus is allowed."
                                            % (list(self.net.ext_grid[self.net.ext_grid.bus
                                                                      == bus].index), bus))
-                        elif feeder_type is "buses_with_gens_and_ext_grids":
+                        elif feeder_type == "buses_with_gens_and_ext_grids":
                             logger.warning("Generator(s) %s and external grid(s) %s are connected "
                                            "to bus %s. Only one generator OR one external grid "
                                            "per bus is allowed."
@@ -480,7 +480,7 @@ class DiagnosticReports:
             # message body
             diag_result = self.diag_results["wrong_reference_system"]
             for element_type in diag_result:
-                if element_type is "loads":
+                if element_type == "loads":
                     if self.compact_report:
                         logger.warning("loads %s: wrong reference system."
                                        % (diag_result[element_type]))
@@ -491,7 +491,7 @@ class DiagnosticReports:
                                            % (load, self.net.load.name.at[load],
                                               self.net.load.p_mw.at[load]))
 
-                elif element_type is "gens":
+                elif element_type == "gens":
                     if self.compact_report:
                         logger.warning("gens %s: wrong reference system."
                                        % (diag_result[element_type]))
@@ -501,7 +501,7 @@ class DiagnosticReports:
                                            "system p_mw should be negative."
                                            % (gen, self.net.gen.name.at[gen], self.net.gen.p_mw.at[gen]))
 
-                elif element_type is "sgens":
+                elif element_type == "sgens":
                     if self.compact_report:
                         logger.warning("sgens %s: wrong reference system."
                                        % (diag_result[element_type]))

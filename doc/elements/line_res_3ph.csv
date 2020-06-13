@@ -1,0 +1,29 @@
+**Parameter**;**Datatype**;**Explanation**
+"p_a_from_mw;float;""active power flow into the line at """"from"""" bus: Phase A [MW]"""
+"q_a_from_mvar;float;""reactive power flow into the line at """"from"""" bus : Phase A[MVar]"""
+"p_b_from_mw;float;""active power flow into the line at """"from"""" bus: Phase B [MW]"""
+"q_b_from_mvar;float;""reactive power flow into the line at """"from"""" bus : Phase B[MVar]"""
+"p_c_from_mw;float;""active power flow into the line at """"from"""" bus: Phase C [MW]"""
+"q_c_from_mvar;float;""reactive power flow into the line at """"from"""" bus : Phase C[MVar]"""
+"p_a_to_mw;float;""active power flow into the line at """"to"""" bus: Phase A [MW]"""
+"q_a_to_mvar;float;""reactive power flow into the line at """"to"""" bus : Phase A[MVar]"""
+"p_b_to_mw;float;""active power flow into the line at """"to"""" bus: Phase B [MW]"""
+"q_b_to_mvar;float;""reactive power flow into the line at """"to"""" bus : Phase B[MVar]"""
+"p_c_to_mw;float;""active power flow into the line at """"to"""" bus: Phase C [MW]"""
+"q_c_to_mvar;float;""reactive power flow into the line at """"to"""" bus : Phase C[MVar]"""
+pl_a_mw;float;active power losses of the line: Phase A [MW]
+ql_a_mvar;float;reactive power consumption of the line: Phase A [MVar]
+pl_b_mw;float;active power losses of the line: Phase B [MW]
+ql_b_mvar;float;reactive power consumption of the line: Phase B [MVar]
+pl_c_mw;float;active power losses of the line: Phase C [MW]
+ql_c_mvar;float;reactive power consumption of the line: Phase C [MVar]
+i_a_from_ka;float;Current at to bus: Phase A [kA]
+i_b_from_ka;float;Current at to bus: Phase B [kA]
+i_c_from_ka;float;Current at to bus: Phase C [kA]
+i_n_from_ka;float;Current at to bus: Neutral [kA]
+i_a_to_ka;float;Current at from bus: Phase A [kA]
+i_b_to_ka;float;Current at from bus: Phase B [kA]
+i_c_to_ka;float;Current at from bus: Phase C [kA]
+i_n_to_ka;float;Current at from bus: Neutral [kA]
+i_ka;float;Maximum of i_from_ka and i_to_ka [kA]
+loading_percent;float;line loading [%]

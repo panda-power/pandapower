@@ -6,22 +6,20 @@
 import numpy as np
 from scipy.stats import chi2
 
-from pandapower.estimation.util import set_bb_switch_impedance, reset_bb_switch_impedance
-from pandapower.estimation.ppc_conversion import pp2eppci, _initialize_voltage
-from pandapower.estimation.results import eppci2pp
-from pandapower.estimation.algorithm.base import (WLSAlgorithm, 
+from pandapower.estimation.algorithm.base import (WLSAlgorithm,
                                                   WLSZeroInjectionConstraintsAlgorithm,
                                                   IRWLSAlgorithm)
-from pandapower.estimation.algorithm.optimization import OptAlgorithm
 from pandapower.estimation.algorithm.lp import LPAlgorithm
-
+from pandapower.estimation.algorithm.optimization import OptAlgorithm
+from pandapower.estimation.ppc_conversion import pp2eppci, _initialize_voltage
+from pandapower.estimation.results import eppci2pp
+from pandapower.estimation.util import set_bb_switch_impedance, reset_bb_switch_impedance
 
 try:
     import pplog as logging
 except ImportError:
     import logging
 std_logger = logging.getLogger(__name__)
-
 
 ALGORITHM_MAPPING = {'wls': WLSAlgorithm,
                      'wls_with_zero_constraint': WLSZeroInjectionConstraintsAlgorithm,
@@ -33,7 +31,7 @@ ALLOWED_OPT_VAR = {"a", "opt_method", "estimator"}
 
 def estimate(net, algorithm='wls',
              init='flat', tolerance=1e-6, maximum_iterations=10,
-             calculate_voltage_angles=True, 
+             calculate_voltage_angles=True,
              zero_injection='aux_bus', fuse_buses_with_bb_switch='all',
              **opt_vars):
     """
@@ -81,8 +79,8 @@ def estimate(net, algorithm='wls',
 
     se = StateEstimation(net, tolerance, maximum_iterations, algorithm=algorithm)
     v_start, delta_start = _initialize_voltage(net, init, calculate_voltage_angles)
-    return se.estimate(v_start=v_start, delta_start=delta_start, 
-                       calculate_voltage_angles=calculate_voltage_angles, 
+    return se.estimate(v_start=v_start, delta_start=delta_start,
+                       calculate_voltage_angles=calculate_voltage_angles,
                        zero_injection=zero_injection,
                        fuse_buses_with_bb_switch=fuse_buses_with_bb_switch, **opt_vars)
 
@@ -118,7 +116,7 @@ def remove_bad_data(net, init='flat', tolerance=1e-6, maximum_iterations=10,
     wls_se = StateEstimation(net, tolerance, maximum_iterations, algorithm="wls")
     v_start, delta_start = _initialize_voltage(net, init, calculate_voltage_angles)
     return wls_se.perform_rn_max_test(v_start, delta_start, calculate_voltage_angles,
-                                   rn_max_threshold)
+                                      rn_max_threshold)
 
 
 def chi2_analysis(net, init='flat', tolerance=1e-6, maximum_iterations=10,
@@ -151,7 +149,7 @@ def chi2_analysis(net, init='flat', tolerance=1e-6, maximum_iterations=10,
     wls_se = StateEstimation(net, tolerance, maximum_iterations, algorithm="wls")
     v_start, delta_start = _initialize_voltage(net, init, calculate_voltage_angles)
     return wls_se.perform_chi2_test(v_start, delta_start, calculate_voltage_angles,
-                                 chi2_prob_false)
+                                    chi2_prob_false)
 
 
 class StateEstimation:
@@ -161,6 +159,7 @@ class StateEstimation:
     system according to the users needs while one function is used for the actual estimation
     process.
     """
+
     def __init__(self, net, tolerance=1e-6, maximum_iterations=10, algorithm='wls', logger=None, recycle=False):
         self.logger = logger
         if self.logger is None:
@@ -239,8 +238,8 @@ class StateEstimation:
         # check if all parameter are allowed
         for var_name in opt_vars.keys():
             if var_name not in ALLOWED_OPT_VAR:
-                self.logger.warning("Caution! %s is not allowed as parameter"%var_name\
-                                    + " for estimate and will be ignored!" )
+                self.logger.warning("Caution! %s is not allowed as parameter" % var_name \
+                                    + " for estimate and will be ignored!")
 
         if self.net is None:
             raise UserWarning("SE Component was not initialized with a network.")
@@ -255,8 +254,8 @@ class StateEstimation:
                 bus_to_be_fused = fuse_buses_with_bb_switch
             set_bb_switch_impedance(self.net, bus_to_be_fused)
 
-        self.net, self.ppc, self.eppci = pp2eppci(self.net, v_start=v_start, delta_start=delta_start, 
-                                                  calculate_voltage_angles=calculate_voltage_angles, 
+        self.net, self.ppc, self.eppci = pp2eppci(self.net, v_start=v_start, delta_start=delta_start,
+                                                  calculate_voltage_angles=calculate_voltage_angles,
                                                   zero_injection=zero_injection, ppc=self.ppc, eppci=self.eppci)
 
         # Estimate voltage magnitude and angle with the given estimator
@@ -270,7 +269,7 @@ class StateEstimation:
         # clear the aux elements and calculation results created for the substitution of bb switches
         if fuse_buses_with_bb_switch != 'all' and not self.net.switch.empty:
             reset_bb_switch_impedance(self.net)
-        
+
         # if recycle is not wished, reset ppc, ppci
         if not self.recycle:
             self.ppc, self.eppci = None, None

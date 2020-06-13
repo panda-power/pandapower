@@ -16,6 +16,11 @@ Create Standard Type
 .. autofunction:: pandapower.create_std_types
 
 
+Adds zero sequence impedance parameters to net
+----------------------------------------------
+
+.. autofunction:: pandapower.add_zero_impedance_parameters
+
 Copy Standard Types
 ---------------------
 

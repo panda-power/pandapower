@@ -262,6 +262,45 @@ def sgen_patches(node_coords, size, angles, **kwargs):
     return lines, polys, {"offset", "r_triangle", "patch_edgecolor", "patch_facecolor"}
 
 
+def storage_patches(node_coords, size, angles, **kwargs):
+    """
+    Creation function of patches for storage systems.
+
+    :param node_coords: coordinates of the nodes that the storage system belong to.
+    :type node_coords: iterable
+    :param size: size of the patch
+    :type size: float
+    :param angles: angles by which to rotate the patches (in radians)
+    :type angles: iterable(float), float
+    :param kwargs: additional keyword arguments (might contain parameters "offset", "r_triangle",\
+        "patch_edgecolor" and "patch_facecolor")
+    :type kwargs:
+    :return: Return values are: \
+        - lines (list) - list of coordinates for lines leading to storage patches\
+        - polys (list of RegularPolygon) - list containing the storage patches\
+        - keywords (set) - set of keywords removed from kwargs
+    """
+    polys, lines = list(), list()
+    offset = kwargs.get("offset", 1 * size)
+    r_triangle = kwargs.get("r_triangles", size * 0.4)
+    for i, node_geo in enumerate(node_coords):
+        mid_circ = node_geo + _rotate_dim2(np.array([0, offset + r_triangle * 2.]), angles[i])
+        circ_edge = node_geo + _rotate_dim2(np.array([0, offset]), angles[i])
+        mid_tri1 = mid_circ + _rotate_dim2(np.array([-r_triangle, -r_triangle]), angles[i])
+
+        # dropped perpendicular foot of triangle1
+        perp_foot1 = mid_tri1 + _rotate_dim2(np.array([r_triangle * 0.5, -r_triangle/4]), angles[i])
+        line_end1 = perp_foot1 + _rotate_dim2(np.array([1 * r_triangle, 0]), angles[i])
+
+        perp_foot2 = mid_tri1 + _rotate_dim2(np.array([0, -r_triangle]), angles[i])
+        line_end2 = perp_foot2 + _rotate_dim2(np.array([2. * r_triangle, 0]), angles[i])
+
+        lines.append((node_geo, circ_edge))
+        lines.append((perp_foot1, line_end1))
+        lines.append((perp_foot2, line_end2))
+    return lines, polys, {"offset", "r_triangle", "patch_edgecolor", "patch_facecolor"}
+
+
 def ext_grid_patches(node_coords, size, angles, **kwargs):
     """
     Creation function of patches for external grids.

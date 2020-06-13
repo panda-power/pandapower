@@ -1,5 +1,8 @@
 **Parameter**;**read as**
 vm_pu;:math:`v_m  [pu]`
+vm_a_pu;:math:`v_m (A)  [pu]`
 loading_percent;:math:`loading [\%]`
 pl_mw;:math:`p_l  [mw]`
+pl_a_mw;:math:`p_l(A)  [mw]`
 r_ohm_per_km;:math:`r  [\Omega / km]`
+r0_ohm_per_km;:math:`r_0  [\Omega / km]`

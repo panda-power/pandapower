@@ -42,6 +42,34 @@ def create_std_type(net, data, name, element="line", overwrite=True, check_requi
 
     >>> line_data = {"c_nf_per_km": 0, "r_ohm_per_km": 0.642, "x_ohm_per_km": 0.083, "max_i_ka": 0.142, "type": "cs", "q_mm2": 50, "alpha": 4.03e-3}
     >>> pandapower.create_std_type(net, line_data, "NAYY 4×50 SE", element='line')
+    >>> # Three phase line creation:
+    >>> pandapower.create_std_type(net, {"r_ohm_per_km": 0.1941, "x_ohm_per_km": 0.07476991,
+                    "c_nf_per_km": 1160., "max_i_ka": 0.421,
+                    "endtemp_degree": 70.0, "r0_ohm_per_km": 0.7766,
+                    "x0_ohm_per_km": 0.2990796,
+                    "c0_nf_per_km":  496.2}, name="unsymmetric_line_type",element = "line")
+    >>> #Three phase transformer creation
+    >>> pp.create_std_type(net, {"sn_mva": 1.6,
+            "vn_hv_kv": 10,
+            "vn_lv_kv": 0.4,
+            "vk_percent": 6,
+            "vkr_percent": 0.78125,
+            "pfe_kw": 2.7,
+            "i0_percent": 0.16875,
+            "shift_degree": 0,
+            "vector_group": vector_group,
+            "tap_side": "lv",
+            "tap_neutral": 0,
+            "tap_min": -2,
+            "tap_max": 2,
+            "tap_step_degree": 0,
+            "tap_step_percent": 2.5,
+            "tap_phase_shifter": False,
+            "vk0_percent": 6, 
+            "vkr0_percent": 0.78125, 
+            "mag0_percent": 100,
+            "mag0_rx": 0.,
+            "si0_hv_partial": 0.9,}, name='Unsymmetric_trafo_type', element="trafo")
     """
 
     if type(data) != dict:
@@ -284,7 +312,18 @@ def find_std_type_by_parameter(net, data, element="line", epsilon=0.):
 
 def add_zero_impedance_parameters(net):
     """
-    adds all parameters required for zero impedance calculations
+    Adds all parameters required for zero sequence impedance calculations
+    INPUT:
+        **net** - pandapower network
+        
+        zero sequence parameters of lines and transformers in pandapower networks
+        are entered using std_type. 
+        
+        This function adds them to the pandas dataframe
+
+
+    OUTPUT:
+        Now, net has all the zero sequence  parameters
     """
     parameter_from_std_type(net, "vector_group", element="trafo")
     parameter_from_std_type(net, "vk0_percent", element="trafo")

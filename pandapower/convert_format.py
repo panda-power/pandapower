@@ -5,18 +5,17 @@
 
 import pandas as pd
 import numpy as np
-import copy
 from packaging import version
 from pandapower.create import create_empty_network, create_poly_cost
 from pandapower.results import reset_results
 from pandapower import __version__
-from pandapower.toolbox import set_data_type_of_columns_to_default
 
 
 def convert_format(net):
     """
     Converts old nets to new format to ensure consistency. The converted net is returned.
     """
+    from pandapower.toolbox import set_data_type_of_columns_to_default
     if isinstance(net.version, str) and version.parse(net.version) >= version.parse(__version__):
         return net
     _add_nominal_power(net)
@@ -275,10 +274,10 @@ def _convert_to_mw(net):
 
     for element, std_types in net.std_types.items():
         for std_type, parameters in std_types.items():
-            for parameter, value in parameters.items():
+            for parameter in set(parameters.keys()):
                 for old, new in replace:
                     if old in parameter and parameter != "pfe_kw":
-                        parameters[parameter.replace(old, new)] = value * 1e-3
+                        parameters[parameter.replace(old, new)] = parameters[parameter] * 1e-3
                         del parameters[parameter]
 
 

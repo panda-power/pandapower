@@ -10,16 +10,18 @@ except ImportError:
     import logging
 
 logger = logging.getLogger(__name__)
-#import time
+# import time
 
 from pandapower.auxiliary import _clean_up, _add_ppc_options, _add_sc_options, _add_auxiliary_elements
 from pandapower.pd2ppc import _pd2ppc
 from pandapower.pd2ppc_zero import _pd2ppc_zero
 from pandapower.results import _copy_results_ppci_to_ppc
-from pandapower.shortcircuit.currents import _calc_ikss, _calc_ikss_1ph, _calc_ip, _calc_ith, _calc_branch_currents, _calc_single_bus_sc
+from pandapower.shortcircuit.currents import _calc_ikss, _calc_ikss_1ph, _calc_ip, _calc_ith, _calc_branch_currents, \
+    _calc_single_bus_sc
 from pandapower.shortcircuit.impedance import _calc_zbus, _calc_ybus, _calc_rx
 from pandapower.shortcircuit.kappa import _add_kappa_to_ppc
 from pandapower.shortcircuit.results import _extract_results, _extract_single_results
+from pandapower.results import init_results
 
 
 def calc_sc(net, fault="3ph", case='max', lv_tol_percent=10, topology="auto", ip=False,
@@ -110,13 +112,14 @@ def calc_sc(net, fault="3ph", case='max', lv_tol_percent=10, topology="auto", ip
     kappa = ith or ip
     net["_options"] = {}
     _add_ppc_options(net, calculate_voltage_angles=False, trafo_model="pi",
-                     check_connectivity=check_connectivity, mode="sc", switch_rx_ratio=2, 
+                     check_connectivity=check_connectivity, mode="sc", switch_rx_ratio=2,
                      init_vm_pu="flat", init_va_degree="flat", enforce_q_lims=False,
                      recycle=None)
     _add_sc_options(net, fault=fault, case=case, lv_tol_percent=lv_tol_percent, tk_s=tk_s,
                     topology=topology, r_fault_ohm=r_fault_ohm, kappa_method=kappa_method,
                     x_fault_ohm=x_fault_ohm, kappa=kappa, ip=ip, ith=ith,
                     branch_results=branch_results)
+    init_results(net, "sc")
     if fault == "3ph":
         _calc_sc(net)
     if fault == "2ph":
@@ -125,6 +128,7 @@ def calc_sc(net, fault="3ph", case='max', lv_tol_percent=10, topology="auto", ip
         if case == "min":
             raise NotImplementedError("Minimum 1ph short-circuits are not yet implemented")
         _calc_sc_1ph(net)
+
 
 def calc_single_sc(net, bus, fault="3ph", case='max', lv_tol_percent=10, check_connectivity=True):
     """
@@ -179,7 +183,7 @@ def calc_single_sc(net, bus, fault="3ph", case='max', lv_tol_percent=10, check_c
                                 "circuit current')
     net["_options"] = {}
     _add_ppc_options(net, calculate_voltage_angles=False, trafo_model="pi",
-                     check_connectivity=check_connectivity, mode="sc", switch_rx_ratio=2, 
+                     check_connectivity=check_connectivity, mode="sc", switch_rx_ratio=2,
                      init_vm_pu="flat", init_va_degree="flat", enforce_q_lims=False,
                      recycle=None)
     _add_sc_options(net, fault=fault, case=case, lv_tol_percent=lv_tol_percent, tk_s=1.,
@@ -191,7 +195,8 @@ def calc_single_sc(net, bus, fault="3ph", case='max', lv_tol_percent=10, check_c
     elif fault == "1ph":
         raise NotImplementedError("1ph short-circuits are not yet implemented")
     else:
-        raise ValueError("Invalid fault %s"%fault)
+        raise ValueError("Invalid fault %s" % fault)
+
 
 def _calc_sc_single(net, bus):
     _add_auxiliary_elements(net)
@@ -201,13 +206,13 @@ def _calc_sc_single(net, bus):
         _calc_zbus(ppci)
     except Exception as e:
         _clean_up(net, res=False)
-        raise(e)
+        raise (e)
     _calc_rx(net, ppci)
     _calc_ikss(net, ppci)
     _calc_single_bus_sc(net, ppci, bus)
     ppc = _copy_results_ppci_to_ppc(ppci, ppc, "sc")
     _extract_single_results(net, ppc)
-    _clean_up(net)    
+    _clean_up(net)
 
 
 def _calc_sc(net):
@@ -218,7 +223,7 @@ def _calc_sc(net):
         _calc_zbus(ppci)
     except Exception as e:
         _clean_up(net, res=False)
-        raise(e)
+        raise (e)
     _calc_rx(net, ppci)
     _add_kappa_to_ppc(net, ppci)
     _calc_ikss(net, ppci)
@@ -245,7 +250,7 @@ def _calc_sc_1ph(net):
         _calc_zbus(ppci)
     except Exception as e:
         _clean_up(net, res=False)
-        raise(e)
+        raise (e)
     _calc_rx(net, ppci)
     _add_kappa_to_ppc(net, ppci)
     # zero seq bus impedance
@@ -255,7 +260,7 @@ def _calc_sc_1ph(net):
         _calc_zbus(ppci_0)
     except Exception as e:
         _clean_up(net, res=False)
-        raise(e)
+        raise (e)
     _calc_rx(net, ppci_0)
     _calc_ikss_1ph(net, ppci, ppci_0)
     ppc_0 = _copy_results_ppci_to_ppc(ppci_0, ppc_0, "sc")

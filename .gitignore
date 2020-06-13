@@ -25,3 +25,4 @@ pandapower/plotting/plotly/mapbox_token.txt
 pandapower/plotting/plotly/temp-plot.html
 pandapower/test/timeseries/run_timeseries_output/*
 pandapower/timeseries/logs/*
+*/data/*

@@ -17,7 +17,7 @@ from pandapower.pypower.opf import opf
 from pandapower.pypower.printpf import printpf
 from pandapower.pd2ppc import _pd2ppc
 from pandapower.pf.run_newton_raphson_pf import _run_newton_raphson_pf
-from pandapower.results import _copy_results_ppci_to_ppc, reset_results, \
+from pandapower.results import _copy_results_ppci_to_ppc, init_results, \
     _extract_results
 
 
@@ -36,7 +36,7 @@ def _optimal_powerflow(net, verbose, suppress_warnings, **kwargs):
     net["OPF_converged"] = False
     net["converged"] = False
     _add_auxiliary_elements(net)
-    reset_results(net)
+    init_results(net, "opf")
 
     ppc, ppci = _pd2ppc(net)
 

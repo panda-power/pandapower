@@ -124,7 +124,7 @@ class ConstControl(Controller):
         else:
             raise NotImplementedError("ConstControl: self.write must be one of "
                                       "['single_index', 'all_index', 'loc']")
-
+                
     def time_step(self, time):
         """
         Get the values of the element from data source

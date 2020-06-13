@@ -23,6 +23,8 @@ If you are not yet using Julia, install it. Note that you need a version that is
 
 5. To call Julia from Python, install the pyjulia package with :code:`pip install julia`. Afterwards, test if everything works by importing PowerModels from Python with: :code:`from julia.PowerModels import run_ac_opf`. This takes some time, since Python starts a julia instance in the background, but it if the import completes without error everything is configured correctly and you can now use PowerModels to optimize pandapower networks.
 
+6. Additional packages are required to use the pandapower - PowerModels.jl interface. Install the "JSON" and "JuMP" packages with, e.g., :code:`julia -e 'import Pkg; Pkg.add("JSON"); Pkg.add("JuMP")'` or by entering :code:`]` inside the julia console and calling :code:`add JSON` :code:`add JuMP`
+
 Usage
 ------
 
@@ -34,6 +36,6 @@ The usage is explained in the `PowerModels tutorial <https://github.com/e2nIEE/p
 
 .. autofunction:: pandapower.runpm
 
-The TNEP optimization is explained in the `PowerModels TNEP tutorial <https://github.com/e2nIEE/pandapower/blob/develop/tutorials/tnep_powermodels.ipynb>`_.
+The TNEP optimization is explained in the `PowerModels TNEP tutorial <https://github.com/e2nIEE/pandapower/blob/develop/tutorials/tnep_powermodels.ipynb>`_. Additional packages including "juniper" 
 
 .. autofunction:: pandapower.runpm_tnep

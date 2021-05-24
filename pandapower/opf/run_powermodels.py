@@ -50,6 +50,7 @@ def _call_powermodels(buffer_file, julia_file):  # pragma: no cover
         from julia import Base
     except ImportError:
         raise ImportError("Please install pyjulia to run pandapower with PowerModels.jl")
+        
     try:
         j = julia.Julia()
     except:
@@ -61,16 +62,20 @@ def _call_powermodels(buffer_file, julia_file):  # pragma: no cover
     # import two julia scripts and runs powermodels julia_file
 
     if str(type(Base.find_package("PandaModels"))) == "<class 'NoneType'>":
-        
+        print("PandaModels is not exist")
+        Pkg.Registry.update()
         Pkg.add(url = "https://github.com/e2nIEE/PandaModels.jl") 
-        
+        # Pkg.build()
+        Pkg.resolve()
         Pkg.develop("PandaModels")
         Pkg.build()
         Pkg.resolve()
-        
+        print("add PandaModels")
+      
+
+    print(Base.find_package("PandaModels"))    
     # Pkg_path = Base.find_package("PandaModels").split(".jl")[0]
 
-    
     # try:
     #     Pkg_path = Base.find_package("PandaModels").split(".jl")[0]
     #     print(Pkg_path)
@@ -81,9 +86,15 @@ def _call_powermodels(buffer_file, julia_file):  # pragma: no cover
         
     # Pkg.activate(Pkg_path)
     Pkg.activate("PandaModels")
+    Pkg.instantiate()
+    Pkg.resolve()
+    print("activate PandaModels")
     
-
-    Main.using("PandaModels")
+    try:    
+        Main.using("PandaModels")
+        print("using PandaModels")
+    except ImportError:
+        raise ImportError("cannot use PandaModels")    
     # if not os.path.isfile(julia_file):
     #     raise UserWarning("File %s could not be imported" % julia_file)
     Main.buffer_file = buffer_file

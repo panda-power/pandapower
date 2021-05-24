@@ -156,7 +156,7 @@ def runpm_dc_opf(net, pp_to_pm_callback=None, calculate_voltage_angles=True,
         **pm_log_level** (int, 0) - solver log level in power models
      """
     # julia_file = os.path.join(pp_dir, "opf", "PpPmInterface", "src", "pm_models", 'run_powermodels.jl')
-    julia_file = "run_powermodels"
+    julia_file = "run_powermodels_opf"
     # ac = True if "DC" not in pm_model else False
 
     net._options = {}
@@ -239,7 +239,7 @@ def runpm_ac_opf(net, pp_to_pm_callback=None, calculate_voltage_angles=True,
                                        delete_buffer_file to False!
          """
     # julia_file = os.path.join(pp_dir, "opf", "PpPmInterface", "src", "pm_models", 'run_powermodels.jl')
-    julia_file = "run_powermodels"
+    julia_file = "run_powermodels_opf"
     # ac = True if "DC" not in pm_model else False
 
     net._options = {}

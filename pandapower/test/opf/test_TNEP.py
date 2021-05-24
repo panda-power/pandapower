@@ -58,7 +58,7 @@ def test_pm_tnep_cigre_dc():
 
     # run power models tnep optimization
 
-    pp.runpm_tnep(net, pm_solver= "juniper", pm_model="DCPPowerModel") # gurobi is a better option, but not for travis
+    pp.runpm_tnep(net, pm_solver= "juniper", pm_model="DCMPPowerModel") # gurobi is a better option, but not for travis
   
     # print the information about the newly built lines
     print("These lines are to be built:")
@@ -172,7 +172,8 @@ def test_pm_tnep_cigre_ac_I():
 
 if __name__ == '__main__':
 
-    pytest.main([__file__])
+    # pytest.main([__file__])
     # test_pm_tnep_cigre_ac_I()
     # test_pm_tnep_cigre()
     # test_pm_tnep_cigre_only_conversion()
+    test_pm_tnep_cigre_dc()

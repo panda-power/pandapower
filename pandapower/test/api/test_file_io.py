@@ -310,6 +310,67 @@ def test_deepcopy_controller():
     assert not ct1.equals(ct2)
 
 
+def test_table_selection_keep(tmp_path):
+    net = networks.mv_oberrhein()
+    filename = os.path.abspath(str(tmp_path)) + "testfile.json"
+    pp.to_json(net, filename)
+    net_select = pp.from_json(filename, table_selection=['bus', 'load'])
+    for key, item in net_select.items():
+        if key in ['bus', 'load']:
+            assert isinstance(item, pd.DataFrame)
+        elif '_empty' in key:
+            assert isinstance(item, pd.DataFrame)
+        elif '_lookup' in key:
+            assert isinstance(item, dict)
+        elif key in ['std_types', 'user_pf_options']:
+            assert isinstance(item, dict)
+        elif '_ppc' in key:
+            assert item is None
+        elif key == '_is_elements' :
+            assert item is None
+        elif key in ['converged', 'OPF_converged']:
+            assert isinstance(item, bool)
+        elif key in ['f_hz', 'sn_mva']:
+            assert isinstance(item, float)
+        else:
+            assert isinstance(item, str)
+    pp.to_json(net_select, filename)
+    net_select = pp.from_json(filename)
+    assert_net_equal(net, net_select)
+
+
+def test_table_selection_wo_keep(tmp_path):
+    net = networks.mv_oberrhein()
+    filename = os.path.abspath(str(tmp_path)) + "testfile.json"
+    pp.to_json(net, filename)
+    net_select = pp.from_json(filename, table_selection=['bus', 'load'], keep_unserialized=False)
+    for key, item in net_select.items():
+        if key in ['bus', 'load']:
+            assert isinstance(item, pd.DataFrame)
+        elif '_empty' in key:
+            assert isinstance(item, pd.DataFrame)
+        elif '_lookup' in key:
+            assert isinstance(item, dict)
+        elif key in ['std_types', 'user_pf_options']:
+            assert isinstance(item, dict)
+        elif '_ppc' in key:
+            assert item is None
+        elif key == '_is_elements' :
+            assert item is None
+        elif key in ['converged', 'OPF_converged']:
+            assert isinstance(item, bool)
+        elif key in ['f_hz', 'sn_mva']:
+            assert isinstance(item, float)
+        else:
+            if isinstance(item, pd.DataFrame):
+                assert len(item) == 0
+            else:
+                assert isinstance(item, str)
+    pp.to_json(net_select, filename)
+    net_select = pp.from_json(filename)
+    assert_net_equal(net, net_select, name_selection=['bus', 'load'])
+
+
 @pytest.mark.skipif('geopandas' not in sys.modules, reason="requires the GeoPandas library")
 def test_empty_geo_dataframe():
     net = pp.create_empty_network()

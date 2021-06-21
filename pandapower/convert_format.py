@@ -12,7 +12,7 @@ from pandapower.create import create_empty_network, create_poly_cost
 from pandapower.results import reset_results
 
 
-def convert_format(net):
+def convert_format(net, table_selection=None):
     """
     Converts old nets to new format to ensure consistency. The converted net is returned.
     """
@@ -21,35 +21,43 @@ def convert_format(net):
         return net
     _add_nominal_power(net)
     _add_missing_tables(net)
-    _rename_columns(net)
-    _add_missing_columns(net)
-    _create_seperate_cost_tables(net)
+    _rename_columns(net, table_selection)
+    _add_missing_columns(net, table_selection)
+    _create_seperate_cost_tables(net, table_selection)
     if version.parse(str(net.version)) < version.parse("2.4.0"):
-        _convert_bus_pq_meas_to_load_reference(net)
+        _convert_bus_pq_meas_to_load_reference(net, table_selection)
     if isinstance(net.version, float) and net.version < 2:
-        _convert_to_generation_system(net)
+        _convert_to_generation_system(net, table_selection)
         _convert_costs(net)
         _convert_to_mw(net)
-        _update_trafo_parameter_names(net)
+        _update_trafo_parameter_names(net, table_selection)
         reset_results(net)
     if isinstance(net.version, float) and net.version < 1.6:
         set_data_type_of_columns_to_default(net)
-    _convert_objects(net)
+    _convert_objects(net, table_selection)
     net.version = __version__
     return net
 
 
-def _convert_bus_pq_meas_to_load_reference(net):
-    bus_pq_meas_mask = net.measurement.measurement_type.isin(["p", "q"])&\
-        (net.measurement.element_type=="bus")
-    net.measurement.loc[bus_pq_meas_mask, "value"] *= -1
+def _convert_bus_pq_meas_to_load_reference(net, table_selection):
+    if _check_table_selection('measurement', table_selection):
+        bus_pq_meas_mask = net.measurement.measurement_type.isin(["p", "q"])&\
+            (net.measurement.element_type=="bus")
+        net.measurement.loc[bus_pq_meas_mask, "value"] *= -1
 
 
-def _convert_to_generation_system(net):
-    net.sgen.p_kw *= -1
-    net.sgen.q_kvar *= -1
-    net.gen.p_kw *= -1
-    for element in ["gen", "sgen", "ext_grid"]:
+def _convert_to_generation_system(net, table_selection):
+    update_elements = []
+    if _check_table_selection('sgen', table_selection):
+        net.sgen.p_kw *= -1
+        net.sgen.q_kvar *= -1
+        update_elements += ['sgen']
+    if _check_table_selection('gen', table_selection):
+        net.gen.p_kw *= -1
+        update_elements += ['gen']
+    if _check_table_selection('ext_grid', table_selection):
+        update_elements += ['ext_grid']
+    for element in update_elements:
         for suffix in ["p_kw", "q_kvar"]:
             constraints = {}
             if "min_%s" % suffix in net[element]:
@@ -103,62 +111,65 @@ def _add_missing_tables(net):
             net[key] = net_new[key]
 
 
-def _create_seperate_cost_tables(net):
-    if "cost_per_kw" in net.gen:
+def _create_seperate_cost_tables(net, table_selection):
+    if _check_table_selection('gen', table_selection) and "cost_per_kw" in net.gen:
         for index, cost in net.gen.cost_per_kw.iteritems():
             if not np.isnan(cost):
                 create_poly_cost(net, index, "gen", cp1_eur_per_mw=cost * 1e3)
 
-    if "cost_per_kw" in net.sgen:
+    if _check_table_selection('sgen', table_selection) and "cost_per_kw" in net.sgen:
         for index, cost in net.sgen.cost_per_kw.iteritems():
             if not np.isnan(cost):
                 create_poly_cost(net, index, "sgen", cp1_eur_per_kw=cost)
 
-    if "cost_per_kw" in net.ext_grid:
+    if _check_table_selection('ext_grid', table_selection) and "cost_per_kw" in net.ext_grid:
         for index, cost in net.ext_grid.cost_per_kw.iteritems():
             if not np.isnan(cost):
                 create_poly_cost(net, index, "ext_grid", cp1_eur_per_kw=cost)
 
-    if "cost_per_kvar" in net.gen:
+    if _check_table_selection('gen', table_selection) and "cost_per_kvar" in net.gen:
         for index, cost in net.gen.cost_per_kvar.iteritems():
             if not np.isnan(cost):
                 create_poly_cost(net, index, "ext_grid", cp1_eur_per_mw=0,
                                  cq1_eur_per_mvar=cost * 1e3)
 
-    if "cost_per_kvar" in net.sgen:
+    if _check_table_selection('sgen', table_selection) and "cost_per_kvar" in net.sgen:
         for index, cost in net.sgen.cost_per_kvar.iteritems():
             if not np.isnan(cost):
                 create_poly_cost(net, index, "sgen", cp1_eur_per_mw=0,
                                  cq1_eur_per_mvar=cost * 1e3)
 
-    if "cost_per_kvar" in net.ext_grid:
+    if _check_table_selection('ext_grid', table_selection) and "cost_per_kvar" in net.ext_grid:
         for index, cost in net.ext_grid.cost_per_kvar.iteritems():
             if not np.isnan(cost):
                 create_poly_cost(net, index, "ext_grid", cp1_eur_per_mw=0,
                                  cq1_eur_per_mvar=cost * 1e3)
 
 
-def _rename_columns(net):
-    net.line.rename(columns={'imax_ka': 'max_i_ka'}, inplace=True)
+def _rename_columns(net, table_selection):
+    if _check_table_selection('line', table_selection):
+        net.line.rename(columns={'imax_ka': 'max_i_ka'}, inplace=True)
     for typ, data in net.std_types["line"].items():
         if "imax_ka" in data:
             net.std_types["line"][typ]["max_i_ka"] = net.std_types["line"][typ].pop("imax_ka")
-    _update_trafo_parameter_names(net)
+    _update_trafo_parameter_names(net, table_selection)
     # initialize measurement dataframe
-    if "measurement" in net and "type" in net.measurement:
-        if net.measurement.empty:
-            net["measurement"] = create_empty_network()["measurement"]
-        else:
-            net.measurement["side"] = None
-            bus_measurements = net.measurement.element_type == "bus"
-            net.measurement.loc[bus_measurements, "element"] = \
-                net.measurement.loc[bus_measurements, "bus"].values
-            net.measurement.loc[~bus_measurements, "side"] = \
-                net.measurement.loc[~bus_measurements, "bus"].values
-            net.measurement.rename(columns={'type': 'measurement_type'}, inplace=True)
-            net.measurement.drop(["bus"], axis=1, inplace=True)
-    if "controller" in net:
-        net["controller"].rename(columns={"controller": "object"}, inplace=True)
+    if _check_table_selection('measurement', table_selection):
+        if "measurement" in net and "type" in net.measurement and "measurement":
+            if net.measurement.empty:
+                net["measurement"] = create_empty_network()["measurement"]
+            else:
+                net.measurement["side"] = None
+                bus_measurements = net.measurement.element_type == "bus"
+                net.measurement.loc[bus_measurements, "element"] = \
+                    net.measurement.loc[bus_measurements, "bus"].values
+                net.measurement.loc[~bus_measurements, "side"] = \
+                    net.measurement.loc[~bus_measurements, "bus"].values
+                net.measurement.rename(columns={'type': 'measurement_type'}, inplace=True)
+                net.measurement.drop(["bus"], axis=1, inplace=True)
+    if _check_table_selection('controller', table_selection):
+        if "controller" in net:
+            net["controller"].rename(columns={"controller": "object"}, inplace=True)
     if "options" in net:
         if "recycle" in net["options"]:
             if "Ybus" in net["options"]["recycle"]:
@@ -175,55 +186,61 @@ def _rename_columns(net):
                 net["options"]["recycle"]["bus_pq"] = True
 
 
-def _add_missing_columns(net):
-    for element in ["trafo", "line"]:
+def _add_missing_columns(net, table_selection):
+    update_elements = []
+    if _check_table_selection('trafo', table_selection):
+        update_elements += ['trafo']
+    if _check_table_selection('line', table_selection):
+        update_elements += ['line']
+    for element in update_elements:
         if "df" not in net[element]:
             net[element]["df"] = 1.0
-    if "coords" not in net.bus_geodata:
+
+    if _check_table_selection('bus_geodata', table_selection) and "coords" not in net.bus_geodata:
         net.bus_geodata["coords"] = None
-    if not "tap_at_star_point" in net.trafo3w:
+    if _check_table_selection('trafo3w', table_selection) and not "tap_at_star_point" in net.trafo3w:
         net.trafo3w["tap_at_star_point"] = False
-    if not "tap_step_degree" in net.trafo3w:
+    if _check_table_selection('trafo3w', table_selection) and not "tap_step_degree" in net.trafo3w:
         net.trafo3w["tap_step_degree"] = 0
-    if "const_z_percent" not in net.load or "const_i_percent" not in net.load:
+    if _check_table_selection('load', table_selection) and "const_z_percent" not in net.load or "const_i_percent" not in net.load:
         net.load["const_z_percent"] = np.zeros(net.load.shape[0])
         net.load["const_i_percent"] = np.zeros(net.load.shape[0])
 
-    if "vn_kv" not in net["shunt"]:
+    if _check_table_selection('shunt', table_selection) and "vn_kv" not in net["shunt"]:
         net.shunt["vn_kv"] = net.bus.vn_kv.loc[net.shunt.bus.values].values
-    if "step" not in net["shunt"]:
+    if _check_table_selection('shunt', table_selection) and "step" not in net["shunt"]:
         net.shunt["step"] = 1
-    if "max_step" not in net["shunt"]:
+    if _check_table_selection('shunt', table_selection) and "max_step" not in net["shunt"]:
         net.shunt["max_step"] = 1
-    if "std_type" not in net.trafo3w:
+    if _check_table_selection('trafo3w', table_selection) and "std_type" not in net.trafo3w:
         net.trafo3w["std_type"] = None
 
-    if "current_source" not in net.sgen:
+    if _check_table_selection('sgen', table_selection) and "current_source" not in net.sgen:
         net.sgen["current_source"] = net.sgen["type"].apply(
             func=lambda x: False if x == "motor" else True)
 
-    if "g_us_per_km" not in net.line:
+    if _check_table_selection('line', table_selection) and "g_us_per_km" not in net.line:
         net.line["g_us_per_km"] = 0.
 
-    if "slack" not in net.gen:
+    if _check_table_selection('gen', table_selection) and "slack" not in net.gen:
         net.gen["slack"] = False
 
-    if "tap_phase_shifter" not in net.trafo and "tp_phase_shifter" not in net.trafo:
+    if _check_table_selection('trafo', table_selection) and "tap_phase_shifter" not in net.trafo and "tp_phase_shifter" not in net.trafo:
         net.trafo["tap_phase_shifter"] = False
 
     # unsymmetric impedance
-    if "r_pu" in net.impedance:
+    if _check_table_selection('impedance', table_selection) and "r_pu" in net.impedance:
         net.impedance["rft_pu"] = net.impedance["rtf_pu"] = net.impedance["r_pu"]
         net.impedance["xft_pu"] = net.impedance["xtf_pu"] = net.impedance["x_pu"]
 
     # Update the switch table with 'z_ohm'
-    if 'z_ohm' not in net.switch:
+    if _check_table_selection('switch', table_selection) and 'z_ohm' not in net.switch:
         net.switch['z_ohm'] = 0
 
-    if "name" not in net.measurement:
+    if _check_table_selection('measurement', table_selection) and "name" not in net.measurement:
         net.measurement.insert(0, "name", None)
 
-    if "initial_run" not in net.controller:
+    if _check_table_selection('controller', table_selection) and "initial_run" not in net.controller:
         net.controller.insert(4, 'initial_run', False)
         for _, ctrl in net.controller.iterrows():
             if hasattr(ctrl['object'], 'initial_run'):
@@ -240,8 +257,13 @@ def _update_trafo_type_parameter_names(net):
                 net.std_types[element][type][new_key] = net.std_types[element][type].pop(old_key)
 
 
-def _update_trafo_parameter_names(net):
-    for element in ["trafo", "trafo3w"]:
+def _update_trafo_parameter_names(net, table_selection):
+    update_data = []
+    if _check_table_selection('trafo', table_selection):
+        update_data += ['trafo']
+    if _check_table_selection('trafo3w', table_selection):
+        update_data += ['trafo3w']
+    for element in update_data:
         replace_cols = {col: _update_column(col) for col in net[element].columns if
                         col.startswith("tp") or col.startswith("vsc")}
         net[element].rename(columns=replace_cols, inplace=True)
@@ -312,11 +334,21 @@ def _update_object_attributes(obj):
             obj.__dict__[val] = obj.__dict__.pop(key)
 
 
-def _convert_objects(net):
+def _convert_objects(net, table_selection):
     """
     The function updates attribute names in pandapower objects. For now, it affects TrafoController.
     Should be expanded for other objects if necessary.
     """
-    if "controller" in net.keys():
+    _check_table_selection('controller', table_selection)
+    if _check_table_selection('controller', table_selection) and "controller" in net.keys():
         for obj in net["controller"].object.values:
             _update_object_attributes(obj)
+
+
+def _check_table_selection(element, table_selection):
+    if table_selection is None:
+        return True
+    elif element in table_selection:
+        return True
+    else:
+        return False

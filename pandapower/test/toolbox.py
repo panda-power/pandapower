@@ -37,6 +37,7 @@ def assert_net_equal(a_net, b_net, **kwargs):
                 'trafo', 'switch', 'trafo3w', 'gen', 'ext_grid', 'asymmetric_load', 'asymmetric_sgen',
                 'res_line', 'res_bus', 'res_sgen', 'res_gen', 'res_shunt', 'res_load', 'res_ext_grid',
                 'res_trafo']
+    namelist = kwargs.pop('name_selection', namelist)
     for name in namelist:
         if name in a_net or name in b_net:
             if not (a_net[name] is None and b_net[name] is None):

@@ -457,8 +457,7 @@ class FromSerializableRegistry():
         if isclass(class_) and issubclass(class_, JSONSerializableClass):
             if isinstance(self.obj, str):
                 self.obj = json.loads(self.obj, cls=PPJSONDecoder,
-                                      object_hook=partial(pp_hook,
-                                                          registry_class=FromSerializableRegistry))
+                                      object_hook=pp_hook)
                 # backwards compatibility
             if "net" in self.obj:
                 del self.obj["net"]
@@ -504,16 +503,21 @@ class FromSerializableRegistry():
 class PPJSONDecoder(json.JSONDecoder):
     def __init__(self, **kwargs):
         # net = pandapowerNet.__new__(pandapowerNet)
-#        net = create_empty_network()
-        super_kwargs = {"object_hook": partial(pp_hook, registry_class=FromSerializableRegistry)}
+        #        net = create_empty_network()
+        deserialize_pandas = kwargs.pop('deserialize_pandas', True)
+        super_kwargs = {"object_hook": partial(pp_hook,
+                                               deserialize_pandas=deserialize_pandas,
+                                               registry_class=FromSerializableRegistry)}
         super_kwargs.update(kwargs)
         super().__init__(**super_kwargs)
 
 
-def pp_hook(d, registry_class=FromSerializableRegistry):
+def pp_hook(d, deserialize_pandas=True, registry_class=FromSerializableRegistry):
     try:
         if '_module' in d and '_class' in d:
-            if "_object" in d:
+            if 'pandas' in d['_module'] and not deserialize_pandas:
+                return json.dumps(d)
+            elif "_object" in d:
                 obj = d.pop('_object')
             elif "_state" in d:
                 obj = d['_state']
@@ -704,7 +708,11 @@ def to_serializable(obj):
 
 @to_serializable.register(pandapowerNet)
 def json_pandapowernet(obj):
+    logger.debug('pandapowerNet')
     net_dict = {k: item for k, item in obj.items() if not k.startswith("_")}
+    for k, item in net_dict.items():
+        if (isinstance(item, str) and '_module' in item):
+            net_dict[k] = json.loads(item)
     d = with_signature(obj, net_dict)
     return d
 

@@ -269,8 +269,7 @@ def transform_net_with_df_and_geo(net, point_geo_columns, line_geo_columns):
                         data = {"coords": [row[0] for row in df_dict["data"]]}
                         geo = [shapely.geometry.LineString(row[1]) for row in df_dict["data"]]
 
-                    net[key] = geopandas.GeoDataFrame(data, crs=fiona.crs.from_epsg(epsg),
-                                                      geometry=geo, index=df_index)
+                    net[key] = geopandas.GeoDataFrame(data, crs=f"epsg:{epsg}", geometry=geo, index=df_index)
                 else:
                     net[key] = pd.DataFrame(columns=df_dict["columns"], index=df_index,
                                             data=df_dict["data"])

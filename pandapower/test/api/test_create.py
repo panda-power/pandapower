@@ -23,7 +23,7 @@ def test_convenience_create_functions():
     pp.create_line_from_parameters(net, b1, b2, length_km=20., r_ohm_per_km=0.0487,
                                    x_ohm_per_km=0.1382301, c_nf_per_km=160., max_i_ka=0.664)
 
-    l0 = pp.create_load_from_cosphi(net, b2, 10, 0.95, "ind", name="load")
+    l0 = pp.create_load_from_cosphi(net, b2, 10, 0.95, "underexcited", name="load")
     pp.runpp(net, init="flat")
     assert net.load.p_mw.at[l0] == 9.5
     assert net.load.q_mvar.at[l0] > 0
@@ -38,7 +38,7 @@ def test_convenience_create_functions():
     assert np.isclose(net.res_bus.vm_pu.at[b2], 1.0021942964)
     assert net.shunt.name.at[sh0] == "shunt"
 
-    sg0 = pp.create_sgen_from_cosphi(net, b2, 5, 0.95, "cap", name="sgen")
+    sg0 = pp.create_sgen_from_cosphi(net, b2, 5, 0.95, "overexcited", name="sgen")
     pp.runpp(net, init="flat")
     assert np.sqrt(net.sgen.p_mw.at[sg0] ** 2 + net.sgen.q_mvar.at[sg0] ** 2) == 5
     assert net.sgen.p_mw.at[sg0] == 4.75

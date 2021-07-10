@@ -905,9 +905,8 @@ def create_asymmetric_load(net, bus, p_a_mw=0, p_b_mw=0, p_c_mw=0, q_a_mvar=0, q
 #     OUTPUT:
 #         **index** (int) - The unique ID of the created load
 #
-#     All elements are modeled from a consumer point of view. Active power will therefore always be
-#     positive, reactive power will be negative for inductive behaviour and positive for capacitive
-#     behaviour.
+#     Load elements are modeled from a consumer point of view. Active power will therefore always be
+#     positive, reactive power will be positive for under-excited behavior (Q absorption, decreases voltage) and negative for over-excited behavior (Q injection, increases voltage)
 #     """
 #     if bus not in net["bus"].index.values:
 #         raise UserWarning("Cannot attach to bus %s, bus does not exist" % bus)
@@ -946,16 +945,16 @@ def create_load_from_cosphi(net, bus, sn_mva, cos_phi, mode, **kwargs):
 
         **cos_phi** (float) - power factor cos_phi
 
-        **mode** (str) - "ind" for inductive or "cap" for capacitive behaviour
+        **mode** (str) - "underexcited" (Q absorption, decreases voltage) or "overexcited" (Q injection, increases voltage)
 
         **kwargs are passed on to the create_load function
 
     OUTPUT:
         **index** (int) - The unique ID of the created load
 
-    All elements are modeled from a consumer point of view. Active power will therefore always be
-    positive, reactive power will be negative for inductive behaviour and positive for capacitive
-    behaviour.
+    Load elements are modeled from a consumer point of view. Active power will therefore always be
+    positive, reactive power will be positive for underexcited behavior (Q absorption, decreases voltage) and negative for
+    overexcited behavior (Q injection, increases voltage).
     """
     from pandapower.toolbox import pq_from_cosphi
     p_mw, q_mvar = pq_from_cosphi(sn_mva, cos_phi, qmode=mode, pmode="load")
@@ -1230,14 +1229,15 @@ def create_sgen_from_cosphi(net, bus, sn_mva, cos_phi, mode, **kwargs):
 
         **cos_phi** (float) - power factor cos_phi
 
-        **mode** (str) - "ind" for inductive or "cap" for capacitive behaviour
+        **mode** (str) - "underexcited" (Q absorption, decreases voltage) or "overexcited" (Q injection, increases voltage)
 
     OUTPUT:
         **index** (int) - The unique ID of the created sgen
 
     gen, sgen, and ext_grid are modelled in the generator point of view. Active power
-    will therefore be postive por generation, and reactive power will be negative for consumption
-    behaviour and positive for generation behaviour.
+    will therefore be postive for generation, and reactive power will be negative for
+    underexcited behavior (Q absorption, decreases voltage) and
+    positive for for overexcited behavior (Q injection, increases voltage).
     """
     from pandapower.toolbox import pq_from_cosphi
     p_mw, q_mvar = pq_from_cosphi(sn_mva, cos_phi, qmode=mode, pmode="gen")
@@ -1342,7 +1342,8 @@ def create_storage(net, bus, p_mw, max_e_mwh, q_mvar=0, sn_mva=nan, soc_percent=
 def create_gen(net, bus, p_mw, vm_pu=1., sn_mva=nan, name=None, index=None, max_q_mvar=nan,
                min_q_mvar=nan, min_p_mw=nan, max_p_mw=nan, min_vm_pu=nan, max_vm_pu=nan,
                scaling=1., type=None, slack=False, controllable=nan, vn_kv=nan,
-               xdss_pu=nan, rdss_pu=nan, cos_phi=nan, in_service=True):
+               xdss_pu=nan, rdss_ohm=nan, cos_phi=nan, pg_percent=nan, power_station_trafo=None,
+               in_service=True):
     """
     Adds a generator to the network.
 
@@ -1381,9 +1382,13 @@ def create_gen(net, bus, p_mw, vm_pu=1., sn_mva=nan, name=None, index=None, max_
 
         **xdss_pu** (float, NaN) - Subtransient generator reactance for short-circuit calculation
 
-        **rdss_pu** (float, NaN) - Subtransient generator resistance for short-circuit calculation
+        **rdss_ohm** (float, NaN) - Subtransient generator resistance for short-circuit calculation
 
         **cos_phi** (float, NaN) - Rated cosine phi of the generator for short-circuit calculation
+
+        **pg_percent** (float, NaN) - Rated pg (voltage control range) of the generator for short-circuit calculation
+
+        **power_station_trafo** (int, None) - Index of the power station transformer for short-circuit calculation
 
         **in_service** (bool, True) - True for in_service or False for out of service
 
@@ -1437,18 +1442,14 @@ def create_gen(net, bus, p_mw, vm_pu=1., sn_mva=nan, name=None, index=None, max_
     _create_column_and_set_value(net, index, max_vm_pu, "max_vm_pu", "gen", default_val=2.)
     _create_column_and_set_value(net, index, min_vm_pu, "min_vm_pu", "gen", default_val=0.)
 
-    # Short circuit calculation limits
+    # Short circuit calculation variables
     _create_column_and_set_value(net, index, vn_kv, "vn_kv", "gen")
     _create_column_and_set_value(net, index, cos_phi, "cos_phi", "gen")
-
-    if not isnan(xdss_pu):
-        if "xdss_pu" not in net.gen.columns:
-            net.gen.loc[:, "xdss_pu"] = pd.Series(dtype=float64)
-        if "rdss_pu" not in net.gen.columns:
-            net.gen.loc[:, "rdss_pu"] = pd.Series(dtype=float64)
-        net.gen.at[index, "xdss_pu"] = float(xdss_pu)
-
-    _create_column_and_set_value(net, index, rdss_pu, "rdss_pu", "gen")
+    _create_column_and_set_value(net, index, xdss_pu, "xdss_pu", "gen")
+    _create_column_and_set_value(net, index, rdss_ohm, "rdss_ohm", "gen")
+    _create_column_and_set_value(net, index, pg_percent, "pg_percent", "gen")
+    _create_column_and_set_value(net, index, power_station_trafo,
+                                 "power_station_trafo", "gen")
 
     return index
 
@@ -1456,7 +1457,8 @@ def create_gen(net, bus, p_mw, vm_pu=1., sn_mva=nan, name=None, index=None, max_
 def create_gens(net, buses, p_mw, vm_pu=1., sn_mva=nan, name=None, index=None, max_q_mvar=None,
                 min_q_mvar=None, min_p_mw=None, max_p_mw=None, min_vm_pu=None, max_vm_pu=None,
                 scaling=1., type=None, slack=False, controllable=None, vn_kv=None,
-                xdss_pu=None, rdss_pu=None, cos_phi=None, in_service=True, **kwargs):
+                xdss_pu=None, rdss_ohm=None, cos_phi=None, pg_percent=None, power_station_trafo=None,
+                in_service=True, **kwargs):
     """
     Adds generators to the specified buses network.
 
@@ -1500,11 +1502,16 @@ def create_gens(net, buses, p_mw, vm_pu=1., sn_mva=nan, name=None, index=None, m
         **xdss_pu** (list of float, NaN) - Subtransient generator reactance for short-circuit \
             calculation
 
-        **rdss_pu** (list of float, NaN) - Subtransient generator resistance for short-circuit \
+        **rdss_ohm** (list of float, NaN) - Subtransient generator resistance for short-circuit \
             calculation
 
         **cos_phi** (list of float, NaN) - Rated cosine phi of the generator for short-circuit \
             calculation
+
+        **pg_percent** (float, NaN) - Rated pg (voltage control range) of the generator for \
+            short-circuit calculation
+
+        **power_station_trafo** (int, None) - Index of the power station transformer for short-circuit calculation
 
         **in_service** (bool, True) - True for in_service or False for out of service
 
@@ -1551,7 +1558,9 @@ def create_gens(net, buses, p_mw, vm_pu=1., sn_mva=nan, name=None, index=None, m
     _add_series_to_entries(entries, index, "vn_kv", vn_kv)
     _add_series_to_entries(entries, index, "cos_phi", cos_phi)
     _add_series_to_entries(entries, index, "xdss_pu", xdss_pu)
-    _add_series_to_entries(entries, index, "rdss_pu", rdss_pu)
+    _add_series_to_entries(entries, index, "rdss_ohm", rdss_ohm)
+    _add_series_to_entries(entries, index, "pg_percent", pg_percent)
+    _add_series_to_entries(entries, index, "power_station_trafo", power_station_trafo)
     _add_series_to_entries(entries, index, "controllable", controllable, dtyp=bool_,
                            default_val=False)
 
@@ -2205,14 +2214,18 @@ def create_transformer(net, hv_bus, lv_bus, std_type, name=None, tap_pos=nan, in
     return index
 
 
-def create_transformer_from_parameters(net, hv_bus, lv_bus, sn_mva, vn_hv_kv, vn_lv_kv, vkr_percent,
-                                       vk_percent, pfe_kw, i0_percent, shift_degree=0,
-                                       tap_side=None, tap_neutral=nan, tap_max=nan, tap_min=nan,
-                                       tap_step_percent=nan, tap_step_degree=nan, tap_pos=nan,
-                                       tap_phase_shifter=False, in_service=True, name=None,
-                                       vector_group=None, index=None, max_loading_percent=nan,
-                                       parallel=1, df=1., vk0_percent=nan, vkr0_percent=nan,
-                                       mag0_percent=nan, mag0_rx=nan, si0_hv_partial=nan, **kwargs):
+def create_transformer_from_parameters(net, hv_bus, lv_bus, sn_mva, vn_hv_kv, vn_lv_kv,
+                                       vkr_percent, vk_percent, pfe_kw, i0_percent,
+                                       shift_degree=0,
+                                       tap_side=None, tap_neutral=nan, tap_max=nan,
+                                       tap_min=nan, tap_step_percent=nan, tap_step_degree=nan,
+                                       tap_pos=nan, tap_phase_shifter=False, in_service=True,
+                                       name=None, vector_group=None, index=None,
+                                       max_loading_percent=nan, parallel=1,
+                                       df=1., vk0_percent=nan, vkr0_percent=nan,
+                                       mag0_percent=nan, mag0_rx=nan,
+                                       si0_hv_partial=nan,
+                                       pt_percent=nan, oltc=False, **kwargs):
     """
     Creates a two-winding transformer in table net["trafo"].
     The trafo parameters are defined through the standard type library.
@@ -2292,6 +2305,10 @@ def create_transformer_from_parameters(net, hv_bus, lv_bus, sn_mva, vn_hv_kv, vn
         **df** (float) - derating factor: maximal current of transformer in relation to nominal \
             current of transformer (from 0 to 1)
 
+        **pt_percent** (float, nan) - (short circuit only)
+
+        **oltc** (bool, False) - (short circuit only)
+
         ** only considered in loadflow if calculate_voltage_angles = True
 
     OUTPUT:
@@ -2321,9 +2338,9 @@ def create_transformer_from_parameters(net, hv_bus, lv_bus, sn_mva, vn_hv_kv, vn
         "vn_lv_kv": vn_lv_kv, "vk_percent": vk_percent, "vkr_percent": vkr_percent,
         "pfe_kw": pfe_kw, "i0_percent": i0_percent, "tap_neutral": tap_neutral,
         "tap_max": tap_max, "tap_min": tap_min, "shift_degree": shift_degree,
-        "tap_side": tap_side, "tap_step_percent": tap_step_percent,
-        "tap_step_degree": tap_step_degree,
-        "tap_phase_shifter": tap_phase_shifter, "parallel": parallel, "df": df
+        "tap_side": tap_side, "tap_step_percent": tap_step_percent, "tap_step_degree": tap_step_degree,
+        "tap_phase_shifter": tap_phase_shifter, "parallel": parallel, "df": df,
+        "pt_percent": pt_percent, "oltc": oltc
     }
 
     if ("tap_neutral" in v) and (tap_pos is nan):
@@ -2344,6 +2361,7 @@ def create_transformer_from_parameters(net, hv_bus, lv_bus, sn_mva, vn_hv_kv, vn
         _create_column_and_set_value(net, index, si0_hv_partial, "si0_hv_partial", "trafo")
         _create_column_and_set_value(net, index, vector_group, "vector_group", "trafo", dtyp=str,
                                      default_val=None)
+    _create_column_and_set_value(net, index, pt_percent, "pt_percent", "trafo")
     _create_column_and_set_value(net, index, max_loading_percent, "max_loading_percent", "trafo")
 
     return index
@@ -2357,7 +2375,7 @@ def create_transformers_from_parameters(net, hv_buses, lv_buses, sn_mva, vn_hv_k
                                         vector_group=None, index=None, max_loading_percent=None,
                                         parallel=1, df=1., vk0_percent=None, vkr0_percent=None,
                                         mag0_percent=None, mag0_rx=None, si0_hv_partial=None,
-                                        **kwargs):
+                                        pt_percent=nan, oltc=False, **kwargs):
     """
     Creates several two-winding transformers in table net["trafo"].
     The trafo parameters are defined through the standard type library.
@@ -2438,6 +2456,10 @@ def create_transformers_from_parameters(net, hv_buses, lv_buses, sn_mva, vn_hv_k
         **df** (float) - derating factor: maximal current of transformer in relation to nominal \
             current of transformer (from 0 to 1)
 
+        **pt_percent** (float, nan) - (short circuit only)
+
+        **oltc** (bool, False) - (short circuit only)
+
         ** only considered in loadflow if calculate_voltage_angles = True
 
     OUTPUT:
@@ -2461,7 +2483,8 @@ def create_transformers_from_parameters(net, hv_buses, lv_buses, sn_mva, vn_hv_k
                "tap_neutral": tp_neutral, "tap_max": tap_max, "tap_min": tap_min,
                "shift_degree": shift_degree, "tap_pos": tp_pos, "tap_side": tap_side,
                "tap_step_percent": tap_step_percent, "tap_step_degree": tap_step_degree,
-               "tap_phase_shifter": tap_phase_shifter, "parallel": parallel, "df": df}
+               "tap_phase_shifter": tap_phase_shifter, "parallel": parallel, "df": df,
+               "pt_percent": pt_percent, "oltc": oltc}
 
     _add_series_to_entries(entries, index, "vk0_percent", vk0_percent)
     _add_series_to_entries(entries, index, "vkr0_percent", vkr0_percent)
@@ -2470,6 +2493,7 @@ def create_transformers_from_parameters(net, hv_buses, lv_buses, sn_mva, vn_hv_k
     _add_series_to_entries(entries, index, "si0_hv_partial", si0_hv_partial)
     _add_series_to_entries(entries, index, "max_loading_percent", max_loading_percent)
     _add_series_to_entries(entries, index, "vector_group", vector_group, dtyp=str)
+    _add_series_to_entries(entries, index, "pt_percent", pt_percent)
 
     _set_multiple_entries(net, "trafo", index, **entries, **kwargs)
 
@@ -2588,7 +2612,10 @@ def create_transformer3w_from_parameters(net, hv_bus, mv_bus, lv_bus, vn_hv_kv, 
                                          tap_step_percent=nan, tap_step_degree=nan, tap_pos=nan,
                                          tap_neutral=nan, tap_max=nan,
                                          tap_min=nan, name=None, in_service=True, index=None,
-                                         max_loading_percent=nan, tap_at_star_point=False):
+                                         max_loading_percent=nan, tap_at_star_point=False,
+                                         vk0_hv_percent=nan, vk0_mv_percent=nan, vk0_lv_percent=nan,
+                                         vkr0_hv_percent=nan, vkr0_mv_percent=nan, vkr0_lv_percent=nan,
+                                         vector_group=None):
     """
     Adds a three-winding transformer in table net["trafo3w"].
 
@@ -2664,6 +2691,20 @@ def create_transformer3w_from_parameters(net, hv_bus, mv_bus, lv_bus, vn_hv_kv, 
 
         **max_loading_percent (float)** - maximum current loading (only needed for OPF)
 
+        **vk0_hv_percent** (float) - zero sequence short circuit voltage from high to medium voltage
+
+        **vk0_mv_percent** (float) - zero sequence short circuit voltage from medium to low voltage
+
+        **vk0_lv_percent** (float) - zero sequence short circuit voltage from high to low voltage
+
+        **vkr0_hv_percent** (float) - zero sequence real part of short circuit voltage from high to medium voltage
+
+        **vkr0_mv_percent** (float) - zero sequence real part of short circuit voltage from medium to low voltage
+
+        **vkr0_lv_percent** (float) - zero sequence real part of short circuit voltage from high to low voltage
+
+        **vector_group** (list of String) - Vector group of the transformer3w
+
     OUTPUT:
         **trafo_id** - The unique trafo_id of the created 3W transformer
 
@@ -2691,12 +2732,15 @@ def create_transformer3w_from_parameters(net, hv_bus, mv_bus, lv_bus, vn_hv_kv, 
                "vkr_hv_percent", "vkr_mv_percent", "vkr_lv_percent", "pfe_kw", "i0_percent",
                "shift_mv_degree", "shift_lv_degree", "tap_side", "tap_step_percent",
                "tap_step_degree", "tap_pos", "tap_neutral", "tap_max", "tap_min", "in_service",
-               "name", "std_type", "tap_at_star_point"]
+               "name", "std_type", "tap_at_star_point", "vk0_hv_percent", "vk0_mv_percent", "vk0_lv_percent",
+               "vkr0_hv_percent", "vkr0_mv_percent", "vkr0_lv_percent", "vector_group"]
     values = [lv_bus, mv_bus, hv_bus, vn_hv_kv, vn_mv_kv, vn_lv_kv, sn_hv_mva, sn_mv_mva, sn_lv_mva,
               vk_hv_percent, vk_mv_percent, vk_lv_percent, vkr_hv_percent, vkr_mv_percent,
               vkr_lv_percent, pfe_kw, i0_percent, shift_mv_degree, shift_lv_degree, tap_side,
               tap_step_percent, tap_step_degree, tap_pos, tap_neutral, tap_max, tap_min,
-              bool(in_service), name, None, tap_at_star_point]
+              bool(in_service), name, None, tap_at_star_point,
+              vk0_hv_percent, vk0_mv_percent, vk0_lv_percent,
+              vkr0_hv_percent, vkr0_mv_percent, vkr0_lv_percent, vector_group]
 
     _set_entries(net, "trafo3w", index, **dict(zip(columns, values)))
 
@@ -2713,7 +2757,10 @@ def create_transformers3w_from_parameters(net, hv_buses, mv_buses, lv_buses, vn_
                                           tap_step_percent=nan, tap_step_degree=nan, tap_pos=nan,
                                           tap_neutral=nan, tap_max=nan, tap_min=nan, name=None,
                                           in_service=True, index=None, max_loading_percent=None,
-                                          tap_at_star_point=False, **kwargs):
+                                          tap_at_star_point=False,
+                                          vk0_hv_percent=nan, vk0_mv_percent=nan, vk0_lv_percent=nan,
+                                          vkr0_hv_percent=nan, vkr0_mv_percent=nan, vkr0_lv_percent=nan,
+                                          vector_group=None, **kwargs):
     """
     Adds a three-winding transformer in table net["trafo3w"].
 
@@ -2792,6 +2839,20 @@ def create_transformers3w_from_parameters(net, hv_buses, mv_buses, lv_buses, vn_
 
         **max_loading_percent (float)** - maximum current loading (only needed for OPF)
 
+        **vk0_hv_percent** (float) - zero sequence short circuit voltage from high to medium voltage
+
+        **vk0_mv_percent** (float) - zero sequence short circuit voltage from medium to low voltage
+
+        **vk0_lv_percent** (float) - zero sequence short circuit voltage from high to low voltage
+
+        **vkr0_hv_percent** (float) - zero sequence real part of short circuit voltage from high to medium voltage
+
+        **vkr0_mv_percent** (float) - zero sequence real part of short circuit voltage from medium to low voltage
+
+        **vkr0_lv_percent** (float) - zero sequence real part of short circuit voltage from high to low voltage
+
+        **vector_group** (list of String) - Vector group of the transformer3w
+
     OUTPUT:
         **trafo_id** - List of trafo_ids of the created 3W transformers
 
@@ -2829,7 +2890,11 @@ def create_transformers3w_from_parameters(net, hv_buses, mv_buses, lv_buses, vn_
                "tap_step_degree": tap_step_degree, "tap_pos": tp_pos, "tap_neutral": tp_neutral,
                "tap_max": tap_max, "tap_min": tap_min,
                "in_service": array(in_service).astype(bool_), "name": name,
-               "tap_at_star_point": array(tap_at_star_point).astype(bool_), "std_type": None}
+               "tap_at_star_point": array(tap_at_star_point).astype(bool_), "std_type": None,
+               "vk0_hv_percent":vk0_hv_percent, "vk0_mv_percent":vk0_mv_percent,
+               "vk0_lv_percent":vk0_lv_percent, "vkr0_hv_percent":vkr0_hv_percent,
+               "vkr0_mv_percent":vkr0_mv_percent, "vkr0_lv_percent":vkr0_lv_percent,
+               "vector_group": vector_group}
 
     _add_series_to_entries(entries, index, "max_loading_percent", max_loading_percent)
 
@@ -3321,7 +3386,7 @@ def create_measurement(net, meas_type, element_type, value, std_dev, element, si
     OPTIONAL:
         **check_existing** (bool, default: None) - Check for and replace existing measurements for\
             this bus, type and element_type. Set it to false for performance improvements which can\
-            cause unsafe behaviour
+            cause unsafe behavior
 
         **index** (int, default: None) - Index of the measurement in the measurement table. Should\
             not exist already.
@@ -3542,7 +3607,7 @@ def _create_column_and_set_value(net, index, variable, column, element, dtyp=flo
     # (e.g. "gen") table
     # create this column and write the value of variable to the index of this element
     try:
-        set_value = not isnan(variable)
+        set_value = not (isnan(variable) or variable is None)
     except TypeError:
         set_value = True
     if set_value:

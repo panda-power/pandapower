@@ -37,7 +37,9 @@ def run_all_tests(parallel=False, n_cpu=None):
 
     Inputs:
     parallel (bool, False) - If true and pytest-xdist is installed, tests are run in parallel
-    n_cpu (int, None) - number of CPUs to run the tests on in parallel. Only relevant for parallel runs.
+
+    n_cpu (int, None) - number of CPUs to run the tests on in parallel. Only relevant fo
+        parallel runs.
     """
 
     if parallel:
@@ -59,7 +61,9 @@ def run_fast_tests(parallel=False, n_cpu=None):
     Only executes the tests which are **not** marked as slow with pytest.mark.slow
 
     parallel (bool, False) - If true and pytest-xdist is installed, tests are run in parallel
-    n_cpu (int, None) - number of CPUs to run the tests on in parallel. Only relevant for parallel runs.
+
+    n_cpu (int, None) - number of CPUs to run the tests on in parallel. Only relevant for
+        parallel runs.
 
     """
 
@@ -81,7 +85,9 @@ def run_slow_tests(parallel=False, n_cpu=None):
     Only executes the tests which are marked as slow with pytest.mark.slow
 
     parallel (bool, False) - If true and pytest-xdist is installed, tests are run in parallel
-    n_cpu (int, None) - number of CPUs to run the tests on in parallel. Only relevant for parallel runs.
+
+    n_cpu (int, None) - number of CPUs to run the tests on in parallel. Only relevant for
+        parallel runs.
     """
 
     if parallel:
@@ -101,7 +107,8 @@ def get_command_line_args():
     parser = argparse.ArgumentParser()
 
     parser.add_argument('-which', type=str, default="all", help="run 'fast' or 'all' tests")
-    parser.add_argument('-n_cpu', type=int, default=1, help="runs the tests in parallel if n_cpu > 1")
+    parser.add_argument('-n_cpu', type=int, default=1,
+                        help="runs the tests in parallel if n_cpu > 1")
 
     args = parser.parse_args()
     # return as dict

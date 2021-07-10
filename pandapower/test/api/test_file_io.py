@@ -85,7 +85,6 @@ def test_json(net_in, tmp_path):
         net_geo = copy.deepcopy(net_in)
         # make GeodataFrame
         from shapely.geometry import Point, LineString
-        from fiona.crs import from_epsg
         import geopandas as gpd
 
         for tab in ('bus_geodata', 'line_geodata'):
@@ -93,7 +92,7 @@ def test_json(net_in, tmp_path):
                 geometry = net_geo[tab].apply(lambda x: Point(x.x, x.y), axis=1)
             else:
                 geometry = net_geo[tab].coords.apply(LineString)
-            net_geo[tab] = gpd.GeoDataFrame(net_geo[tab], geometry=geometry, crs=from_epsg(4326))
+            net_geo[tab] = gpd.GeoDataFrame(net_geo[tab], geometry=geometry, crs=f"epsg:4326")
 
         pp.to_json(net_geo, filename)
         net_out = pp.from_json(filename)

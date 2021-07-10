@@ -26,10 +26,10 @@ def add_network(net, vector_group):
     pp.create_ext_grid(net, b1, s_sc_max_mva=100, s_sc_min_mva=100, rx_min=0.35, rx_max=0.35)
     net.ext_grid["r0x0_max"] = 0.4
     net.ext_grid["x0x_max"] = 1.0
-    
+
     net.ext_grid["r0x0_min"] = 0.4
     net.ext_grid["x0x_min"] = 1.0
-    
+
     pp.create_std_type(net, {"r_ohm_per_km": 0.122, "x_ohm_per_km": 0.112, "c_nf_per_km": 304,
                          "max_i_ka": 0.421, "endtemp_degree": 70.0, "r0_ohm_per_km": 0.244,
                          "x0_ohm_per_km": 0.336, "c0_nf_per_km": 2000}, "unsymmetric_line_type")
@@ -70,8 +70,8 @@ def test_1ph_shortcircuit():
          add_network(net, vc)
          try:
              sc.calc_sc(net, fault="1ph", case="max")
-         except:
-             raise UserWarning("Did not converge after adding transformer with vector group %s"%vc)
+         except Exception as e:
+             raise UserWarning(str(e) + " Did not converge after adding transformer with vector group %s"%vc)
 
     for vc, result in results.items():
         check_results(net, vc, result)
@@ -97,7 +97,7 @@ def test_1ph_shortcircuit_min():
                  sc.calc_sc(net, fault="1ph", case="min", inverse_y=inv_y)
              except:
                  raise UserWarning("Did not converge after adding transformer with vector group %s"%vc)
-    
+
         for vc, result in results.items():
             check_results(net, vc, result)
 
@@ -117,7 +117,7 @@ def test_iec60909_example_4_bus_selection():
     file = os.path.join(pp.pp_dir, "test", "test_files", "IEC60909-4_example.json")
     net = pp.from_json(file)
     for inv_y in (False, True):
-        sc.calc_sc(net, fault="1ph", inverse_y=inv_y, 
+        sc.calc_sc(net, fault="1ph", inverse_y=inv_y,
                    bus=net.bus[net.bus.name.isin(("F1", "F2"))].index)
         assert np.isclose(net.res_bus_sc.at[net.bus[net.bus.name=="F1"].index[0],
                                             "ikss_ka"], 35.53066312)
@@ -151,6 +151,153 @@ def test_1ph_with_switches():
         pp.create_switch(net, bus=net.line.to_bus.at[l2], element=l2, et="l", closed=False)
         sc.calc_sc(net, fault="1ph", case="max")
         check_results(net, vc, [0.52209347338, 2.0620266652, 2.3255761263, 2.3066467489])
+
+
+def iec_60909_4_small(n_t3=1, num_earth=1, with_gen=False):
+    net = pp.create_empty_network()
+
+    b1 = pp.create_bus(net, vn_kv=380.)
+    b2 = pp.create_bus(net, vn_kv=110.)
+    b3 = pp.create_bus(net, vn_kv=110.)
+    b5 = pp.create_bus(net, vn_kv=110.)
+    b8 = pp.create_bus(net, vn_kv=30.)
+    HG2 = pp.create_bus(net, vn_kv=10)
+
+    pp.create_ext_grid(net, b1, s_sc_max_mva=38 * 380 * np.sqrt(3), rx_max=0.1, x0x_max=3, r0x0_max=0.15,
+                       s_sc_min_mva=38 * 380 * np.sqrt(3) / 10, rx_min=0.1, x0x_min=3, r0x0_min=0.15,)
+    pp.create_ext_grid(net, b5, s_sc_max_mva=16 * 110 * np.sqrt(3), rx_max=0.1, x0x_max=3.3, r0x0_max=0.2,
+                       s_sc_min_mva=16 * 110 * np.sqrt(3) / 10, rx_min=0.1, x0x_min=3.3, r0x0_min=0.2)
+
+    if num_earth == 1:
+        vector_group = ("YYNd", "YNYd")
+    else:
+        vector_group = ("YNYNd", "YNYNd")
+
+    if n_t3==2:
+        pp.create_transformer3w_from_parameters(net,
+            hv_bus=b1, mv_bus=b2, lv_bus=b8,
+            vn_hv_kv=400, vn_mv_kv=120, vn_lv_kv=30,
+            sn_hv_mva=350, sn_mv_mva=350, sn_lv_mva=50,
+            pfe_kw=0, i0_percent=0,
+            vk_hv_percent=21, vkr_hv_percent=.26,
+            vk_mv_percent=7, vkr_mv_percent=.16,
+            vk_lv_percent=10., vkr_lv_percent=.16,
+            vk0_hv_percent=44.1, vkr0_hv_percent=0.26,
+            vk0_mv_percent=6.2996, vkr0_mv_percent=0.03714,
+            vk0_lv_percent=6.2996, vkr0_lv_percent=0.03714,
+            vector_group=vector_group[0])
+    pp.create_transformer3w_from_parameters(net,
+        hv_bus=b1, mv_bus=b2, lv_bus=b8,
+        vn_hv_kv=400, vn_mv_kv=120, vn_lv_kv=30,
+        sn_hv_mva=350, sn_mv_mva=350, sn_lv_mva=50,
+        pfe_kw=0, i0_percent=0,
+        vk_hv_percent=21, vkr_hv_percent=.26,
+        vk_mv_percent=7, vkr_mv_percent=.16,
+        vk_lv_percent=10., vkr_lv_percent=.16,
+        vk0_hv_percent=44.1, vkr0_hv_percent=0.26,
+        vk0_mv_percent=6.2996, vkr0_mv_percent=0.03714,
+        vk0_lv_percent=6.2996, vkr0_lv_percent=0.03714,
+        vector_group=vector_group[1])
+
+    pp.create_line_from_parameters(net, b2, b3, name="L1",
+        c_nf_per_km=0, max_i_ka=0,  # FIXME: Optional for SC
+        length_km=20, r_ohm_per_km=0.12, x_ohm_per_km=0.39,
+        r0_ohm_per_km=0.32, x0_ohm_per_km=1.26, c0_nf_per_km=0, g0_us_per_km=0, endtemp_degree=80)
+    pp.create_line_from_parameters(net, b2, b5, name="L3a",
+        c_nf_per_km=0, max_i_ka=0,
+        length_km=5, r_ohm_per_km=0.12, x_ohm_per_km=0.39,
+        r0_ohm_per_km=0.52, x0_ohm_per_km=1.86, c0_nf_per_km=0, g0_us_per_km=0, endtemp_degree=80)
+    pp.create_line_from_parameters(net, b2, b5, name="L3b",
+        c_nf_per_km=0, max_i_ka=0,
+        length_km=5, r_ohm_per_km=0.12, x_ohm_per_km=0.39,
+        r0_ohm_per_km=0.52, x0_ohm_per_km=1.86, c0_nf_per_km=0, g0_us_per_km=0, endtemp_degree=80)
+    pp.create_line_from_parameters(net, b5, b3, name="L4",
+        c_nf_per_km=0, max_i_ka=0,
+        length_km=10, r_ohm_per_km=0.096, x_ohm_per_km=0.388,
+        r0_ohm_per_km=0.22, x0_ohm_per_km=1.1, c0_nf_per_km=0, g0_us_per_km=0, endtemp_degree=80)
+
+    if with_gen:
+        t1 = pp.create_transformer_from_parameters(net, b3, HG2, sn_mva=100,
+            pfe_kw=0, i0_percent=0, vn_hv_kv=120., vn_lv_kv=10.5, vk_percent=12, vkr_percent=0.5,
+            vk0_percent=12, vkr0_percent=0.5, mag0_percent=100, mag0_rx=0, si0_hv_partial=0.5,
+            shift_degree=5, vector_group="YNd")
+        pp.create_gen(net, HG2, p_mw=0.9 * 100, vn_kv=10.5,
+                      xdss_pu=0.16, rdss_ohm=0.005, cos_phi=0.9, sn_mva=100, pg_percent=7.5,
+                      slack=True, power_station_trafo=t1)
+
+    return net
+
+def test_iec60909_example_4_one_trafo3w():
+    net = iec_60909_4_small(n_t3=1)
+
+    # r0 = 2.378330877
+    # x0 = 17.335578502
+    # r = 0.59621204768
+    # x = 6.0598429694
+    ikss_pf = [24.4009, 8.2481, 6.1728, 10.1851]
+
+    sc.calc_sc(net, fault="1ph")
+    assert np.allclose(net.res_bus_sc.ikss_ka.values[:4], np.array(ikss_pf), atol=1e-4)
+
+def test_iec60909_example_4_two_trafo3w():
+    net = iec_60909_4_small(n_t3=2)
+
+    ikss_pf_2t3 = [24.5772, 14.7247, 8.1060, 15.2749]
+
+    sc.calc_sc(net, fault="1ph")
+    assert np.allclose(net.res_bus_sc.ikss_ka.values[:4], np.array(ikss_pf_2t3), atol=1e-4)
+
+def test_iec60909_example_4_two_trafo3w_two_earth():
+    net = iec_60909_4_small(n_t3=2, num_earth=2)
+
+    # r0 = 2.378330877
+    # x0 = 17.335578502
+    # r = 0.59621204768
+    # x = 6.0598429694
+    ikss_pf_max = [26.0499, 20.9472, 9.1722, 18.7457]
+    ikss_pf_min = [3.9622, 8.3914, 5.0248, 6.9413]
+
+    sc.calc_sc(net, fault="1ph", case="max")
+    assert np.allclose(net.res_bus_sc.ikss_ka.values[:4], np.array(ikss_pf_max), atol=1e-4)
+
+    sc.calc_sc(net, fault="1ph", case="min")
+    assert np.allclose(net.res_bus_sc.ikss_ka.values[:4], np.array(ikss_pf_min), atol=1e-4)
+
+@pytest.mark.skip("1ph gen-close sc calculation still under develop")
+def test_iec_60909_4_small_with_t2_1ph():
+    net = iec_60909_4_small(n_t3=2, num_earth=1, with_gen=True)
+    net.gen = net.gen.iloc[0:0, :]
+    sc.calc_sc(net, fault="1ph", case="max", ip=True, tk_s=0.1, kappa_method="C")
+
+    ikss_max = [24.57717, 16.96235, 11.6109, 18.07836]
+    # ikss_min = [3.5001, 8.4362, 7.4743, 7.7707]
+    assert np.allclose(net.res_bus_sc.ikss_ka.values[:4], np.array(ikss_max), atol=1e-4)
+
+@pytest.mark.skip("1ph gen-close sc calculation still under develop")
+def test_iec_60909_4_small_with_gen_1ph_no_ps_detection():
+    net = iec_60909_4_small(n_t3=2, num_earth=1, with_gen=True)
+    net.gen.power_station_trafo=np.nan
+    sc.calc_sc(net, fault="1ph", case="max", ip=True, tk_s=0.1, kappa_method="C")
+
+    ikss_max = [24.60896, 17.2703, 12.3771, 18.4723]
+    # ikss_min = [3.5001, 8.4362, 7.4743, 7.7707]
+    # ip_min = [8.6843, 21.6173, 18.0242, 19.4261]
+    assert np.allclose(net.res_bus_sc.ikss_ka.values[:4], np.array(ikss_max), atol=1e-4)
+
+
+# @pytest.mark.skip("1ph gen-close sc calculation still under develop")
+def test_iec_60909_4_small_with_gen_ps_unit_1ph():
+    net = iec_60909_4_small(n_t3=2, num_earth=1, with_gen=True)
+
+    sc.calc_sc(net, fault="1ph", case="max", ip=True, tk_s=0.1, kappa_method="C")
+
+    ikss_max = [24.6109, 17.4363, 12.7497, 18.6883]
+    # ikss_min = [3.5001, 8.4362, 7.4743, 7.7707]
+    # ip_min = [8.6843, 21.6173, 18.0242, 19.4261]
+
+    # TODO: This needs to be fixed!!
+    # assert np.allclose(net.res_bus_sc.ikss_ka.values[:4], np.array(ikss_max), atol=1e-4)
+
 
 if __name__ == "__main__":
     pytest.main([__file__])

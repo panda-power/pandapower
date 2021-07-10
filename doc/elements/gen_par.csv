@@ -17,6 +17,7 @@ max_q_mvar**;float;;Maximum reactive power
 min_q_mvar**;float;;Minimum reactive power
 vn_kv***;float;;Rated voltage of the generator
 xdss_pu***;float;:math:`>` 0;Subtransient generator reactance in per unit
-rdss_pu***;float;:math:`>` 0;Subtransient generator resistence in per unit
+rdss_ohm***;float;:math:`>` 0;Subtransient generator resistence in ohm
 cos_phi***;float;:math:`0 \leq` 1;Rated generator cosine phi
-in_service*;boolean;True / False;specifies if the generator is in service.
+in_service*;boolean;True / False;specifies if the generator is in service
+power_station_trafo*;integer;;index of the power station trafo (short-circuit relevant).

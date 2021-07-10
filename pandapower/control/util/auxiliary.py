@@ -14,6 +14,11 @@ import pandas as pd
 from pandas import Int64Index
 
 from pandapower.toolbox import ensure_iterability
+try:
+    import matplotlib.pyplot as plt
+    MATPLOTLIB_INSTALLED = True
+except ImportError:
+    MATPLOTLIB_INSTALLED = False
 
 try:
     import pplog
@@ -127,7 +132,7 @@ def get_controller_index(net, ctrl_type=None, parameters=None, idx=[]):
         # query of parameters in net.controller dataframe
         idx = Int64Index(idx)
         for df_key in df_keys:
-            idx &= net.controller.index[net.controller[df_key] == parameters[df_key]]
+            idx = idx.intersection(net.controller.index[net.controller[df_key] == parameters[df_key]])
         # query of parameters in controller object attributes
         idx = [i for i in idx if _controller_attributes_query(
             net.controller.object.loc[i], attributes_dict)]
@@ -194,3 +199,12 @@ def drop_same_type_existing_controllers(net, this_ctrl_type, index=None, matchin
         logger.info("Creating controller " + index + " of type %s, " % this_ctrl_type +
                     "no matching parameters are given to check which " +
                     "same type controllers should be dropped.")
+
+
+def plot_characteristic(characteristic, start, stop, num=20):
+    x = np.linspace(start, stop, num)
+    y = characteristic(x)
+    if MATPLOTLIB_INSTALLED:
+        plt.plot(x, y, marker='x')
+    else:
+        logger.info("matplotlib not installed. y-values: %s" % y)

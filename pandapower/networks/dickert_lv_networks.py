@@ -38,7 +38,7 @@ def _create_loads_with_coincidence(net, buses):
     n_buses = len(buses)
     c = c_inf + (1 - c_inf) * n_buses**(-1/2)
     p_mw = c * P_max1
-    p_mw, q_mvar = pp.pq_from_cosphi(p_mw, powerfactor, qmode='ind', pmode="load")
+    p_mw, q_mvar = pp.pq_from_cosphi(p_mw, powerfactor, qmode='underexcited', pmode="load")
 
     # create loads
     for i in buses:

@@ -19,19 +19,24 @@ logger = logging.getLogger(__name__)
 
 def from_mpc(mpc_file, f_hz=50, casename_mpc_file='mpc', validate_conversion=False):
     """
-    This function converts a matpower case file (.mat) version 2 to a pandapower net.
+    This function converts a matpower case file version 2 to a pandapower net.
+
+    Note: The input is a .mat file not an .m script. You need to save the mpc dict variable as .mat
+    file. If the saved variable of the matlab workspace is not named 'mpc', you can adapt the value
+    of 'casename_mpc_file' as needed.
 
     Note: python is 0-based while Matlab is 1-based.
 
     INPUT:
 
-        **mpc_file** - path to a matpower case file (.mat).
+        **mpc_file** - path to a matpower case file (.mat format not .m script).
 
     OPTIONAL:
 
         **f_hz** (int, 50) - The frequency of the network.
 
-        **casename_mpc_file** (str, 'mpc') - The name of the variable in .mat file which contain the matpower case structure, i.e. the arrays "gen", "branch" and "bus".
+        **casename_mpc_file** (str, 'mpc') - The name of the variable in .mat file which contain
+        the matpower case structure, i.e. the arrays "gen", "branch" and "bus".
 
     OUTPUT:
 

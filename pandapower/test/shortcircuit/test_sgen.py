@@ -10,7 +10,7 @@ import pytest
 import pandapower as pp
 import pandapower.shortcircuit as sc
 
-@pytest.fixture
+
 def wind_park_example():
     net = pp.create_empty_network()
     b1 = pp.create_bus(net, vn_kv=110., index=1)
@@ -30,7 +30,7 @@ def wind_park_example():
     net.sgen["k"] = 1.2
     return net
 
-@pytest.fixture
+
 def three_bus_example():
     net = pp.create_empty_network()
     b1 = pp.create_bus(net, 110)
@@ -51,7 +51,7 @@ def three_bus_example():
     pp.create_sgen(net, b2, sn_mva=2, p_mw=0, k=1.2)
     return net
 
-@pytest.fixture
+
 def big_sgen_three_bus_example():
     # ext_grid-bus1--line0--bus2--line1--bus3
     #                        |
@@ -78,8 +78,8 @@ def big_sgen_three_bus_example():
     return net
 
 
-def test_max_3ph_branch_small_sgen(three_bus_example):
-    net = three_bus_example
+def test_max_3ph_branch_small_sgen():
+    net = three_bus_example()
     sc.calc_sc(net, case="max", ip=True, ith=True, branch_results=True)
     assert np.allclose(net.res_bus_sc.ikss_ka.values, np.array([0.53746061, 0.50852707, 0.4988896]))
     assert np.allclose(net.res_line_sc.ikss_ka.values, np.array([ 0.49593034,  0.4988896]))
@@ -87,8 +87,8 @@ def test_max_3ph_branch_small_sgen(three_bus_example):
     assert np.allclose(net.res_line_sc.ith_ka.values, np.array([ 0.49811957,  0.50106881]))
 
 
-def test_max_3ph_branch_big_sgen(big_sgen_three_bus_example):
-    net = big_sgen_three_bus_example
+def test_max_3ph_branch_big_sgen():
+    net = big_sgen_three_bus_example()
     sc.calc_sc(net, case="max", ip=True, ith=True, branch_results=True)
     assert np.allclose(net.res_bus_sc.ikss_ka.values, np.array([1.78453722, 1.75560368, 1.72233192]))
     assert np.allclose(net.res_line_sc.ikss_ka.values, np.array([1.25967331, 1.72233192]))
@@ -96,8 +96,8 @@ def test_max_3ph_branch_big_sgen(big_sgen_three_bus_example):
     assert np.allclose(net.res_line_sc.ith_ka.values, np.array([1.26511638, 1.7298553]))
 
 
-def test_min_3ph_branch_results_small_sgen(three_bus_example):
-    net = three_bus_example
+def test_min_3ph_branch_results_small_sgen():
+    net = three_bus_example()
     sc.calc_sc(net, case="min", ip=True, ith=True, branch_results=True)
     assert np.allclose(net.res_bus_sc.ikss_ka.values, np.array([ 0.43248784,  0.41156533,  0.40431286]))
     assert np.allclose(net.res_line_sc.ikss_ka.values, np.array([0.01259673,  0.40431286]))
@@ -105,8 +105,8 @@ def test_min_3ph_branch_results_small_sgen(three_bus_example):
     assert np.allclose(net.res_line_sc.ith_ka.values, np.array([0.01265116, 0.40605375]))
 
 
-def test_min_3ph_branch_results_big_sgen(big_sgen_three_bus_example):
-    net = big_sgen_three_bus_example
+def test_min_3ph_branch_results_big_sgen():
+    net = big_sgen_three_bus_example()
     sc.calc_sc(net, case="min", ip=True, ith=True, branch_results=True)
     assert np.allclose(net.res_bus_sc.ikss_ka.values, np.array([1.67956442, 1.65864191, 1.62941387]))
     assert np.allclose(net.res_line_sc.ikss_ka.values, np.array([0.36974055, 1.62941387]))
@@ -114,17 +114,17 @@ def test_min_3ph_branch_results_big_sgen(big_sgen_three_bus_example):
     assert np.allclose(net.res_line_sc.ith_ka.values, np.array([0.37133258,  1.63642978]))
 
 
-def test_max_1ph_branch_small_sgen(three_bus_example):
+def test_max_1ph_branch_small_sgen():
     # This test just check coherence between branch ikss_ka results and bus ikss_ka results
 
     # With generator
-    net = three_bus_example
+    net = three_bus_example()
     sc.calc_sc(net, case="max", fault='1ph', branch_results=True)
     i_bus_with_sgen = net.res_bus_sc.copy()
     i_line_with_gen = net.res_line_sc.copy()
 
     # Without generator
-    net = three_bus_example
+    net = three_bus_example()
     net.sgen.in_service = False
     sc.calc_sc(net, case="max", fault='1ph', branch_results=True)
     i_bus_without_sgen = net.res_bus_sc.copy()
@@ -135,17 +135,17 @@ def test_max_1ph_branch_small_sgen(three_bus_example):
 
 
 
-def test_max_1ph_branch_big_sgen(big_sgen_three_bus_example):
+def test_max_1ph_branch_big_sgen():
     # This test just check coherence between branch ikss_ka results and bus ikss_ka results
 
     # With generator
-    net = big_sgen_three_bus_example
+    net = big_sgen_three_bus_example()
     sc.calc_sc(net, case="max", fault='1ph', branch_results=True)
     i_bus_with_sgen = net.res_bus_sc.copy()
     i_line_with_gen = net.res_line_sc.copy()
 
     # Without generator
-    net = big_sgen_three_bus_example
+    net = big_sgen_three_bus_example()
     net.sgen.in_service = False
     sc.calc_sc(net, case="max", fault='1ph', branch_results=True)
     i_bus_without_sgen = net.res_bus_sc.copy()
@@ -159,17 +159,17 @@ def test_max_1ph_branch_big_sgen(big_sgen_three_bus_example):
     assert np.isclose(i_line_with_gen.ikss_ka.at[1], i_bus_with_sgen.ikss_ka.at[2], atol=1e-4)
 
 
-def test_min_1ph_branch_small_sgen(three_bus_example):
+def test_min_1ph_branch_small_sgen():
     # This test just check coherence between branch ikss_ka results and bus ikss_ka results
 
     # With generator
-    net = three_bus_example
+    net = three_bus_example()
     sc.calc_sc(net, case="min", fault='1ph', branch_results=True)
     i_bus_with_sgen = net.res_bus_sc.copy()
     i_line_with_gen = net.res_line_sc.copy()
 
     # Without generator
-    net = three_bus_example
+    net = three_bus_example()
     net.sgen.in_service = False
     sc.calc_sc(net, case="min", fault='1ph', branch_results=True)
     i_bus_without_sgen = net.res_bus_sc.copy()
@@ -182,17 +182,17 @@ def test_min_1ph_branch_small_sgen(three_bus_example):
     assert np.isclose(i_line_with_gen.ikss_ka.at[1], i_bus_with_sgen.ikss_ka.at[2], atol=1e-4)
 
 
-def test_min_1ph_branch_big_sgen(big_sgen_three_bus_example):
+def test_min_1ph_branch_big_sgen():
     # This test just check coherence between branch ikss_ka results and bus ikss_ka results
 
     # With generator
-    net = big_sgen_three_bus_example
+    net = big_sgen_three_bus_example()
     sc.calc_sc(net, case="min", fault='1ph', branch_results=True)
     i_bus_with_sgen = net.res_bus_sc.copy()
     i_line_with_sgen = net.res_line_sc.copy()
 
     # Without generator
-    net = big_sgen_three_bus_example
+    net = big_sgen_three_bus_example()
     net.sgen.in_service = False
     sc.calc_sc(net, case="min", fault='1ph', branch_results=True)
     i_bus_without_sgen = net.res_bus_sc.copy()
@@ -209,11 +209,11 @@ def test_min_1ph_branch_big_sgen(big_sgen_three_bus_example):
     assert np.isclose(i_line_with_sgen.ikss_ka.at[1], i_bus_with_sgen.ikss_ka.at[2], atol=1e-4)
 
 
-def test_wind_park(wind_park_example):
-    net = wind_park_example
+def test_wind_park():
+    net = wind_park_example()
     sc.calc_sc(net, ip=True)
     assert np.isclose(net.res_bus_sc.ikss_ka.at[2], 3.9034, rtol=1e-4)
     assert np.isclose(net.res_bus_sc.ip_ka.at[2], 7.3746, rtol=1e-4)
 
 if __name__ == '__main__':
-    pytest.main(["test_sgen.py"])
+    pytest.main([__file__])

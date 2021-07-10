@@ -1,13 +1,24 @@
 Change Log
-=============
+
+- [ADDED] Optimized the calculation of single/selected buses in 1ph/2ph/3ph short-circuit calculation
+- [CHANGED] Short-circuit gen calculation parameter "rkss_pu" to "rkss_ohm" according to IEC 60909 example
+- [ADDED] Power station units with gen and trafo designated with "ps_trafo_ix" for short-circuit calculation
+- [ADDED] Multiple example networks and network variations from IEC 60909-4
 - [ADDED] OR-Tools implementation of linprog solver
 - [ADDED] Efficient PTDF calculation on large grid
 - [ADDED] toolbox function replace_pq_elmtype()
+- [CHANGED] ConstControl can now also change attributes of other controllers, if the parameter "variable" is defined in the format "object.attribute" (e.g. "object.vm_set_pu")
+- [CHANGED] ConstControl is initialized with level=-1 and order=-1 by default to make sure that it runs before other controllers
+- [CHANGED] ConstControl now writes values from the datasource to net at time_step instead of control_step, which ensures that the values for the time step are set before running the initial power flow
+- [ADDED] Alternative constructor for DiscreteTapControl to use net.trafo.tap_step_percent to determine vm_lower_pu and vm_upper_pu based on vm_set_pu
+- [ADDED] Characteristic object that represents a piecewise-linear characteristic
+- [ADDED] CharacteristicControl that implements adjusting values in net based on some other input values in the grid
+- [ADDED] USetTapControl that adjusts the setpoint for a transformer tap changer, based on a specified result variable (e.g. i_lv_ka)
+- [CHANGED] replaced naming for "inductive" or "ind" by "underexcited" and "capacitive" or "cap" for "overexcited"
 
 
 [2.6.0]- 2021-03-09
 ----------------------
-
 - [ADDED] Factorization mode instead of inversion of Ybus in short-circuit calculation.
 - [ADDED] Optimized the calculation of single/selected buses in 1ph/2ph/3ph short-circuit calculation.
 - [ADDED] New options for run_control to 'continue on divergence' and 'check each level' PR #1104.

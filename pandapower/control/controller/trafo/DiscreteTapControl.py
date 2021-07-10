@@ -1,4 +1,7 @@
-__author__ = 'lthurner'
+# -*- coding: utf-8 -*-
+
+# Copyright (c) 2016-2021 by University of Kassel and Fraunhofer Institute for Energy Economics
+# and Energy System Technology (IEE), Kassel. All rights reserved.
 
 from pandapower.control.controller.trafo_control import TrafoController
 
@@ -42,6 +45,46 @@ class DiscreteTapControl(TrafoController):
         self.vm_upper_pu = vm_upper_pu
 
         self.tap_pos = net[self.trafotable].at[tid, "tap_pos"]
+        self.vm_delta_pu = net[self.trafotable].at[tid, "tap_step_percent"] / 100. * .5 + self.tol
+        self.vm_set_pu = kwargs.get("vm_set_pu")
+
+    @classmethod
+    def from_tap_step_percent(cls, net, tid, vm_set_pu, side="lv", trafotype="2W", tol=1e-3, in_service=True, order=0,
+                              drop_same_existing_ctrl=False, matching_params=None, **kwargs):
+        """
+        Alternative mode of the controller, which uses a set point for voltage and the value of net.trafo.tap_step_percent to calculate
+        vm_upper_pu and vm_lower_pu. To this end, the parameter vm_set_pu should be provided, instead of vm_lower_pu and vm_upper_pu.
+        To use this mode of the controller, the controller can be initialized as following:
+
+        >>> c = DiscreteTapControl.from_tap_step_percent(net, tid, vm_set_pu)
+
+        INPUT:
+            **net** (attrdict) - Pandapower struct
+
+            **tid** (int) - ID of the trafo that is controlled
+
+            **vm_set_pu** (float) - Voltage setpoint in pu
+        """
+        self = cls(net, tid=tid, vm_lower_pu=None, vm_upper_pu=None, side=side, trafotype=trafotype, tol=tol,
+                   in_service=in_service, order=order, drop_same_existing_ctrl=drop_same_existing_ctrl,
+                   matching_params=matching_params, vm_set_pu=vm_set_pu, **kwargs)
+        return self
+
+    @property
+    def vm_set_pu(self):
+        return self._vm_set_pu
+
+    @vm_set_pu.setter
+    def vm_set_pu(self, value):
+        self._vm_set_pu = value
+        if value is None:
+            return
+        self.vm_lower_pu = value - self.vm_delta_pu
+        self.vm_upper_pu = value + self.vm_delta_pu
+
+    def initialize_control(self, net):
+        if hasattr(self, 'vm_set_pu') and self.vm_set_pu is not None:
+            self.vm_delta_pu = net[self.trafotable].at[self.tid, "tap_step_percent"] / 100. * .5 + self.tol
 
     def control_step(self, net):
         """

@@ -201,11 +201,16 @@ def _ppci_internal_to_ppc(result, ppc):
             # update_matrix = np.empty((n_branches, n_buses)) * np.nan
             # update_matrix[result["internal"]['branch_is'], :n_rows_result] = result["internal"][key]
 
-            # # To select only required buses and pad one column of nan value for oos bus
+            # To select only required buses and pad one column of nan value for oos bus
             update_matrix = np.empty((n_branches, value.shape[1]+1)) * 0.0
             update_matrix[result["internal"]['branch_is'],
                           :value.shape[1]] = result["internal"][key]
             ppc['internal'][key] = update_matrix
+            if "br_res_ks_ppci_bus" in result["internal"]:
+                br_res_ks_ppci_bus = np.r_[result["internal"]["br_res_ks_ppci_bus"], [-1]]
+            else:
+                br_res_ks_ppci_bus = np.r_[np.arange(value.shape[1]), [-1]]
+            ppc['internal'][key] = pd.DataFrame(data=update_matrix, columns=br_res_ks_ppci_bus)
         else:
             ppc["internal"][key] = value
 

@@ -12,7 +12,7 @@ If there are no geocoordinates in a network, generic coordinates can be created.
     - networkx
     - graphviz
 
-Two avoid having two compile C libraries, precompiled wheels are available on https://www.lfd.uci.edu/%7Egohlke/pythonlibs/ (unofficial)
+To avoid having to compile C libraries, precompiled wheels are available on https://www.lfd.uci.edu/%7Egohlke/pythonlibs/ (unofficial)
 
 
 Generically created geocoordinates can then be plotted in the same way as real geocoordinates.

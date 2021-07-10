@@ -20,5 +20,14 @@ IP          = start + 9
 IB          = start + 10
 ITH         = start + 11
 IK          = start + 12
+R_EQUIV_OHM = start + 13
+X_EQUIV_OHM = start + 14
+K_G         = start + 15
+K_SG        = start + 16
+V_G         = start + 17
+PS_TRAFO_IX = start + 18
+GS_P        = start + 19
+BS_P        = start + 20
+SKSS        = start + 21
 
-bus_cols_sc = 13
+bus_cols_sc = 22

@@ -7,7 +7,7 @@ import numpy as np
 import pandapower.auxiliary as aux
 from pandapower.build_branch import _switch_branches, _branches_with_oos_buses, _build_branch_ppc
 from pandapower.build_bus import _build_bus_ppc, _calc_pq_elements_and_add_on_ppc, \
-_calc_shunts_and_add_on_ppc, _add_gen_impedances_ppc, _add_motor_impedances_ppc
+_calc_shunts_and_add_on_ppc, _add_ext_grid_sc_impedance, _add_motor_impedances_ppc
 from pandapower.build_gen import _build_gen_ppc, _check_voltage_setpoints_at_same_bus, \
     _check_voltage_angles_at_same_bus, _check_for_reference_bus
 from pandapower.opf.make_objective import _make_objective
@@ -16,6 +16,40 @@ from pandapower.pypower.idx_brch import F_BUS, T_BUS, BR_STATUS
 from pandapower.pypower.idx_bus import NONE, BUS_I, BUS_TYPE
 from pandapower.pypower.idx_gen import GEN_BUS, GEN_STATUS
 from pandapower.pypower.run_userfcn import run_userfcn
+
+
+def _pd2ppc_recycle(net, sequence, recycle):
+    key = "_ppc" if sequence is None else "_ppc%d" % sequence
+    if not recycle or not net.get(key, None):
+        return _pd2ppc(net, sequence=sequence)
+
+    ppc = net[key]
+    ppc["success"] = False
+    ppc["iterations"] = 0.
+    ppc["et"] = 0.
+
+    if "bus_pq" in recycle and recycle["bus_pq"]:
+        # update pq values in bus
+        _calc_pq_elements_and_add_on_ppc(net, ppc, sequence=sequence)
+
+    # if "trafo" in recycle and recycle["trafo"]:
+    #     # update trafo in branch and Ybus
+    #     lookup = net._pd2ppc_lookups["branch"]
+    #     if "trafo" in lookup:
+    #         _calc_trafo_parameter(net, ppc)
+    #     if "trafo3w" in lookup:
+    #         _calc_trafo3w_parameter(net, ppc)
+
+    if "gen" in recycle and recycle["gen"]:
+        # updates the ppc["gen"] part
+        _build_gen_ppc(net, ppc)
+        ppc["gen"] = np.nan_to_num(ppc["gen"])
+
+    ppci = _ppc2ppci(ppc, net)
+    ppci["internal"] = net[key]["internal"]
+    net[key] = ppc
+
+    return ppc, ppci
 
 
 def _pd2ppc(net, sequence=None):
@@ -69,7 +103,7 @@ def _pd2ppc(net, sequence=None):
     ppc = _init_ppc(net, mode=mode, sequence=sequence)
 
     # generate ppc['bus'] and the bus lookup
-    _build_bus_ppc(net, ppc)
+    _build_bus_ppc(net, ppc, sequence=sequence)
     if sequence == 0:
         from pandapower.pd2ppc_zero import _add_ext_grid_sc_impedance_zero, _build_branch_ppc_zero
         # Adds external grid impedance for 3ph and sc calculations in ppc0
@@ -82,7 +116,8 @@ def _pd2ppc(net, sequence=None):
 
     # Adds P and Q for loads / sgens in ppc['bus'] (PQ nodes)
     if mode == "sc":
-        _add_gen_impedances_ppc(net, ppc)
+        _add_ext_grid_sc_impedance(net, ppc)
+        # Generator impedance are seperately added in sc module
         _add_motor_impedances_ppc(net, ppc)
     else:
         _calc_pq_elements_and_add_on_ppc(net, ppc, sequence=sequence)

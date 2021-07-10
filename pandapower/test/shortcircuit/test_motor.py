@@ -12,7 +12,7 @@ import pandapower.shortcircuit as sc
 
 @pytest.fixture
 def motor_net():
-    net = pp.create_empty_network()
+    net = pp.create_empty_network(sn_mva=10)
     b1 = pp.create_bus(net, vn_kv=0.4)
     b2 = pp.create_bus(net, vn_kv=0.4)
     b3 = pp.create_bus(net, vn_kv=0.4)

@@ -69,7 +69,14 @@ The value should not be relevant in most applications since all power values are
 
 **Signing System**
 
-There are three elements that have power values based on the generator viewpoint (positive active power means power generation), which are:
+The reference system for bus elements can be summarized with the following figure:
+
+.. image:: p_q_reference_system.png
+	:width: 12em
+	:alt: in consumer frame convention (load-like elements), P is positive for consumption Q is positive for absorption (underexcited behavior, decreases voltage). For generator frame convention (gen-like elements), the opposite applies.
+	:align: center
+
+There are three bus elements that have power values based on the generator viewpoint (positive active power means power generation), which are:
     - gen
     - sgen
     - ext_grid

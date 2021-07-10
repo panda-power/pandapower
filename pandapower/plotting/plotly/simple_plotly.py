@@ -47,6 +47,18 @@ def get_hoverinfo(net, element, precision=3, sub_index=None):
                 'V_n HV: ' + net.trafo['vn_hv_kv'].round(precision).astype(str) + ' kV' + '<br />' +
                 'V_n LV: ' + net.trafo['vn_lv_kv'].round(precision).astype(str) + ' kV' + '<br />' +
                 'Tap pos.: ' + net.trafo['tap_pos'].astype(str) + '<br />').tolist()
+
+    elif element == "trafo3w":
+        hoverinfo = (
+                "Index: " + net.trafo3w.index.astype(str) + '<br />' +
+                "Name: " + net.trafo3w['name'].astype(str) + '<br />' +
+                'V_n HV: ' + net.trafo3w['vn_hv_kv'].round(precision).astype(str) + ' kV' + '<br />' +
+                'V_n MV: ' + net.trafo3w['vn_mv_kv'].round(precision).astype(str) + ' kV' + '<br />' +
+                'V_n LV: ' + net.trafo3w['vn_lv_kv'].round(precision).astype(str) + ' kV' + '<br />' +
+                'Tap pos.: ' + net.trafo3w['tap_pos'].astype(str) + '<br />').tolist()
+
+
+
     elif element == "ext_grid":
         hoverinfo = (
                 "Index: " + net.ext_grid.index.astype(str) + '<br />' +
@@ -65,7 +77,7 @@ def get_hoverinfo(net, element, precision=3, sub_index=None):
 def simple_plotly(net, respect_switches=True, use_line_geodata=None, on_map=False,
                   projection=None, map_style='basic', figsize=1, aspectratio='auto', line_width=1,
                   bus_size=10, ext_grid_size=20.0, bus_color="blue", line_color='grey',
-                  trafo_color='green', ext_grid_color="yellow", filename='temp-plot.html', auto_open=True):
+                  trafo_color='green',trafo3w_color='green', ext_grid_color="yellow", filename='temp-plot.html', auto_open=True):
     """
     Plots a pandapower network as simple as possible in plotly.
     If no geodata is available, artificial geodata is generated. For advanced plotting see the tutorial
@@ -114,6 +126,8 @@ def simple_plotly(net, respect_switches=True, use_line_geodata=None, on_map=Fals
 
         **trafo_color** (String, 'green') - Trafo Color. Init is green
 
+        **trafo3w_color** (String, 'green') - Trafo 3W Color. Init is blue
+
         **ext_grid_color** (String, 'yellow') - External Grid Color. Init is yellow
 
         **auto_open** (bool, True) - automatically open plot in browser
@@ -124,19 +138,20 @@ def simple_plotly(net, respect_switches=True, use_line_geodata=None, on_map=Fals
     node_element = "bus"
     branch_element = "line"
     trans_element = "trafo"
+    trans3w_element = "trafo3w"
     separator_element = "switch"
     return _simple_plotly_generic(net, respect_switches, use_line_geodata, on_map, projection,
                                   map_style, figsize, aspectratio, line_width, bus_size,
-                                  ext_grid_size, bus_color, line_color, trafo_color, ext_grid_color,
-                                  node_element, branch_element, trans_element, separator_element,
+                                  ext_grid_size, bus_color, line_color, trafo_color,trafo3w_color, ext_grid_color,
+                                  node_element, branch_element, trans_element, trans3w_element, separator_element,
                                   create_line_trace, create_bus_trace, get_hoverinfo, filename,
                                   auto_open=auto_open)
 
 
 def _simple_plotly_generic(net, respect_separators, use_branch_geodata, on_map, projection, map_style,
                            figsize, aspectratio, branch_width, node_size, ext_grid_size, node_color,
-                           branch_color, trafo_color, ext_grid_color, node_element, branch_element,
-                           trans_element, separator_element, branch_trace_func, node_trace_func,
+                           branch_color, trafo_color,trafo3w_color, ext_grid_color, node_element, branch_element,
+                           trans_element, trans3w_element, separator_element, branch_trace_func, node_trace_func,
                            hoverinfo_func, filename='temp-plot.html', auto_open=True):
     version_check()
     # create geocoord if none are available
@@ -180,6 +195,12 @@ def _simple_plotly_generic(net, respect_separators, use_branch_geodata, on_map, 
     if 'trafo' in net:
         hoverinfo = hoverinfo_func(net, element=trans_element)
         trans_trace = create_trafo_trace(net, color=trafo_color, width=branch_width * 5,
+                                         infofunc=hoverinfo,
+                                         use_line_geodata=use_branch_geodata)
+    # ----- 3W Trafos ------
+    if 'trafo3w' in net:
+        hoverinfo = hoverinfo_func(net, element=trans3w_element)
+        trans_trace = create_trafo_trace(net, color=trafo3w_color, trafotype='3W', width=branch_width * 5, trace_name='3w_trafos',
                                          infofunc=hoverinfo,
                                          use_line_geodata=use_branch_geodata)
     else:

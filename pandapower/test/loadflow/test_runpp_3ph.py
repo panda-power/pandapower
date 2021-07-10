@@ -113,7 +113,9 @@ def test_out_serv_load(net):
     check_it(net)
 
 
-def test_4bus_network():
+@pytest.mark.parametrize("init", ["auto", "results", "flat", "dc"])
+@pytest.mark.parametrize("recycle", [None, {"bus_pq": True, "Ybus": True}, {"bus_pq": True, "Ybus": False}])
+def test_4bus_network(init, recycle):
     v_base = 110                     # 110kV Base Voltage
     mva_base = 100                      # 100 MVA
     net = pp.create_empty_network(sn_mva=mva_base)
@@ -149,7 +151,8 @@ def test_4bus_network():
                               p_c_mw=10, q_c_mvar=5)
     pp.create_asymmetric_load(net, busp, p_a_mw=50, q_a_mvar=20, p_b_mw=60, q_b_mvar=20,
                               p_c_mw=10, q_c_mvar=5)
-    runpp_3ph_with_consistency_checks(net)
+    runpp_3ph_with_consistency_checks(net, init=init, recycle=recycle)
+    runpp_3ph_with_consistency_checks(net, init=init, recycle=recycle)
     assert net['converged']
 
     bus_pp = np.abs(net.res_bus_3ph[['vm_a_pu', 'vm_b_pu', 'vm_c_pu']]

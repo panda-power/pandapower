@@ -1,5 +1,4 @@
 try:
-    from fiona.crs import from_epsg
     from shapely.geometry import Point, LineString
     from geopandas import GeoDataFrame, GeoSeries
     from pyproj import Proj, transform
@@ -19,13 +18,13 @@ def _node_geometries_from_geodata(node_geo, epsg=31467):
     :return: node_geodata - a geodataframe containing the node_geo and Points in the geometry column
     """
     geoms = [Point(x, y) for x, y in node_geo[["x", "y"]].values]
-    return GeoDataFrame(node_geo, crs=from_epsg(epsg), geometry=geoms, index=node_geo.index)
+    return GeoDataFrame(node_geo, crs=f"epsg:{epsg}", geometry=geoms, index=node_geo.index)
 
 
 def _branch_geometries_from_geodata(branch_geo, epsg=31467):
     geoms = GeoSeries([LineString(x) for x in branch_geo.coords.values], index=branch_geo.index,
-                      crs=from_epsg(epsg))
-    return GeoDataFrame(branch_geo, crs=from_epsg(epsg), geometry=geoms, index=branch_geo.index)
+                      crs=f"epsg:{epsg}")
+    return GeoDataFrame(branch_geo, crs=f"epsg:{epsg}", geometry=geoms, index=branch_geo.index)
 
 
 def _transform_node_geometry_to_geodata(node_geo):

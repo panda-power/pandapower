@@ -235,26 +235,26 @@ def create_cigre_network_mv(with_der=False):
 
     # Loads
     # Residential
-    pp.create_load_from_cosphi(net_cigre_mv, buses[0], 15.3, 0.98, "ind", name='Load R1')
-    pp.create_load_from_cosphi(net_cigre_mv, buses[2], 0.285, 0.97, "ind", name='Load R3')
-    pp.create_load_from_cosphi(net_cigre_mv, buses[3], 0.445, 0.97, "ind", name='Load R4')
-    pp.create_load_from_cosphi(net_cigre_mv, buses[4], 0.750, 0.97, "ind", name='Load R5')
-    pp.create_load_from_cosphi(net_cigre_mv, buses[5], 0.565, 0.97, "ind", name='Load R6')
-    pp.create_load_from_cosphi(net_cigre_mv, buses[7], 0.605, 0.97, "ind", name='Load R8')
-    pp.create_load_from_cosphi(net_cigre_mv, buses[9], 0.490, 0.97, "ind", name='Load R10')
-    pp.create_load_from_cosphi(net_cigre_mv, buses[10], 0.340, 0.97, "ind", name='Load R11')
-    pp.create_load_from_cosphi(net_cigre_mv, buses[11], 15.3, 0.98, "ind", name='Load R12')
-    pp.create_load_from_cosphi(net_cigre_mv, buses[13], 0.215, 0.97, "ind", name='Load R14')
+    pp.create_load_from_cosphi(net_cigre_mv, buses[0], 15.3, 0.98, "underexcited", name='Load R1')
+    pp.create_load_from_cosphi(net_cigre_mv, buses[2], 0.285, 0.97, "underexcited", name='Load R3')
+    pp.create_load_from_cosphi(net_cigre_mv, buses[3], 0.445, 0.97, "underexcited", name='Load R4')
+    pp.create_load_from_cosphi(net_cigre_mv, buses[4], 0.750, 0.97, "underexcited", name='Load R5')
+    pp.create_load_from_cosphi(net_cigre_mv, buses[5], 0.565, 0.97, "underexcited", name='Load R6')
+    pp.create_load_from_cosphi(net_cigre_mv, buses[7], 0.605, 0.97, "underexcited", name='Load R8')
+    pp.create_load_from_cosphi(net_cigre_mv, buses[9], 0.490, 0.97, "underexcited", name='Load R10')
+    pp.create_load_from_cosphi(net_cigre_mv, buses[10], 0.340, 0.97, "underexcited", name='Load R11')
+    pp.create_load_from_cosphi(net_cigre_mv, buses[11], 15.3, 0.98, "underexcited", name='Load R12')
+    pp.create_load_from_cosphi(net_cigre_mv, buses[13], 0.215, 0.97, "underexcited", name='Load R14')
 
     # Commercial / Industrial
-    pp.create_load_from_cosphi(net_cigre_mv, buses[0], 5.1, 0.95, "ind", name='Load CI1')
-    pp.create_load_from_cosphi(net_cigre_mv, buses[2], 0.265, 0.85, "ind", name='Load CI3')
-    pp.create_load_from_cosphi(net_cigre_mv, buses[6], 0.090, 0.85, "ind", name='Load CI7')
-    pp.create_load_from_cosphi(net_cigre_mv, buses[8], 0.675, 0.85, "ind", name='Load CI9')
-    pp.create_load_from_cosphi(net_cigre_mv, buses[9], 0.080, 0.85, "ind", name='Load CI10')
-    pp.create_load_from_cosphi(net_cigre_mv, buses[11], 5.28, 0.95, "ind", name='Load CI12')
-    pp.create_load_from_cosphi(net_cigre_mv, buses[12], 0.04, 0.85, "ind", name='Load CI13')
-    pp.create_load_from_cosphi(net_cigre_mv, buses[13], 0.390, 0.85, "ind", name='Load CI14')
+    pp.create_load_from_cosphi(net_cigre_mv, buses[0], 5.1, 0.95, "underexcited", name='Load CI1')
+    pp.create_load_from_cosphi(net_cigre_mv, buses[2], 0.265, 0.85, "underexcited", name='Load CI3')
+    pp.create_load_from_cosphi(net_cigre_mv, buses[6], 0.090, 0.85, "underexcited", name='Load CI7')
+    pp.create_load_from_cosphi(net_cigre_mv, buses[8], 0.675, 0.85, "underexcited", name='Load CI9')
+    pp.create_load_from_cosphi(net_cigre_mv, buses[9], 0.080, 0.85, "underexcited", name='Load CI10')
+    pp.create_load_from_cosphi(net_cigre_mv, buses[11], 5.28, 0.95, "underexcited", name='Load CI12')
+    pp.create_load_from_cosphi(net_cigre_mv, buses[12], 0.04, 0.85, "underexcited", name='Load CI13')
+    pp.create_load_from_cosphi(net_cigre_mv, buses[13], 0.390, 0.85, "underexcited", name='Load CI14')
 
     # Optional distributed energy recources
     if with_der in ["pv_wind", "all"]:

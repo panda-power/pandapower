@@ -17,8 +17,15 @@ logger = logging.getLogger(__name__)
 
 class ConstControl(Controller):
     """
-    Class representing a generic time series controller for a specified element and variable
-    Control strategy: "No Control" -> just updates timeseries
+    Class representing a generic time series controller for a specified element and variable.
+    Control strategy: "No Control" -> updates values of specified elements according to timeseries input data.
+    If ConstControl is used without timeseries input data, it will reset the controlled values to the initial values,
+    preserving the initial net state.
+    The timeseries values are written to net during time_step before the initial powerflow run and before other controllers' control_step.
+    It is possible to set attributes of objects that are contained in a net table, e.g. attributes of other controllers. This can be helpful
+    e.g. if a voltage setpoint of a transformer tap changer depends on the time step.
+    An attribute of an object in the "object" column of a table (e.g. net.controller["object"] -> net.controller.object.at[0, "vm_set_pu"]
+    can be set if the attribute is specified as "object.attribute" (e.g. "object.vm_set_pu").
 
     INPUT:
 
@@ -53,7 +60,7 @@ class ConstControl(Controller):
     """
 
     def __init__(self, net, element, variable, element_index, profile_name=None, data_source=None,
-                 scale_factor=1.0, in_service=True, recycle=True, order=0, level=0,
+                 scale_factor=1.0, in_service=True, recycle=True, order=-1, level=-1,
                  drop_same_existing_ctrl=False, matching_params=None,
                  initial_run=False, **kwargs):
         # just calling init of the parent
@@ -76,8 +83,13 @@ class ConstControl(Controller):
         self.profile_name = profile_name
         self.scale_factor = scale_factor
         self.applied = False
+        self.object_attribute = None
         # write functions faster, depending on type of self.element_index
-        if isinstance(self.element_index, int):
+        if self.variable.startswith('object'):
+            # write to object attribute
+            self.write = "object"
+            self.object_attribute = self.variable.split(".")[1]
+        elif isinstance(self.element_index, int):
             # use .at if element_index is integer for speedup
             self.write = "single_index"
         # commenting this out for now, see issue 609
@@ -123,27 +135,28 @@ class ConstControl(Controller):
             self._write_to_all_index(net)
         elif self.write == "loc":
             self._write_with_loc(net)
+        elif self.write == "object":
+            self._write_to_object_attribute(net)
         else:
             raise NotImplementedError("ConstControl: self.write must be one of "
-                                      "['single_index', 'all_index', 'loc']")
+                                      "['single_index', 'all_index', 'loc', 'object']")
 
     def time_step(self, net, time):
         """
         Get the values of the element from data source
+        Write to pandapower net by calling write_to_net()
+        If ConstControl is used without a data_source, it will reset the controlled values to the initial values,
+        preserving the initial net state.
         """
-        self.values = self.data_source.get_time_step_value(time_step=time,
-                                                           profile_name=self.profile_name,
-                                                           scale_factor=self.scale_factor)
-        # self.write_to_net()
-
-    def initialize_control(self, net):
-        """
-        At the beginning of each run_control call reset applied-flag
-        """
-        #
+        self.applied = False
         if self.data_source is None:
             self.values = net[self.element][self.variable].loc[self.element_index]
-        self.applied = False
+        else:
+            self.values = self.data_source.get_time_step_value(time_step=time,
+                                                               profile_name=self.profile_name,
+                                                               scale_factor=self.scale_factor)
+        if self.values is not None:
+            self.write_to_net(net)
 
     def is_converged(self, net):
         """
@@ -153,10 +166,8 @@ class ConstControl(Controller):
 
     def control_step(self, net):
         """
-        Write to pandapower net by calling write_to_net()
+        Set applied to True, which means that the values set in time_step have been included in the load flow calculation.
         """
-        if self.values is not None:
-            self.write_to_net(net)
         self.applied = True
 
     def _write_to_single_index(self, net):
@@ -167,3 +178,14 @@ class ConstControl(Controller):
 
     def _write_with_loc(self, net):
         net[self.element].loc[self.element_index, self.variable] = self.values
+
+    def _write_to_object_attribute(self, net):
+        if hasattr(self.element_index, '__iter__') and len(self.element_index) > 1:
+            for idx, val in zip(self.element_index, self.values):
+                setattr(net[self.element]["object"].at[idx], self.object_attribute, val)
+        else:
+            setattr(net[self.element]["object"].at[self.element_index], self.object_attribute, self.values)
+
+    def __str__(self):
+        return super().__str__() + " [%s.%s]" % (self.element, self.variable)
+

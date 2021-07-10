@@ -396,8 +396,8 @@ def _create_branch_trace(net, branches=None, use_branch_geodata=True, respect_se
                          separator_element='switch', node_element='bus',
                          cmap_vals_category='loading_percent'):
     """
-   Creates a plotly trace of branch elements. The rather generic, non-power net specific names
-   were introduced to make it usable in other packages, e.g. for pipe networks.
+    Creates a plotly trace of branch elements. The rather generic, non-power net specific names
+    were introduced to make it usable in other packages, e.g. for pipe networks.
 
    INPUT:
        **net** (pandapowerNet) - The  network
@@ -616,9 +616,10 @@ def _create_branch_trace(net, branches=None, use_branch_geodata=True, respect_se
     return branch_traces
 
 
-def create_trafo_trace(net, trafos=None, color='green', width=5, infofunc=None, cmap=None,
-                       trace_name='trafos', cmin=None, cmax=None, cmap_vals=None,
+def create_trafo_trace(net, trafos=None, color='green', trafotype='2W', width=5, infofunc=None, cmap=None,
+                       trace_name='trafos', cmin=None, cmax=None, cmap_vals=None, matching_params=None,
                        use_line_geodata=None):
+
     """
     Creates a plotly trace of pandapower trafos.
 
@@ -628,6 +629,8 @@ def create_trafo_trace(net, trafos=None, color='green', width=5, infofunc=None, 
     OPTIONAL:
         **trafos** (list, None) - The trafos for which the collections are created.
         If None, all trafos in the network are considered.
+
+        **trafotype** (String, "2W") - trafotype can be 2W or 3W and can define which transformer table is taken (trafo or trafo3w)
 
         **width** (int, 5) - line width
 
@@ -654,16 +657,29 @@ def create_trafo_trace(net, trafos=None, color='green', width=5, infofunc=None, 
     """
     color = get_plotly_color(color)
 
+    if trafotype == '2W':
+        trafotable='trafo'
+
+        trafo_buses_with_geodata = net.trafo.hv_bus.isin(net.bus_geodata.index) & \
+                               net.trafo.lv_bus.isin(net.bus_geodata.index)
+        connections = [['hv_bus', 'lv_bus']]
+    elif trafotype=='3W':
+        trafotable = 'trafo3w'
+        trafo_buses_with_geodata = net.trafo3w.hv_bus.isin(net.bus_geodata.index) & \
+                               net.trafo3w.mv_bus.isin(net.bus_geodata.index) & \
+                               net.trafo3w.lv_bus.isin(net.bus_geodata.index)
+        connections = [['hv_bus', 'lv_bus'], ['hv_bus', 'mv_bus'], ['mv_bus', 'lv_bus']]
+
+    else:
+        raise UserWarning('trafo_type should be 2W or 3W')
     # defining lines to be plot
-    trafos = net.trafo.index.tolist() if trafos is None else list(trafos)
+    trafos = net[trafotable].index.tolist() if trafos is None else list(trafos)
     if len(trafos) == 0:
         return []
 
-    trafo_buses_with_geodata = net.trafo.hv_bus.isin(net.bus_geodata.index) & \
-        net.trafo.lv_bus.isin(net.bus_geodata.index)
 
-    trafos_mask = net.trafo.index.isin(trafos)
-    trafos_to_plot = net.trafo[trafo_buses_with_geodata & trafos_mask]
+    trafos_mask = net[trafotable].index.isin(trafos)
+    trafos_to_plot = net[trafotable].loc[trafo_buses_with_geodata & trafos_mask]
 
     if infofunc is not None:
         if not isinstance(infofunc, pd.Series) and isinstance(infofunc, Iterable) and \
@@ -672,6 +688,7 @@ def create_trafo_trace(net, trafos=None, color='green', width=5, infofunc=None, 
         assert isinstance(infofunc, pd.Series), \
             "infofunc should be a pandas series with the net.trafo.index to the infofunc contents"
         infofunc = infofunc.loc[trafos_to_plot.index]
+
 
     cmap_colors = []
     if cmap is not None:
@@ -683,35 +700,34 @@ def create_trafo_trace(net, trafos=None, color='green', width=5, infofunc=None, 
         if cmap_vals is not None:
             cmap_vals = cmap_vals
         else:
-            if net.res_trafo.shape[0] == 0:
+            if net['res_'+trafotable].shape[0] == 0:
                 logger.error("There are no power flow results for lines which are default for line colormap coloring..."
                              "set cmap_vals input argument if you want colormap according to some specific values...")
-            cmap_vals = net.res_trafo.loc[trafos_to_plot.index, 'loading_percent'].values
+            cmap_vals = net['res_'+trafotable].loc[trafos_to_plot.index, 'loading_percent'].values
 
         cmap_colors = get_plotly_cmap(cmap_vals, cmap_name=cmap, cmin=cmin, cmax=cmax)
 
     trafo_traces = []
+
     for col_i, (idx, trafo) in enumerate(trafos_to_plot.iterrows()):
         if cmap is not None:
             color = cmap_colors[col_i]
+        for from_bus1, to_bus1 in connections:
 
-        trafo_trace = dict(type='scatter', text=[], line=Line(width=width, color=color),
-                           hoverinfo='text', mode='lines', name=trace_name)
+            trafo_trace = dict(type='scatter', text=[], line=Line(width=width, color=color),
+                                 hoverinfo='text', mode='lines', name=trace_name)
 
-        trafo_trace['text'] = trafo['name'] if infofunc is None else infofunc.loc[idx]
+            trafo_trace['text'] = trafo['name'] if infofunc is None else infofunc.loc[idx]
 
-        from_bus = net.bus_geodata.loc[trafo.hv_bus, 'x']
-        to_bus = net.bus_geodata.loc[trafo.lv_bus, 'x']
-        trafo_trace['x'] = [from_bus, (from_bus + to_bus) / 2, to_bus]
+            for k in ('x', 'y'):
+                from_bus = net.bus_geodata.loc[trafo[from_bus1], k]
+                to_bus = net.bus_geodata.loc[trafo[to_bus1], k]
+                trafo_trace[k] = [from_bus, (from_bus + to_bus) / 2, to_bus]
 
-        from_bus = net.bus_geodata.loc[trafo.hv_bus, 'y']
-        to_bus = net.bus_geodata.loc[trafo.lv_bus, 'y']
-        trafo_trace['y'] = [from_bus, (from_bus + to_bus) / 2, to_bus]
-
-        trafo_traces.append(trafo_trace)
+            trafo_traces.append(trafo_trace)
 
     center_trace = create_edge_center_trace(trafo_traces, color=color, infofunc=infofunc,
-                                            use_line_geodata=use_line_geodata)
+                                                    use_line_geodata=use_line_geodata)
     trafo_traces.append(center_trace)
     return trafo_traces
 

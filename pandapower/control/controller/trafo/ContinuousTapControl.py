@@ -1,9 +1,9 @@
-from __future__ import division
+# -*- coding: utf-8 -*-
 
-__author__ = 'lthurner'
+# Copyright (c) 2016-2021 by University of Kassel and Fraunhofer Institute for Energy Economics
+# and Energy System Technology (IEE), Kassel. All rights reserved.
 
 import numpy as np
-
 from pandapower.control.controller.trafo_control import TrafoController
 
 

@@ -111,6 +111,28 @@ def test_const_control(simple_test_net):
     assert np.alltrue(profiles['slack_v'].values == ow.output['res_bus.vm_pu'][0].values)
 
 
+def test_const_control_write_to_object_attribute(simple_test_net):
+    net = simple_test_net
+    profiles, ds = create_data_source()
+    time_steps = range(0, 10)
+    ow = setup_output_writer(net, time_steps)
+
+    ContinuousTapControl(net, 0, 1., level=1, check_tap_bounds=False)
+
+    ConstControl(net, 'load', 'p_mw', element_index=0, data_source=ds, profile_name='load1',
+                 scale_factor=0.85)
+
+    ConstControl(net, 'ext_grid', 'vm_pu', element_index=0, data_source=ds, profile_name='slack_v')
+
+    ConstControl(net, 'controller', 'object.vm_set_pu', element_index=0, data_source=ds, profile_name='trafo_v')
+
+    run_timeseries(net, time_steps, output_writer=ow, verbose=False)
+
+    assert np.alltrue(profiles['load1'].values * 0.85 == ow.output['load.p_mw'][0].values)
+    assert np.alltrue(profiles['slack_v'].values == ow.output['res_bus.vm_pu'][0].values)
+    assert np.allclose(profiles['trafo_v'].values, ow.output['res_bus.vm_pu'][net.trafo.at[0, 'lv_bus']].values, atol=1e-3, rtol=0)
+
+
 def test_false_alarm_trafos(simple_test_net):
     net = simple_test_net
 

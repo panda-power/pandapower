@@ -16,6 +16,7 @@ Change Log
 - [ADDED] USetTapControl that adjusts the setpoint for a transformer tap changer, based on a specified result variable (e.g. i_lv_ka)
 - [CHANGED] replaced naming for "inductive" or "ind" by "underexcited" and "capacitive" or "cap" for "overexcited"
 
+
 [2.6.0]- 2021-03-09
 ----------------------
 - [ADDED] Factorization mode instead of inversion of Ybus in short-circuit calculation.

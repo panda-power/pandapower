@@ -292,7 +292,7 @@ def get_p_q_b_3ph(net, element):
 
 
 def _get_p_q_results(net, ppc, bus_lookup_aranged):
-    bus_pq = np.zeros(shape=(len(net["bus"].index), 2), dtype=np.float)
+    bus_pq = np.zeros(shape=(len(net["bus"].index), 2), dtype=np.float64)
     b, p, q = np.array([]), np.array([]), np.array([])
 
     ac = net["_options"]["ac"]

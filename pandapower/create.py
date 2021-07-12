@@ -283,7 +283,10 @@ def create_empty_network(name="", f_hz=50., sn_mva=1, add_stdtypes=True):
             ('order', "float64"),
             ('level', dtype(object)),
             ('initial_run', "bool"),
+
+
             ("recycle", dtype(object)),
+
         ],
         # geodata
         "line_geodata": [("coords", dtype(object))],

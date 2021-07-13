@@ -1,5 +1,6 @@
 Change Log
 
+- [FIXED] add missing matplotlib dependency #1212
 - [ADDED] Optimized the calculation of single/selected buses in 1ph/2ph/3ph short-circuit calculation
 - [CHANGED] Short-circuit gen calculation parameter "rkss_pu" to "rkss_ohm" according to IEC 60909 example
 - [ADDED] Power station units with gen and trafo designated with "ps_trafo_ix" for short-circuit calculation

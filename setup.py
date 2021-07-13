@@ -50,7 +50,8 @@ setup(
                       "xlsxwriter",
                       "xlrd",
                       "openpyxl",
-                      "cryptography"],
+                      "cryptography",
+                      "matplotlib==3.2"],
     extras_require={
         "docs": ["numpydoc", "sphinx", "sphinx_rtd_theme"],
         "plotting": ["plotly", "matplotlib", "python-igraph"],

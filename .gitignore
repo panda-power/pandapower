@@ -27,3 +27,4 @@ pandapower/test/timeseries/run_timeseries_output/*
 pandapower/timeseries/logs/*
 */data/*
 /.vscode/
+venv/
